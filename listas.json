@@ -1,19 +1,19 @@
 {
   "compra": [
-    "Lidl/Aldi · Pechuga de pollo – 200 g",
-    "Lidl/Aldi · Pavo en lonchas – 100 g",
-    "Lidl/Aldi · Arroz – 80 g",
-    "Lidl/Aldi · Aguacate – 1 ud (usas ½)",
-    "Lidl/Aldi · Tomate – 1 ud (100 g)",
-    "Lidl/Aldi · Manzanas – 1 ud",
-    "Lidl/Aldi · Mandarinas – 2 ud",
-    "Lidl/Aldi · Kiwis – 2 ud",
-    "Lidl/Aldi · Plátanos – 1 ud",
-    "Lidl/Aldi · Arándanos – 100 g",
-    "Mercadona · Atún – 1 lata (80 g)",
-    "Mercadona · Wraps integrales – 2 ud",
-    "BM · Tomates cherry – 200 g",
-    "Sin súper · Salmón – 150 g"
+    "Pechuga de pollo – 200 g · Lidl/Aldi",
+    "Pavo en lonchas – 100 g · Lidl/Aldi",
+    "Arroz – 80 g · Lidl/Aldi",
+    "Aguacate – 1 ud (usas ½) · Lidl/Aldi",
+    "Tomate – 1 ud (100 g) · Lidl/Aldi",
+    "Manzanas – 1 ud · Lidl/Aldi",
+    "Mandarinas – 2 ud · Lidl/Aldi",
+    "Kiwis – 2 ud · Lidl/Aldi",
+    "Plátanos – 1 ud · Lidl/Aldi",
+    "Arándanos – 100 g · Lidl/Aldi",
+    "Atún – 1 lata (80 g) · Mercadona",
+    "Wraps integrales – 2 ud · Mercadona",
+    "Tomates cherry – 200 g · BM",
+    "Salmón – 150 g · Sin súper"
   ],
   "tareas-ideas": [
     "Valorar ideas de TikTok con Claude Code"

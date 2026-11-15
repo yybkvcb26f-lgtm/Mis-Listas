@@ -78,7 +78,7 @@
     .fecha { color: var(--muted); font-size: 0.85rem; font-weight: 500; }
 
     .search {
-      margin-top: 14px;
+      margin-top: 12px;
       position: relative;
     }
     .search svg {
@@ -282,12 +282,12 @@
         <h1>Mis Listas</h1>
         <span class="fecha" id="fecha"></span>
       </div>
+      <nav class="tabs" role="tablist" id="tabs"></nav>
       <div class="search" id="searchBox">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="buscar" type="search" placeholder="Buscar en la lista…" autocomplete="off" enterkeyhint="search">
         <button class="clear" id="limpiar" aria-label="Borrar búsqueda">✕</button>
       </div>
-      <nav class="tabs" role="tablist" id="tabs"></nav>
     </header>
     <main id="contenido" role="tabpanel"></main>
   </div>

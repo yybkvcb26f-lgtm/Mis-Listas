@@ -3,115 +3,318 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#f4f3fb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f0f17" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Listas">
   <title>Mis Listas</title>
   <style>
     :root {
-      --bg: #f5f5f7;
+      --bg: #f4f3fb;
+      --bg-grad: radial-gradient(1200px 500px at 10% -10%, #e4e1ff 0%, transparent 60%),
+                 radial-gradient(900px 400px at 110% 0%, #ffe3ea 0%, transparent 55%);
       --card: #ffffff;
-      --text: #1c1c1e;
-      --muted: #8e8e93;
-      --accent: #2563eb;
-      --border: #e5e5ea;
+      --text: #17162b;
+      --muted: #7a7891;
+      --accent: #5b4cf0;
+      --accent-2: #ff5c8a;
+      --accent-soft: #ecebff;
+      --chip: #f1f0f8;
+      --border: rgba(23, 22, 43, 0.07);
+      --shadow: 0 1px 2px rgba(23, 22, 43, 0.04), 0 6px 18px rgba(23, 22, 43, 0.06);
+      --input: rgba(255, 255, 255, 0.85);
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #000000;
-        --card: #1c1c1e;
-        --text: #f2f2f7;
-        --muted: #8e8e93;
-        --accent: #60a5fa;
-        --border: #2c2c2e;
+        --bg: #0f0f17;
+        --bg-grad: radial-gradient(1200px 500px at 10% -10%, #231f55 0%, transparent 60%),
+                   radial-gradient(900px 400px at 110% 0%, #3a1630 0%, transparent 55%);
+        --card: #1a1a26;
+        --text: #f1f0fa;
+        --muted: #9a98b3;
+        --accent: #8e83ff;
+        --accent-2: #ff7aa2;
+        --accent-soft: #29264d;
+        --chip: #26253a;
+        --border: rgba(255, 255, 255, 0.06);
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+        --input: rgba(26, 26, 38, 0.85);
       }
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-grad), var(--bg);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
       -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
     }
+    .wrap { max-width: 720px; margin: 0 auto; }
+
     header {
       position: sticky;
       top: 0;
       z-index: 10;
-      background: var(--bg);
-      padding: calc(env(safe-area-inset-top) + 12px) 16px 0;
-      border-bottom: 1px solid var(--border);
+      padding: calc(env(safe-area-inset-top) + 16px) 20px 12px;
+      backdrop-filter: saturate(180%) blur(18px);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      background: color-mix(in srgb, var(--bg) 75%, transparent);
     }
-    h1 { font-size: 1.6rem; margin: 0 0 12px; }
-    .tabs { display: flex; gap: 4px; }
+    .title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .fecha { color: var(--muted); font-size: 0.85rem; font-weight: 500; }
+
+    .search {
+      margin-top: 14px;
+      position: relative;
+    }
+    .search svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .search input {
+      width: 100%;
+      font: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 40px 12px 42px;
+      outline: none;
+      box-shadow: var(--shadow);
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+    .search input::placeholder { color: var(--muted); }
+    .search input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+    .search input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+    .search .clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: var(--chip);
+      color: var(--muted);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: none;
+    }
+    .search.has-text .clear { display: block; }
+
+    .tabs {
+      margin-top: 14px;
+      display: flex;
+      gap: 6px;
+      padding: 5px;
+      background: var(--chip);
+      border-radius: 16px;
+    }
     .tab {
       flex: 1;
       appearance: none;
       border: none;
-      background: none;
+      background: transparent;
       color: var(--muted);
       font: inherit;
-      font-weight: 600;
-      font-size: 1rem;
-      padding: 12px 8px;
-      min-height: 48px;
-      border-bottom: 3px solid transparent;
+      font-weight: 650;
+      font-size: 0.98rem;
+      padding: 10px 8px;
+      min-height: 46px;
+      border-radius: 12px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      white-space: nowrap;
+      transition: background .2s, color .2s, box-shadow .2s;
     }
+    @media (max-width: 400px) {
+      .tab { font-size: 0.9rem; gap: 5px; padding: 10px 4px; }
+      .tab svg { width: 18px; height: 18px; }
+    }
+    .tab svg { width: 20px; height: 20px; flex-shrink: 0; }
     .tab[aria-selected="true"] {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
+      background: var(--card);
+      color: var(--text);
+      box-shadow: var(--shadow);
     }
+    .tab[aria-selected="true"] svg { color: var(--accent); }
     .count {
-      display: inline-block;
-      min-width: 1.5em;
-      margin-left: 4px;
-      padding: 0 6px;
+      min-width: 26px;
+      height: 24px;
+      padding: 0 8px;
       border-radius: 999px;
       background: var(--border);
+      color: var(--muted);
       font-size: 0.8rem;
-      color: var(--text);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-variant-numeric: tabular-nums;
     }
-    main { padding: 16px 16px calc(env(safe-area-inset-bottom) + 16px); }
+    .tab[aria-selected="true"] .count {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+    }
+
+    main { padding: 8px 20px calc(env(safe-area-inset-bottom) + 32px); }
+    .resumen {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 10px 4px 12px;
+    }
     ul {
       list-style: none;
       margin: 0;
       padding: 0;
-      background: var(--card);
-      border-radius: 12px;
-      overflow: hidden;
+      display: grid;
+      gap: 10px;
+    }
+    @media (min-width: 700px) {
+      ul.compra { grid-template-columns: 1fr 1fr; }
+      h1 { font-size: 2.4rem; }
     }
     li {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
       padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: entra .35s ease both;
+    }
+    @keyframes entra {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: none; }
+    }
+    .dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+    .item-body { min-width: 0; flex: 1; }
+    .item-nombre {
       font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.3;
       word-wrap: break-word;
     }
-    li:last-child { border-bottom: none; }
+    .item-meta {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 3px 9px;
+    }
+    .chip.tienda {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+    mark {
+      background: color-mix(in srgb, var(--accent-2) 30%, transparent);
+      color: inherit;
+      border-radius: 4px;
+      padding: 0 2px;
+    }
+
     .empty, .error {
       text-align: center;
+      padding: 56px 24px;
       color: var(--muted);
-      padding: 48px 16px;
     }
-    .error { color: #ff3b30; }
+    .empty .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
+    .empty strong { display: block; color: var(--text); font-size: 1.15rem; margin-bottom: 6px; }
+    .error { color: #ff453a; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Mis Listas</h1>
-    <nav class="tabs" role="tablist" id="tabs"></nav>
-  </header>
-  <main id="contenido" role="tabpanel"></main>
+  <div class="wrap">
+    <header>
+      <div class="title-row">
+        <h1>Mis Listas</h1>
+        <span class="fecha" id="fecha"></span>
+      </div>
+      <div class="search" id="searchBox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="buscar" type="search" placeholder="Buscar en la lista…" autocomplete="off" enterkeyhint="search">
+        <button class="clear" id="limpiar" aria-label="Borrar búsqueda">✕</button>
+      </div>
+      <nav class="tabs" role="tablist" id="tabs"></nav>
+    </header>
+    <main id="contenido" role="tabpanel"></main>
+  </div>
 
   <script>
-    const NOMBRES = {
-      "compra": "Compra",
-      "tareas-ideas": "Tareas e ideas"
+    const LISTAS = {
+      "compra": {
+        nombre: "Compra",
+        icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3h2.6l2.4 12.2a1.5 1.5 0 0 0 1.5 1.2h8.9a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>',
+        vacia: ["🛒", "¡Despensa a tope!", "No hay nada que comprar. Dime «apúntame…» cuando falte algo."]
+      },
+      "tareas-ideas": {
+        nombre: "Tareas e ideas",
+        icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3Z"/></svg>',
+        vacia: ["💡", "Mente despejada", "No hay tareas ni ideas pendientes. ¡Buen momento para pensar en grande!"]
+      }
     };
 
     const tabsEl = document.getElementById("tabs");
     const contenidoEl = document.getElementById("contenido");
+    const buscarEl = document.getElementById("buscar");
+    const searchBox = document.getElementById("searchBox");
     let listas = {};
     let activa = null;
+
+    document.getElementById("fecha").textContent =
+      new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "short" });
 
     function textoItem(item) {
       if (typeof item === "string") return item;
@@ -119,37 +322,113 @@
       return String(item);
     }
 
+    // "Tomate – 1 ud (100 g) · Lidl/Aldi" → nombre, cantidad, tienda
+    function partes(texto) {
+      let nombre = texto, cantidad = "", tienda = "";
+      const iTienda = nombre.lastIndexOf(" · ");
+      if (iTienda > -1) { tienda = nombre.slice(iTienda + 3).trim(); nombre = nombre.slice(0, iTienda); }
+      const iCant = nombre.indexOf(" – ");
+      if (iCant > -1) { cantidad = nombre.slice(iCant + 3).trim(); nombre = nombre.slice(0, iCant); }
+      return { nombre: nombre.trim(), cantidad, tienda };
+    }
+
+    function normaliza(s) {
+      return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    }
+
+    function resalta(texto, q) {
+      const span = document.createElement("span");
+      if (!q) { span.textContent = texto; return span; }
+      const i = normaliza(texto).indexOf(normaliza(q));
+      if (i < 0) { span.textContent = texto; return span; }
+      span.append(texto.slice(0, i));
+      const m = document.createElement("mark");
+      m.textContent = texto.slice(i, i + q.length);
+      span.append(m, texto.slice(i + q.length));
+      return span;
+    }
+
     function renderTabs() {
       tabsEl.innerHTML = "";
       Object.keys(listas).forEach(clave => {
+        const info = LISTAS[clave] || { nombre: clave, icono: "" };
         const btn = document.createElement("button");
         btn.className = "tab";
         btn.setAttribute("role", "tab");
         btn.setAttribute("aria-selected", clave === activa);
-        btn.textContent = NOMBRES[clave] || clave;
+        btn.innerHTML = info.icono;
+        const label = document.createElement("span");
+        label.textContent = info.nombre;
         const c = document.createElement("span");
         c.className = "count";
         c.textContent = listas[clave].length;
-        btn.appendChild(c);
+        btn.append(label, c);
         btn.addEventListener("click", () => seleccionar(clave));
         tabsEl.appendChild(btn);
       });
     }
 
+    function vacio(emoji, titulo, texto) {
+      const div = document.createElement("div");
+      div.className = "empty";
+      const e = document.createElement("span"); e.className = "emoji"; e.textContent = emoji;
+      const t = document.createElement("strong"); t.textContent = titulo;
+      const p = document.createElement("span"); p.textContent = texto;
+      div.append(e, t, p);
+      return div;
+    }
+
     function renderLista() {
-      const items = listas[activa] || [];
+      const items = (listas[activa] || []).map(textoItem);
+      const q = buscarEl.value.trim();
       contenidoEl.innerHTML = "";
+
       if (items.length === 0) {
-        const p = document.createElement("p");
-        p.className = "empty";
-        p.textContent = "Esta lista está vacía.";
-        contenidoEl.appendChild(p);
+        const v = (LISTAS[activa] && LISTAS[activa].vacia) || ["📭", "Lista vacía", "Aún no hay nada aquí."];
+        contenidoEl.appendChild(vacio(...v));
         return;
       }
+
+      const filtrados = q ? items.filter(t => normaliza(t).includes(normaliza(q))) : items;
+      if (filtrados.length === 0) {
+        contenidoEl.appendChild(vacio("🔍", "Sin resultados", "Nada coincide con «" + q + "»."));
+        return;
+      }
+
+      const resumen = document.createElement("div");
+      resumen.className = "resumen";
+      resumen.textContent = q
+        ? filtrados.length + " de " + items.length + " elementos"
+        : items.length + (items.length === 1 ? " elemento" : " elementos");
+      contenidoEl.appendChild(resumen);
+
       const ul = document.createElement("ul");
-      items.forEach(item => {
+      ul.className = activa;
+      filtrados.forEach((texto, i) => {
+        const p = partes(texto);
         const li = document.createElement("li");
-        li.textContent = textoItem(item);
+        li.style.animationDelay = Math.min(i * 25, 300) + "ms";
+
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        dot.textContent = (p.nombre.trim()[0] || "•").toUpperCase();
+
+        const body = document.createElement("div");
+        body.className = "item-body";
+        const nom = document.createElement("div");
+        nom.className = "item-nombre";
+        nom.appendChild(resalta(p.nombre, q));
+        body.appendChild(nom);
+
+        if (p.cantidad || p.tienda) {
+          const meta = document.createElement("div");
+          meta.className = "item-meta";
+          if (p.cantidad) { const c = document.createElement("span"); c.className = "chip"; c.textContent = p.cantidad; meta.appendChild(c); }
+          if (p.tienda) { const t = document.createElement("span"); t.className = "chip tienda"; t.textContent = p.tienda; meta.appendChild(t); }
+          body.appendChild(meta);
+        }
+
+        li.append(dot, body);
         ul.appendChild(li);
       });
       contenidoEl.appendChild(ul);
@@ -157,10 +436,21 @@
 
     function seleccionar(clave) {
       activa = clave;
-      location.hash = clave;
+      history.replaceState(null, "", "#" + clave);
       renderTabs();
       renderLista();
     }
+
+    buscarEl.addEventListener("input", () => {
+      searchBox.classList.toggle("has-text", buscarEl.value.length > 0);
+      renderLista();
+    });
+    document.getElementById("limpiar").addEventListener("click", () => {
+      buscarEl.value = "";
+      searchBox.classList.remove("has-text");
+      renderLista();
+      buscarEl.focus();
+    });
 
     fetch("listas.json", { cache: "no-store" })
       .then(r => {

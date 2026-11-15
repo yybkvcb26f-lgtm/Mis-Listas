@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2563eb">
+  <title>Mis Listas</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1c1c1e;
+      --muted: #8e8e93;
+      --accent: #2563eb;
+      --border: #e5e5ea;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --card: #1c1c1e;
+        --text: #f2f2f7;
+        --muted: #8e8e93;
+        --accent: #60a5fa;
+        --border: #2c2c2e;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      padding: calc(env(safe-area-inset-top) + 12px) 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 { font-size: 1.6rem; margin: 0 0 12px; }
+    .tabs { display: flex; gap: 4px; }
+    .tab {
+      flex: 1;
+      appearance: none;
+      border: none;
+      background: none;
+      color: var(--muted);
+      font: inherit;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 12px 8px;
+      min-height: 48px;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+    }
+    .tab[aria-selected="true"] {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .count {
+      display: inline-block;
+      min-width: 1.5em;
+      margin-left: 4px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: var(--border);
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+    main { padding: 16px 16px calc(env(safe-area-inset-bottom) + 16px); }
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    li {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 1.05rem;
+      word-wrap: break-word;
+    }
+    li:last-child { border-bottom: none; }
+    .empty, .error {
+      text-align: center;
+      color: var(--muted);
+      padding: 48px 16px;
+    }
+    .error { color: #ff3b30; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mis Listas</h1>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+  </header>
+  <main id="contenido" role="tabpanel"></main>
+
+  <script>
+    const NOMBRES = {
+      "compra": "Compra",
+      "tareas-ideas": "Tareas e ideas"
+    };
+
+    const tabsEl = document.getElementById("tabs");
+    const contenidoEl = document.getElementById("contenido");
+    let listas = {};
+    let activa = null;
+
+    function textoItem(item) {
+      if (typeof item === "string") return item;
+      if (item && typeof item === "object") return item.texto || item.nombre || item.titulo || JSON.stringify(item);
+      return String(item);
+    }
+
+    function renderTabs() {
+      tabsEl.innerHTML = "";
+      Object.keys(listas).forEach(clave => {
+        const btn = document.createElement("button");
+        btn.className = "tab";
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", clave === activa);
+        btn.textContent = NOMBRES[clave] || clave;
+        const c = document.createElement("span");
+        c.className = "count";
+        c.textContent = listas[clave].length;
+        btn.appendChild(c);
+        btn.addEventListener("click", () => seleccionar(clave));
+        tabsEl.appendChild(btn);
+      });
+    }
+
+    function renderLista() {
+      const items = listas[activa] || [];
+      contenidoEl.innerHTML = "";
+      if (items.length === 0) {
+        const p = document.createElement("p");
+        p.className = "empty";
+        p.textContent = "Esta lista está vacía.";
+        contenidoEl.appendChild(p);
+        return;
+      }
+      const ul = document.createElement("ul");
+      items.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = textoItem(item);
+        ul.appendChild(li);
+      });
+      contenidoEl.appendChild(ul);
+    }
+
+    function seleccionar(clave) {
+      activa = clave;
+      location.hash = clave;
+      renderTabs();
+      renderLista();
+    }
+
+    fetch("listas.json", { cache: "no-store" })
+      .then(r => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(datos => {
+        listas = datos;
+        const claves = Object.keys(listas);
+        const desdeHash = decodeURIComponent(location.hash.slice(1));
+        seleccionar(claves.includes(desdeHash) ? desdeHash : claves[0]);
+      })
+      .catch(err => {
+        contenidoEl.innerHTML = "";
+        const p = document.createElement("p");
+        p.className = "error";
+        p.textContent = "No se pudo cargar listas.json (" + err.message + ").";
+        contenidoEl.appendChild(p);
+      });
+  </script>
+</body>
+</html>

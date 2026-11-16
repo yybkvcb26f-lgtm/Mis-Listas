@@ -221,17 +221,90 @@
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: none; }
     }
-    .dot {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
+    li {
+      transition: opacity .25s, transform .25s, background .2s;
+    }
+    li.saliendo {
+      animation: sale .32s ease forwards;
+    }
+    @keyframes sale {
+      to { opacity: 0; transform: translateX(24px) scale(.97); }
+    }
+    .check {
+      appearance: none;
       flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      margin: -4px -4px -4px -6px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
       display: grid;
       place-items: center;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 800;
-      font-size: 0.95rem;
+      color: #fff;
+    }
+    .check .circulo {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid color-mix(in srgb, var(--muted) 55%, transparent);
+      display: grid;
+      place-items: center;
+      transition: background .2s, border-color .2s, transform .15s;
+    }
+    .check:active .circulo { transform: scale(.88); }
+    .check svg { width: 16px; height: 16px; opacity: 0; transition: opacity .15s; }
+    .check:focus-visible .circulo { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent); }
+    li.hecho .check .circulo,
+    li.saliendo .check .circulo {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-color: transparent;
+    }
+    li.hecho .check svg,
+    li.saliendo .check svg { opacity: 1; }
+    li.hecho { background: color-mix(in srgb, var(--card) 60%, transparent); box-shadow: none; }
+    li.hecho .item-nombre {
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      text-decoration-color: var(--muted);
+      color: var(--muted);
+    }
+    li.hecho .chip { opacity: .6; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(env(safe-area-inset-bottom) + 20px);
+      transform: translate(-50%, 120%);
+      opacity: 0;
+      width: calc(100% - 32px);
+      max-width: 480px;
+      background: var(--text);
+      color: var(--bg);
+      border-radius: 16px;
+      padding: 10px 10px 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+      transition: transform .25s ease, opacity .25s ease;
+      z-index: 20;
+      pointer-events: none;
+    }
+    .toast.visible { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+    .toast span { flex: 1; min-width: 0; font-size: .95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .toast button {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--accent-2);
+      font: inherit;
+      font-weight: 700;
+      padding: 10px 12px;
+      min-height: 44px;
+      border-radius: 10px;
+      cursor: pointer;
     }
     .item-body { min-width: 0; flex: 1; }
     .item-nombre {
@@ -291,20 +364,110 @@
     </header>
     <main id="contenido" role="tabpanel"></main>
   </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span id="toastTexto"></span>
+    <button id="deshacer" type="button">Deshacer</button>
+  </div>
 
   <script>
     const LISTAS = {
       "compra": {
         nombre: "Compra",
         icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3h2.6l2.4 12.2a1.5 1.5 0 0 0 1.5 1.2h8.9a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>',
-        vacia: ["🛒", "¡Despensa a tope!", "No hay nada que comprar. Dime «apúntame…» cuando falte algo."]
+        vacia: ["🛒", "¡Despensa a tope!", "No hay nada que comprar. Dime «apúntame…» cuando falte algo."],
+        // Al marcar: se tacha y se queda en la lista
+        alMarcar: "tachar",
+        textoHecho: "comprado",
+        textoHechos: "comprados"
       },
       "tareas-ideas": {
         nombre: "Tareas e ideas",
         icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3Z"/></svg>',
-        vacia: ["💡", "Mente despejada", "No hay tareas ni ideas pendientes. ¡Buen momento para pensar en grande!"]
+        vacia: ["💡", "Mente despejada", "No hay tareas ni ideas pendientes. ¡Buen momento para pensar en grande!"],
+        // Al marcar: desaparece de la lista
+        alMarcar: "borrar"
       }
     };
+
+    // Los marcados se guardan en este navegador (la página no puede escribir en listas.json).
+    // Formato: { "compra": ["texto", …], "tareas-ideas": ["texto", …] }
+    const CLAVE_GUARDADO = "mis-listas:marcados";
+    let marcados = {};
+
+    function cargarMarcados() {
+      try {
+        const guardado = JSON.parse(localStorage.getItem(CLAVE_GUARDADO) || "{}");
+        marcados = guardado && typeof guardado === "object" ? guardado : {};
+      } catch (e) {
+        marcados = {};
+      }
+    }
+
+    function guardarMarcados() {
+      try { localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(marcados)); } catch (e) { /* sin almacenamiento: solo dura esta visita */ }
+    }
+
+    // Olvida marcas de elementos que ya no están en listas.json,
+    // para que si se vuelve a apuntar algo igual aparezca sin marcar.
+    function limpiarMarcados() {
+      const limpio = {};
+      Object.keys(listas).forEach(clave => {
+        const textos = new Set(listas[clave].map(textoItem));
+        const m = (marcados[clave] || []).filter(t => textos.has(t));
+        if (m.length) limpio[clave] = m;
+      });
+      marcados = limpio;
+      guardarMarcados();
+    }
+
+    function estaMarcado(clave, texto) {
+      return (marcados[clave] || []).includes(texto);
+    }
+
+    function marcar(clave, texto, valor) {
+      const set = new Set(marcados[clave] || []);
+      if (valor) set.add(texto); else set.delete(texto);
+      marcados[clave] = [...set];
+      guardarMarcados();
+    }
+
+    function modo(clave) {
+      return (LISTAS[clave] && LISTAS[clave].alMarcar) || "tachar";
+    }
+
+    // Elementos que se ven en la lista (los borrados al completarse no cuentan)
+    function visibles(clave) {
+      const items = (listas[clave] || []).map(textoItem);
+      return modo(clave) === "borrar" ? items.filter(t => !estaMarcado(clave, t)) : items;
+    }
+
+    function pendientes(clave) {
+      return visibles(clave).filter(t => !estaMarcado(clave, t)).length;
+    }
+
+    const toastEl = document.getElementById("toast");
+    const toastTextoEl = document.getElementById("toastTexto");
+    let toastTimer = null;
+    let deshacerAccion = null;
+
+    function mostrarToast(texto, accion) {
+      toastTextoEl.textContent = texto;
+      deshacerAccion = accion;
+      toastEl.classList.add("visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(ocultarToast, 5000);
+    }
+
+    function ocultarToast() {
+      toastEl.classList.remove("visible");
+      deshacerAccion = null;
+    }
+
+    document.getElementById("deshacer").addEventListener("click", () => {
+      const accion = deshacerAccion;
+      ocultarToast();
+      if (accion) accion();
+    });
 
     const tabsEl = document.getElementById("tabs");
     const contenidoEl = document.getElementById("contenido");
@@ -361,7 +524,7 @@
         label.textContent = info.nombre;
         const c = document.createElement("span");
         c.className = "count";
-        c.textContent = listas[clave].length;
+        c.textContent = pendientes(clave);
         btn.append(label, c);
         btn.addEventListener("click", () => seleccionar(clave));
         tabsEl.appendChild(btn);
@@ -379,7 +542,7 @@
     }
 
     function renderLista() {
-      const items = (listas[activa] || []).map(textoItem);
+      const items = visibles(activa);
       const q = buscarEl.value.trim();
       contenidoEl.innerHTML = "";
 
@@ -397,21 +560,27 @@
 
       const resumen = document.createElement("div");
       resumen.className = "resumen";
-      resumen.textContent = q
-        ? filtrados.length + " de " + items.length + " elementos"
-        : items.length + (items.length === 1 ? " elemento" : " elementos");
+      resumen.textContent = textoResumen();
       contenidoEl.appendChild(resumen);
 
       const ul = document.createElement("ul");
       ul.className = activa;
+      const clave = activa;
       filtrados.forEach((texto, i) => {
         const p = partes(texto);
         const li = document.createElement("li");
         li.style.animationDelay = Math.min(i * 25, 300) + "ms";
+        const hecho = estaMarcado(clave, texto);
+        li.classList.toggle("hecho", hecho);
 
-        const dot = document.createElement("div");
-        dot.className = "dot";
-        dot.textContent = (p.nombre.trim()[0] || "•").toUpperCase();
+        const check = document.createElement("button");
+        check.type = "button";
+        check.className = "check";
+        check.setAttribute("aria-pressed", hecho);
+        check.setAttribute("aria-label",
+          (hecho ? "Desmarcar " : (clave === "compra" ? "Marcar como comprado: " : "Marcar como hecho: ")) + p.nombre);
+        check.innerHTML = '<span class="circulo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>';
+        check.addEventListener("click", () => alPulsar(clave, texto, li));
 
         const body = document.createElement("div");
         body.className = "item-body";
@@ -428,10 +597,53 @@
           body.appendChild(meta);
         }
 
-        li.append(dot, body);
+        li.append(check, body);
         ul.appendChild(li);
       });
       contenidoEl.appendChild(ul);
+    }
+
+    function textoResumen() {
+      const items = visibles(activa);
+      const q = buscarEl.value.trim();
+      const info = LISTAS[activa] || {};
+      const n = q ? items.filter(t => normaliza(t).includes(normaliza(q))).length : items.length;
+      let txt = q
+        ? n + " de " + items.length + " elementos"
+        : items.length + (items.length === 1 ? " elemento" : " elementos");
+      const hechos = items.filter(t => estaMarcado(activa, t)).length;
+      if (hechos && info.textoHecho) {
+        txt += " · " + hechos + " " + (hechos === 1 ? info.textoHecho : info.textoHechos);
+      }
+      return txt;
+    }
+
+    function alPulsar(clave, texto, li) {
+      if (modo(clave) === "borrar") {
+        // Ideas/tareas: se marca como hecha y desaparece (con opción de deshacer)
+        if (li.classList.contains("saliendo")) return;
+        marcar(clave, texto, true);
+        li.classList.add("saliendo");
+        li.style.animationDelay = "0ms";
+        setTimeout(() => { renderTabs(); renderLista(); }, 320);
+        mostrarToast("Hecho: " + partes(texto).nombre, () => {
+          marcar(clave, texto, false);
+          renderTabs();
+          renderLista();
+        });
+      } else {
+        // Compra: se tacha o se destacha (sin redibujar la lista, para que no parpadee)
+        const hecho = !estaMarcado(clave, texto);
+        marcar(clave, texto, hecho);
+        li.classList.toggle("hecho", hecho);
+        li.style.animation = "none";
+        const check = li.querySelector(".check");
+        check.setAttribute("aria-pressed", hecho);
+        check.setAttribute("aria-label", (hecho ? "Desmarcar " : "Marcar como comprado: ") + partes(texto).nombre);
+        renderTabs();
+        const resumen = contenidoEl.querySelector(".resumen");
+        if (resumen) resumen.textContent = textoResumen();
+      }
     }
 
     function seleccionar(clave) {
@@ -459,6 +671,8 @@
       })
       .then(datos => {
         listas = datos;
+        cargarMarcados();
+        limpiarMarcados();
         const claves = Object.keys(listas);
         const desdeHash = decodeURIComponent(location.hash.slice(1));
         seleccionar(claves.includes(desdeHash) ? desdeHash : claves[0]);

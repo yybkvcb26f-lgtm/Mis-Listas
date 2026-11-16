@@ -18,7 +18,10 @@
       "texto": "Prueba 2",
       "hecho": true
     },
-    "Prueba iPhone"
+    {
+      "texto": "Prueba iPhone",
+      "hecho": true
+    }
   ],
   "tareas-ideas": []
 }

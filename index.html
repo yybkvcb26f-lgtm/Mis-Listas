@@ -273,6 +273,93 @@
     .empty .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
     .empty strong { display: block; color: var(--text); font-size: 1.15rem; margin-bottom: 6px; }
     .error { color: #ff453a; }
+
+    /* --- Edición --- */
+    .title-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--muted);
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .icon-btn svg { width: 20px; height: 20px; }
+    .icon-btn.conectado { color: var(--accent); }
+    .estado {
+      margin: 8px 4px 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      min-height: 1em;
+    }
+    .estado.error { color: #ff453a; padding: 0; text-align: left; }
+
+    .anadir {
+      display: flex;
+      gap: 8px;
+      margin: 6px 0 14px;
+    }
+    .anadir input {
+      flex: 1;
+      min-width: 0;
+      font: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      outline: none;
+      box-shadow: var(--shadow);
+      -webkit-appearance: none;
+    }
+    .anadir input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+    .anadir button {
+      appearance: none;
+      border: none;
+      border-radius: 14px;
+      padding: 0 18px;
+      font: inherit;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      cursor: pointer;
+    }
+    .anadir button:disabled { opacity: .5; }
+
+    .grupo {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 18px 4px 10px;
+    }
+    li.editable { cursor: pointer; user-select: none; -webkit-user-select: none; }
+    li.hecho { opacity: .5; box-shadow: none; }
+    li.hecho .item-nombre { text-decoration: line-through; }
+    li.hecho .dot { background: var(--chip); color: var(--muted); }
+    .borrar {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 1.1rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .borrar:hover { background: var(--chip); }
   </style>
 </head>
 <body>
@@ -280,7 +367,12 @@
     <header>
       <div class="title-row">
         <h1>Mis Listas</h1>
-        <span class="fecha" id="fecha"></span>
+        <div class="title-actions">
+          <span class="fecha" id="fecha"></span>
+          <button class="icon-btn" id="ajustes" aria-label="Conectar con GitHub">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m10.85 12.15 8.65-8.65"/><path d="m18 5 2 2"/><path d="m15 8 2 2"/></svg>
+          </button>
+        </div>
       </div>
       <nav class="tabs" role="tablist" id="tabs"></nav>
       <div class="search" id="searchBox">
@@ -288,21 +380,33 @@
         <input id="buscar" type="search" placeholder="Buscar en la lista…" autocomplete="off" enterkeyhint="search">
         <button class="clear" id="limpiar" aria-label="Borrar búsqueda">✕</button>
       </div>
+      <div class="estado" id="estado"></div>
     </header>
     <main id="contenido" role="tabpanel"></main>
   </div>
 
   <script>
+    // --- Configuración del repositorio ---
+    const REPO = "yybkvcb26f-lgtm/Mis-Listas";
+    const RAMA = "main";
+    const API = "https://api.github.com/repos/" + REPO + "/contents/";
+    const CLAVE_TOKEN = "misListasToken";
+
+    // Orden de los supermercados en la lista de la compra
+    const ORDEN_SUPER = ["Lidl/Aldi", "Mercadona", "BM", "Carrefour"];
+
     const LISTAS = {
       "compra": {
         nombre: "Compra",
         icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3h2.6l2.4 12.2a1.5 1.5 0 0 0 1.5 1.2h8.9a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>',
-        vacia: ["🛒", "¡Despensa a tope!", "No hay nada que comprar. Dime «apúntame…» cuando falte algo."]
+        vacia: ["🛒", "¡Despensa a tope!", "No hay nada que comprar."],
+        placeholder: "Añadir a la compra…"
       },
       "tareas-ideas": {
         nombre: "Tareas e ideas",
         icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3Z"/></svg>',
-        vacia: ["💡", "Mente despejada", "No hay tareas ni ideas pendientes. ¡Buen momento para pensar en grande!"]
+        vacia: ["💡", "Mente despejada", "No hay tareas ni ideas pendientes."],
+        placeholder: "Añadir tarea o idea…"
       }
     };
 
@@ -310,16 +414,44 @@
     const contenidoEl = document.getElementById("contenido");
     const buscarEl = document.getElementById("buscar");
     const searchBox = document.getElementById("searchBox");
+    const estadoEl = document.getElementById("estado");
+    const ajustesEl = document.getElementById("ajustes");
     let listas = {};
+    let supermercados = {};
     let activa = null;
+    let ocupado = false;
 
     document.getElementById("fecha").textContent =
       new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "short" });
 
+    // --- Token (solo en este navegador) ---
+    function leerToken() {
+      try { return localStorage.getItem(CLAVE_TOKEN) || ""; } catch (e) { return ""; }
+    }
+    function guardarToken(t) {
+      try {
+        if (t) localStorage.setItem(CLAVE_TOKEN, t); else localStorage.removeItem(CLAVE_TOKEN);
+      } catch (e) {}
+    }
+    let token = leerToken();
+
+    function estado(texto, esError) {
+      estadoEl.textContent = texto || "";
+      estadoEl.classList.toggle("error", !!esError);
+    }
+    function estadoBase() {
+      ajustesEl.classList.toggle("conectado", !!token);
+      estado(token ? "" : "Solo lectura. Toca la llave para poder añadir y tachar.");
+    }
+
+    // --- Elementos: texto pendiente o { texto, hecho: true } tachado ---
     function textoItem(item) {
       if (typeof item === "string") return item;
       if (item && typeof item === "object") return item.texto || item.nombre || item.titulo || JSON.stringify(item);
       return String(item);
+    }
+    function esHecho(item) {
+      return !!(item && typeof item === "object" && item.hecho);
     }
 
     // "Tomate – 1 ud (100 g) · Lidl/Aldi" → nombre, cantidad, tienda
@@ -333,7 +465,38 @@
     }
 
     function normaliza(s) {
-      return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+      return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+    }
+    function singular(s) {
+      return s.split(/\s+/).map(w => /[rlnd]es$/.test(w) ? w.slice(0, -2) : w.replace(/s$/, "")).join(" ");
+    }
+
+    // Busca el súper de un producto en supermercados.json
+    function superDe(nombre) {
+      const n = singular(normaliza(nombre));
+      let mejor = null, largo = 0;
+      const exacto = Object.keys(supermercados).find(prod => singular(normaliza(prod)) === n);
+      if (exacto) {
+        const s = supermercados[exacto];
+        return Array.isArray(s) && s.length ? s[0] : null;
+      }
+      Object.keys(supermercados).forEach(prod => {
+        const p = singular(normaliza(prod));
+        if (!p) return;
+        if ((n === p || n.includes(p) || p.includes(n)) && p.length > largo) {
+          mejor = prod; largo = p.length;
+        }
+      });
+      const s = mejor ? supermercados[mejor] : null;
+      return Array.isArray(s) && s.length ? s[0] : null;
+    }
+
+    // Al añadir a la compra, completa el súper si se conoce
+    function completarCompra(texto) {
+      texto = texto.replace(/\s+-\s+/, " – ").trim();
+      if (texto.includes(" · ")) return texto;
+      const s = superDe(partes(texto).nombre);
+      return s ? texto + " · " + s : texto;
     }
 
     function resalta(texto, q) {
@@ -346,6 +509,129 @@
       m.textContent = texto.slice(i, i + q.length);
       span.append(m, texto.slice(i + q.length));
       return span;
+    }
+
+    // --- GitHub: leer y escribir listas.json ---
+    function decodificar(b64) {
+      const bin = atob(b64.replace(/\n/g, ""));
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder().decode(bytes);
+    }
+    function codificar(texto) {
+      const bytes = new TextEncoder().encode(texto);
+      let bin = "";
+      for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+      return btoa(bin);
+    }
+    async function leerApi(ruta) {
+      const r = await fetch(API + ruta + "?ref=" + RAMA + "&t=" + Date.now(), {
+        headers: { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json" },
+        cache: "no-store"
+      });
+      if (r.status === 401 || r.status === 403) throw new Error("token");
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const j = await r.json();
+      return { datos: JSON.parse(decodificar(j.content)), sha: j.sha };
+    }
+    async function escribirApi(ruta, datos, sha, mensaje) {
+      const r = await fetch(API + ruta, {
+        method: "PUT",
+        headers: { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({
+          message: mensaje,
+          content: codificar(JSON.stringify(datos, null, 2) + "\n"),
+          sha: sha,
+          branch: RAMA
+        })
+      });
+      if (r.status === 409 || r.status === 422) throw new Error("conflicto");
+      if (r.status === 401 || r.status === 403) throw new Error("token");
+      if (!r.ok) throw new Error("HTTP " + r.status);
+    }
+
+    // Aplica un cambio sobre la versión más reciente del repo y la guarda
+    async function cambiar(fn, mensaje) {
+      if (!token) { pedirToken(); return; }
+      if (ocupado) return;
+      ocupado = true;
+      // Vista previa inmediata
+      const copia = JSON.parse(JSON.stringify(listas));
+      fn(copia);
+      listas = copia;
+      render();
+      estado("Guardando…");
+      try {
+        for (let intento = 0; intento < 3; intento++) {
+          const { datos, sha } = await leerApi("listas.json");
+          fn(datos);
+          try {
+            await escribirApi("listas.json", datos, sha, mensaje);
+            listas = datos;
+            estado("Guardado ✓");
+            setTimeout(() => { if (estadoEl.textContent === "Guardado ✓") estadoBase(); }, 1500);
+            return;
+          } catch (e) {
+            if (e.message !== "conflicto") throw e;
+          }
+        }
+        throw new Error("conflicto");
+      } catch (e) {
+        estado(e.message === "token"
+          ? "El token no vale o ha caducado. Toca la llave para cambiarlo."
+          : "No se pudo guardar (" + e.message + "). Vuelve a intentarlo.", true);
+        await cargar();
+      } finally {
+        ocupado = false;
+        render();
+      }
+    }
+
+    function buscarIndice(lista, texto) {
+      return lista.findIndex(it => textoItem(it) === texto);
+    }
+    function tachar(clave, texto) {
+      cambiar(d => {
+        const l = d[clave] || [];
+        const i = buscarIndice(l, texto);
+        if (i < 0) return;
+        l[i] = esHecho(l[i]) ? textoItem(l[i]) : { texto: textoItem(l[i]), hecho: true };
+      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": tachar/destachar " + partes(texto).nombre);
+    }
+    function borrar(clave, texto) {
+      cambiar(d => {
+        const l = d[clave] || [];
+        const i = buscarIndice(l, texto);
+        if (i >= 0) l.splice(i, 1);
+      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": quitar " + partes(texto).nombre);
+    }
+    function anadir(clave, texto) {
+      if (clave === "compra") texto = completarCompra(texto);
+      cambiar(d => {
+        if (!d[clave]) d[clave] = [];
+        const ya = d[clave].some(it => !esHecho(it) && normaliza(textoItem(it)) === normaliza(texto));
+        if (!ya) d[clave].push(texto);
+      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": añadir " + partes(texto).nombre);
+    }
+
+    function pedirToken() {
+      const t = prompt(
+        token
+          ? "Token de GitHub guardado en este navegador. Pega uno nuevo o deja vacío para desconectar:"
+          : "Pega tu token de GitHub (solo con permiso de contenido en Mis-Listas). Se guarda solo en este navegador:",
+        ""
+      );
+      if (t === null) return;
+      token = t.trim();
+      guardarToken(token);
+      estadoBase();
+      cargar();
+    }
+    ajustesEl.addEventListener("click", pedirToken);
+
+    // --- Pintar ---
+    function pendientes(clave) {
+      return (listas[clave] || []).filter(it => !esHecho(it)).length;
     }
 
     function renderTabs() {
@@ -361,7 +647,7 @@
         label.textContent = info.nombre;
         const c = document.createElement("span");
         c.className = "count";
-        c.textContent = listas[clave].length;
+        c.textContent = pendientes(clave);
         btn.append(label, c);
         btn.addEventListener("click", () => seleccionar(clave));
         tabsEl.appendChild(btn);
@@ -378,67 +664,144 @@
       return div;
     }
 
+    function formAnadir() {
+      const form = document.createElement("form");
+      form.className = "anadir";
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = (LISTAS[activa] && LISTAS[activa].placeholder) || "Añadir…";
+      input.setAttribute("enterkeyhint", "done");
+      input.autocomplete = "off";
+      const btn = document.createElement("button");
+      btn.type = "submit";
+      btn.textContent = "Añadir";
+      form.append(input, btn);
+      form.addEventListener("submit", ev => {
+        ev.preventDefault();
+        const v = input.value.trim();
+        if (!v) return;
+        anadir(activa, v);
+        input.value = "";
+      });
+      return form;
+    }
+
+    function itemLi(item, i, q) {
+      const texto = textoItem(item);
+      const hecho = esHecho(item);
+      const p = partes(texto);
+      const li = document.createElement("li");
+      li.style.animationDelay = Math.min(i * 25, 300) + "ms";
+      if (hecho) li.classList.add("hecho");
+      if (token) {
+        li.classList.add("editable");
+        li.title = hecho ? "Toca para desmarcar" : "Toca para tachar";
+        li.addEventListener("click", () => tachar(activa, texto));
+      }
+
+      const dot = document.createElement("div");
+      dot.className = "dot";
+      dot.textContent = hecho ? "✓" : (p.nombre.trim()[0] || "•").toUpperCase();
+
+      const body = document.createElement("div");
+      body.className = "item-body";
+      const nom = document.createElement("div");
+      nom.className = "item-nombre";
+      nom.appendChild(resalta(p.nombre, q));
+      body.appendChild(nom);
+
+      if (p.cantidad || (p.tienda && activa !== "compra")) {
+        const meta = document.createElement("div");
+        meta.className = "item-meta";
+        if (p.cantidad) { const c = document.createElement("span"); c.className = "chip"; c.textContent = p.cantidad; meta.appendChild(c); }
+        if (p.tienda && activa !== "compra") { const t = document.createElement("span"); t.className = "chip tienda"; t.textContent = p.tienda; meta.appendChild(t); }
+        body.appendChild(meta);
+      }
+
+      li.append(dot, body);
+      if (token) {
+        const x = document.createElement("button");
+        x.className = "borrar";
+        x.setAttribute("aria-label", "Quitar");
+        x.textContent = "✕";
+        x.addEventListener("click", ev => { ev.stopPropagation(); borrar(activa, texto); });
+        li.appendChild(x);
+      }
+      return li;
+    }
+
+    function grupoDe(item) {
+      return partes(textoItem(item)).tienda || "Sin súper";
+    }
+    function ordenGrupo(g) {
+      const i = ORDEN_SUPER.indexOf(g);
+      if (i >= 0) return i;
+      return normaliza(g).startsWith("sin") ? 999 : 500;
+    }
+
     function renderLista() {
-      const items = (listas[activa] || []).map(textoItem);
+      const todos = listas[activa] || [];
       const q = buscarEl.value.trim();
       contenidoEl.innerHTML = "";
+      if (token) contenidoEl.appendChild(formAnadir());
 
-      if (items.length === 0) {
+      if (todos.length === 0) {
         const v = (LISTAS[activa] && LISTAS[activa].vacia) || ["📭", "Lista vacía", "Aún no hay nada aquí."];
         contenidoEl.appendChild(vacio(...v));
         return;
       }
 
-      const filtrados = q ? items.filter(t => normaliza(t).includes(normaliza(q))) : items;
+      const filtrados = q ? todos.filter(it => normaliza(textoItem(it)).includes(normaliza(q))) : todos;
       if (filtrados.length === 0) {
         contenidoEl.appendChild(vacio("🔍", "Sin resultados", "Nada coincide con «" + q + "»."));
         return;
       }
 
+      const nPend = filtrados.filter(it => !esHecho(it)).length;
+      const nHechos = filtrados.length - nPend;
       const resumen = document.createElement("div");
       resumen.className = "resumen";
-      resumen.textContent = q
-        ? filtrados.length + " de " + items.length + " elementos"
-        : items.length + (items.length === 1 ? " elemento" : " elementos");
+      resumen.textContent = nPend + (nPend === 1 ? " pendiente" : " pendientes") +
+        (nHechos ? " · " + nHechos + (nHechos === 1 ? " tachado" : " tachados") : "");
       contenidoEl.appendChild(resumen);
 
-      const ul = document.createElement("ul");
-      ul.className = activa;
-      filtrados.forEach((texto, i) => {
-        const p = partes(texto);
-        const li = document.createElement("li");
-        li.style.animationDelay = Math.min(i * 25, 300) + "ms";
+      // Pendientes primero, tachados al final de cada grupo
+      const ordenar = arr => arr.slice().sort((a, b) => esHecho(a) - esHecho(b));
+      let i = 0;
 
-        const dot = document.createElement("div");
-        dot.className = "dot";
-        dot.textContent = (p.nombre.trim()[0] || "•").toUpperCase();
+      if (activa === "compra") {
+        const grupos = {};
+        filtrados.forEach(it => { (grupos[grupoDe(it)] = grupos[grupoDe(it)] || []).push(it); });
+        Object.keys(grupos)
+          .sort((a, b) => ordenGrupo(a) - ordenGrupo(b) || a.localeCompare(b))
+          .forEach(g => {
+            const h = document.createElement("div");
+            h.className = "grupo";
+            const n = grupos[g].filter(it => !esHecho(it)).length;
+            h.textContent = g + " · " + n;
+            contenidoEl.appendChild(h);
+            const ul = document.createElement("ul");
+            ul.className = activa;
+            ordenar(grupos[g]).forEach(it => ul.appendChild(itemLi(it, i++, q)));
+            contenidoEl.appendChild(ul);
+          });
+      } else {
+        const ul = document.createElement("ul");
+        ul.className = activa;
+        ordenar(filtrados).forEach(it => ul.appendChild(itemLi(it, i++, q)));
+        contenidoEl.appendChild(ul);
+      }
+    }
 
-        const body = document.createElement("div");
-        body.className = "item-body";
-        const nom = document.createElement("div");
-        nom.className = "item-nombre";
-        nom.appendChild(resalta(p.nombre, q));
-        body.appendChild(nom);
-
-        if (p.cantidad || p.tienda) {
-          const meta = document.createElement("div");
-          meta.className = "item-meta";
-          if (p.cantidad) { const c = document.createElement("span"); c.className = "chip"; c.textContent = p.cantidad; meta.appendChild(c); }
-          if (p.tienda) { const t = document.createElement("span"); t.className = "chip tienda"; t.textContent = p.tienda; meta.appendChild(t); }
-          body.appendChild(meta);
-        }
-
-        li.append(dot, body);
-        ul.appendChild(li);
-      });
-      contenidoEl.appendChild(ul);
+    function render() {
+      renderTabs();
+      renderLista();
     }
 
     function seleccionar(clave) {
       activa = clave;
       history.replaceState(null, "", "#" + clave);
-      renderTabs();
-      renderLista();
+      render();
     }
 
     buscarEl.addEventListener("input", () => {
@@ -452,24 +815,47 @@
       buscarEl.focus();
     });
 
-    fetch("listas.json", { cache: "no-store" })
-      .then(r => {
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        return r.json();
-      })
-      .then(datos => {
-        listas = datos;
+    // --- Carga: desde la API si hay token (siempre al día), si no desde la web ---
+    async function cargar() {
+      try {
+        if (token) {
+          try {
+            listas = (await leerApi("listas.json")).datos;
+          } catch (e) {
+            if (e.message === "token") estado("El token no vale o ha caducado. Toca la llave para cambiarlo.", true);
+            const r = await fetch("listas.json", { cache: "no-store" });
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            listas = await r.json();
+          }
+        } else {
+          const r = await fetch("listas.json", { cache: "no-store" });
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          listas = await r.json();
+        }
+        try {
+          const s = await fetch("supermercados.json", { cache: "no-store" });
+          if (s.ok) supermercados = await s.json();
+        } catch (e) {}
         const claves = Object.keys(listas);
         const desdeHash = decodeURIComponent(location.hash.slice(1));
-        seleccionar(claves.includes(desdeHash) ? desdeHash : claves[0]);
-      })
-      .catch(err => {
+        if (!activa || !claves.includes(activa)) activa = claves.includes(desdeHash) ? desdeHash : claves[0];
+        seleccionar(activa);
+      } catch (err) {
         contenidoEl.innerHTML = "";
         const p = document.createElement("p");
         p.className = "error";
         p.textContent = "No se pudo cargar listas.json (" + err.message + ").";
         contenidoEl.appendChild(p);
-      });
+      }
+    }
+
+    // Al volver a la app, recarga por si cambió desde otro dispositivo
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && !ocupado) cargar();
+    });
+
+    estadoBase();
+    cargar();
   </script>
 </body>
 </html>

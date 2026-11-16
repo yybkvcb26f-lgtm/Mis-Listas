@@ -13,7 +13,8 @@
     "Atún – 1 lata (80 g) · Mercadona",
     "Wraps integrales – 2 ud · Mercadona",
     "Tomates cherry – 200 g · BM",
-    "Salmón – 150 g · Sin súper"
+    "Salmón – 150 g · Sin súper",
+    "Prueba"
   ],
   "tareas-ideas": [
     "Plan lista de la compra única: 1) listas.json como única lista de la compra (nada de sincronizar dos copias); 2) yo añado y tacho desde Mis-Listas en cualquier dispositivo (falta el token de GitHub); 3) cada sábado, con el menú nuevo, Claude escribe la lista directamente en listas.json; 4) el artefacto del menú solo tiene el menú y enlaza a Mis-Listas o lee la lista de ahí (comprobar si puede); 5) base de datos de productos con su súper en un archivo del repo: Claude la revisa en cada actualización y añade lo nuevo; 6) decidir la regla del sábado: ¿se borra lo tachado? ¿lo añadido a mano sin comprar pasa a la semana siguiente?; 7) opcional: renovación del sábado automática con tarea programada; 8) pasar a Claude el enlace del artefacto del menú"

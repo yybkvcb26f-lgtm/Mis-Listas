@@ -221,18 +221,6 @@
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: none; }
     }
-    .dot {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 800;
-      font-size: 0.95rem;
-    }
     .item-body { min-width: 0; flex: 1; }
     .item-nombre {
       font-size: 1.05rem;
@@ -343,10 +331,28 @@
       letter-spacing: 0.06em;
       margin: 18px 4px 10px;
     }
-    li.editable { cursor: pointer; user-select: none; -webkit-user-select: none; }
+    .check {
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: transparent;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      cursor: pointer;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      transition: background .15s, border-color .15s, transform .1s;
+    }
+    .check:active { transform: scale(.9); }
+    .check:disabled { cursor: default; opacity: .4; }
     li.hecho { opacity: .5; box-shadow: none; }
     li.hecho .item-nombre { text-decoration: line-through; }
-    li.hecho .dot { background: var(--chip); color: var(--muted); }
+    li.hecho .check { background: var(--accent); }
     .borrar {
       appearance: none;
       border: none;
@@ -693,15 +699,24 @@
       const li = document.createElement("li");
       li.style.animationDelay = Math.min(i * 25, 300) + "ms";
       if (hecho) li.classList.add("hecho");
-      if (token) {
-        li.classList.add("editable");
-        li.title = hecho ? "Toca para desmarcar" : "Toca para tachar";
-        li.addEventListener("click", () => tachar(activa, texto));
-      }
 
-      const dot = document.createElement("div");
-      dot.className = "dot";
-      dot.textContent = hecho ? "✓" : (p.nombre.trim()[0] || "•").toUpperCase();
+      const check = document.createElement("button");
+      check.className = "check";
+      check.setAttribute("role", "checkbox");
+      check.setAttribute("aria-checked", hecho ? "true" : "false");
+      check.setAttribute("aria-label", (hecho ? "Desmarcar " : "Tachar ") + p.nombre);
+      check.textContent = hecho ? "✓" : "";
+      if (token) {
+        check.addEventListener("click", () => {
+          const ahora = !li.classList.contains("hecho");
+          li.classList.toggle("hecho", ahora);
+          check.textContent = ahora ? "✓" : "";
+          check.setAttribute("aria-checked", ahora ? "true" : "false");
+          tachar(activa, texto);
+        });
+      } else {
+        check.disabled = true;
+      }
 
       const body = document.createElement("div");
       body.className = "item-body";
@@ -718,7 +733,7 @@
         body.appendChild(meta);
       }
 
-      li.append(dot, body);
+      li.append(check, body);
       if (token) {
         const x = document.createElement("button");
         x.className = "borrar";

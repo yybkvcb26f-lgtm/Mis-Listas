@@ -22,6 +22,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 - En cada actualización de la compra, revisa `supermercados.json`: añade los productos nuevos que aparezcan en la lista con su súper (si no lo sé, pon `[]` y pregúntame).
 - Después de cada cambio, haz siempre commit con un mensaje corto y push a `main`, sin preguntarme. Antes de editar, haz `git pull` (yo también escribo desde la app).
 - No toques nada más del repo salvo que te lo pida.
+- Los cambios en la app (`index.html`, diseño, funciones) van siempre en una rama aparte con pull request, sin que te lo pida. Los cambios de las listas sí van directos a `main`.
 
 ## Renovación del sábado (menú semanal)
 

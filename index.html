@@ -156,9 +156,11 @@
       white-space: nowrap;
       transition: background .2s, color .2s, box-shadow .2s;
     }
-    @media (max-width: 400px) {
-      .tab { font-size: 0.9rem; gap: 5px; padding: 10px 4px; }
+    @media (max-width: 520px) {
+      .tab { flex-wrap: wrap; align-content: center; font-size: 0.8rem; gap: 2px 6px; padding: 8px 4px; min-width: 0; }
       .tab svg { width: 18px; height: 18px; }
+      .tab > span:not(.count) { flex-basis: 100%; order: 3; text-align: center; overflow: hidden; text-overflow: ellipsis; }
+      .tab .count { min-width: 22px; height: 18px; padding: 0 6px; font-size: 0.72rem; }
     }
     .tab svg { width: 20px; height: 20px; flex-shrink: 0; }
     .tab[aria-selected="true"] {
@@ -331,6 +333,37 @@
       letter-spacing: 0.06em;
       margin: 18px 4px 10px;
     }
+    ul.menu { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    @media (min-width: 700px) { ul.menu { grid-template-columns: 1fr 1fr; } }
+    li.cena { flex-direction: column; align-items: stretch; gap: 8px; }
+    .cena-dia {
+      font-size: 0.78rem; font-weight: 800; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .cena-plato { display: flex; align-items: flex-start; gap: 10px; }
+    .cena-racion { margin-top: 4px; font-size: 0.88rem; color: var(--muted); line-height: 1.35; }
+    .cena-extras { border-top: 1px solid var(--border); padding-top: 8px; display: grid; gap: 4px; font-size: 0.9rem; }
+    .cena-etq { display: inline-block; min-width: 54px; font-size: 0.75rem; font-weight: 700; color: var(--muted); }
+    .menu-nota { margin: -4px 4px 12px; font-size: 0.85rem; color: var(--muted); }
+    .refrescar {
+      appearance: none; border: none; flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 12px;
+      display: grid; place-items: center; cursor: pointer;
+      color: var(--accent); background: var(--accent-soft);
+    }
+    .refrescar:active { transform: scale(.92); }
+    .refrescar.gira svg { animation: gira .6s linear infinite; }
+    @keyframes gira { to { transform: rotate(360deg); } }
+    .base {
+      background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+      padding: 14px 16px; box-shadow: var(--shadow);
+    }
+    .base-titulo { font-weight: 700; margin: 10px 0 4px; }
+    .base-titulo:first-child { margin-top: 0; }
+    ul.base-lista { margin: 0; padding-left: 20px; display: block; color: var(--text); }
+    ul.base-lista li {
+      all: unset; display: list-item; list-style: disc; font-size: 0.95rem; line-height: 1.5;
+    }
     .check {
       appearance: none;
       width: 28px;
@@ -458,6 +491,10 @@
         icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3Z"/></svg>',
         vacia: ["💡", "Mente despejada", "No hay tareas ni ideas pendientes."],
         placeholder: "Añadir tarea o idea…"
+      },
+      "menu": {
+        nombre: "Menú",
+        icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8a2 2 0 0 0 2 2v8"/><path d="M5 3v5a2 2 0 0 0 4 0V3"/><path d="M17 21V3c-2 1.5-3 4-3 7v4h3"/></svg>'
       }
     };
 
@@ -469,6 +506,7 @@
     const ajustesEl = document.getElementById("ajustes");
     let listas = {};
     let supermercados = {};
+    let menu = null; // menu.json: menú semanal + base de platos
     let activa = null;
     let ocupado = false;
     let editando = null; // texto del elemento que se está editando
@@ -603,23 +641,27 @@
     }
 
     // Aplica un cambio sobre la versión más reciente del repo y la guarda
-    async function cambiar(fn, mensaje) {
+    async function cambiar(fn, mensaje, ruta) {
+      ruta = ruta || "listas.json";
+      const esMenu = ruta === "menu.json";
+      const leerLocal = () => esMenu ? menu : listas;
+      const ponerLocal = d => { if (esMenu) menu = d; else listas = d; };
       if (!token) { pedirToken(); return; }
       if (ocupado) return;
       ocupado = true;
       // Vista previa inmediata
-      const copia = JSON.parse(JSON.stringify(listas));
+      const copia = JSON.parse(JSON.stringify(leerLocal()));
       fn(copia);
-      listas = copia;
+      ponerLocal(copia);
       render();
       estado("Guardando…");
       try {
         for (let intento = 0; intento < 3; intento++) {
-          const { datos, sha } = await leerApi("listas.json");
+          const { datos, sha } = await leerApi(ruta);
           fn(datos);
           try {
-            await escribirApi("listas.json", datos, sha, mensaje);
-            listas = datos;
+            await escribirApi(ruta, datos, sha, mensaje);
+            ponerLocal(datos);
             estado("Guardado ✓");
             setTimeout(() => { if (estadoEl.textContent === "Guardado ✓") estadoBase(); }, 1500);
             return;
@@ -696,9 +738,122 @@
       return (listas[clave] || []).filter(it => !esHecho(it)).length;
     }
 
+    function claves() {
+      return Object.keys(listas).concat(menu ? ["menu"] : []);
+    }
+
+    // --- Menú semanal ---
+    function platoBase(nombre) {
+      return ((menu && menu.base && menu.base.platos) || []).find(p => normaliza(p.nombre) === normaliza(nombre || ""));
+    }
+    // Otro plato de la base con valores nutricionales parecidos y que no esté ya en la semana
+    function platoParecido(dia) {
+      const actual = platoBase(menu.cenas[dia].plato);
+      const usados = menu.cenas.map(c => normaliza(c.plato));
+      const candidatos = menu.base.platos.filter(p => !usados.includes(normaliza(p.nombre)));
+      if (!candidatos.length) return null;
+      if (!actual) return candidatos[Math.floor(Math.random() * candidatos.length)];
+      const dist = p => Math.abs(p.kcal - actual.kcal) / 100 + Math.abs(p.proteina - actual.proteina) / 10;
+      candidatos.sort((a, b) => dist(a) - dist(b));
+      const top = candidatos.slice(0, 2);
+      return top[Math.floor(Math.random() * top.length)];
+    }
+    function cambiarPlato(dia) {
+      const nuevo = platoParecido(dia);
+      if (!nuevo) { estado("No quedan platos distintos en la base.", true); return; }
+      const dianombre = menu.cenas[dia].dia;
+      cambiar(d => { if (d.cenas && d.cenas[dia]) d.cenas[dia].plato = nuevo.nombre; },
+        "Menú: " + dianombre + " → " + nuevo.nombre, "menu.json");
+    }
+
+    function renderMenu() {
+      contenidoEl.innerHTML = "";
+      if (!menu || !menu.cenas) { contenidoEl.appendChild(vacio("🍽️", "Sin menú", "Aún no hay menú esta semana.")); return; }
+      const cab = document.createElement("div");
+      cab.className = "resumen";
+      cab.textContent = menu.semana || "";
+      contenidoEl.appendChild(cab);
+      if (menu.nota) {
+        const n = document.createElement("p");
+        n.className = "menu-nota";
+        n.textContent = menu.nota;
+        contenidoEl.appendChild(n);
+      }
+      const ul = document.createElement("ul");
+      ul.className = "menu";
+      menu.cenas.forEach((c, i) => {
+        const li = document.createElement("li");
+        li.className = "cena";
+        li.style.animationDelay = Math.min(i * 40, 300) + "ms";
+        const dia = document.createElement("div");
+        dia.className = "cena-dia";
+        dia.textContent = c.dia;
+        const fila = document.createElement("div");
+        fila.className = "cena-plato";
+        const info = document.createElement("div");
+        info.className = "item-body";
+        const nom = document.createElement("div");
+        nom.className = "item-nombre";
+        nom.textContent = c.plato;
+        info.appendChild(nom);
+        const b = platoBase(c.plato);
+        if (b) {
+          const r = document.createElement("div");
+          r.className = "cena-racion";
+          r.textContent = b.racion;
+          const meta = document.createElement("div");
+          meta.className = "item-meta";
+          [ "≈ " + b.kcal + " kcal", b.proteina + " g proteína" ].forEach(t => {
+            const ch = document.createElement("span"); ch.className = "chip"; ch.textContent = t; meta.appendChild(ch);
+          });
+          info.append(r, meta);
+        }
+        fila.appendChild(info);
+        if (token) {
+          const btn = document.createElement("button");
+          btn.className = "refrescar";
+          btn.setAttribute("aria-label", "Cambiar " + c.plato + " por otro parecido");
+          btn.title = "Cambiar por otro plato parecido";
+          btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>';
+          btn.addEventListener("click", () => { btn.classList.add("gira"); cambiarPlato(i); });
+          fila.appendChild(btn);
+        }
+        const extras = document.createElement("div");
+        extras.className = "cena-extras";
+        [["Snack", c.snack], ["Fruta", c.fruta], ["Postre", c.postre]].forEach(([k, v]) => {
+          if (!v) return;
+          const d = document.createElement("div");
+          const e = document.createElement("span"); e.className = "cena-etq"; e.textContent = k;
+          d.append(e, document.createTextNode(v));
+          extras.appendChild(d);
+        });
+        li.append(dia, fila, extras);
+        ul.appendChild(li);
+      });
+      contenidoEl.appendChild(ul);
+
+      // Base de platos (solo nombres)
+      const base = menu.base || {};
+      const h = document.createElement("div");
+      h.className = "grupo";
+      h.textContent = "Base de platos";
+      contenidoEl.appendChild(h);
+      const card = document.createElement("div");
+      card.className = "base";
+      [["Platos principales", (base.platos || []).map(p => p.nombre)], ["Snacks de verdura", base.snacks],
+       ["Fruta", base.frutas], ["Postres", base.postres]].forEach(([t, arr]) => {
+        if (!arr || !arr.length) return;
+        const st = document.createElement("div"); st.className = "base-titulo"; st.textContent = t;
+        const l = document.createElement("ul"); l.className = "base-lista";
+        arr.forEach(x => { const it = document.createElement("li"); it.textContent = x; l.appendChild(it); });
+        card.append(st, l);
+      });
+      contenidoEl.appendChild(card);
+    }
+
     function renderTabs() {
       tabsEl.innerHTML = "";
-      Object.keys(listas).forEach(clave => {
+      claves().forEach(clave => {
         const info = LISTAS[clave] || { nombre: clave, icono: "" };
         const btn = document.createElement("button");
         btn.className = "tab";
@@ -710,7 +865,8 @@
         const c = document.createElement("span");
         c.className = "count";
         c.textContent = pendientes(clave);
-        btn.append(label, c);
+        btn.append(label);
+        if (clave !== "menu") btn.append(c);
         btn.addEventListener("click", () => seleccionar(clave));
         tabsEl.appendChild(btn);
       });
@@ -954,7 +1110,8 @@
 
     function render() {
       renderTabs();
-      renderLista();
+      searchBox.style.display = activa === "menu" ? "none" : "";
+      if (activa === "menu") renderMenu(); else renderLista();
     }
 
     function seleccionar(clave) {
@@ -996,9 +1153,18 @@
           const s = await fetch("supermercados.json", { cache: "no-store" });
           if (s.ok) supermercados = await s.json();
         } catch (e) {}
-        const claves = Object.keys(listas);
+        try {
+          if (token) menu = (await leerApi("menu.json")).datos;
+          else throw new Error("sin token");
+        } catch (e) {
+          try {
+            const m = await fetch("menu.json", { cache: "no-store" });
+            if (m.ok) menu = await m.json();
+          } catch (e2) {}
+        }
+        const cs = claves();
         const desdeHash = decodeURIComponent(location.hash.slice(1));
-        if (!activa || !claves.includes(activa)) activa = claves.includes(desdeHash) ? desdeHash : claves[0];
+        if (!activa || !cs.includes(activa)) activa = cs.includes(desdeHash) ? desdeHash : cs[0];
         seleccionar(activa);
       } catch (err) {
         contenidoEl.innerHTML = "";

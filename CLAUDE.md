@@ -6,6 +6,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 - `listas.json`: las listas `"compra"` y `"tareas-ideas"`. Es la ÚNICA lista de la compra (no hay copias en otros sitios).
 - `supermercados.json`: base de productos con su súper o súpers, en orden de preferencia: `{"Producto": ["Súper 1", "Súper 2"]}`. Lista vacía = súper sin decidir.
+- `menu.json`: el menú semanal (pestaña «Menú»). `cenas`: lunes a jueves con `plato` (nombre de un plato de la base), `snack`, `fruta` y `postre` (con cantidades). `base`: la base de platos; cada plato tiene `nombre`, `racion` (cantidades por ración), `kcal` y `proteina` (estimados), y además listas de `snacks`, `frutas` y `postres` (solo nombres). Desde la app, el botón ↻ de cada día cambia el plato por otro de la base con valores nutricionales parecidos.
 - `index.html`: la app. Desde ella añado, tacho y quito elementos (con un token de GitHub guardado solo en mi navegador).
 
 ## Formato de los elementos
@@ -26,7 +27,9 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 ## Renovación del sábado (menú semanal)
 
-Cada sábado, con el menú nuevo del documento "Menú semanal de Manu", se reescribe `"compra"`:
+Cada sábado se renueva `menu.json`: 4 platos distintos de `base.platos` (sin repetir los de la semana anterior), snack, fruta y postre de la base con su cantidad, y `semana` con las fechas de lunes a jueves. Si te pido un plato nuevo, añádelo a `base.platos` con `racion`, `kcal` y `proteina`.
+
+Con ese menú se reescribe `"compra"` (las cantidades salen de `racion` y de snack/fruta/postre):
 
 1. Se borra todo lo tachado (`"hecho": true`).
 2. Lo pendiente que NO sea del menú anterior (añadido a mano) se mantiene.

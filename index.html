@@ -351,6 +351,51 @@
     .check:active { transform: scale(.9); }
     .check:disabled { cursor: default; opacity: .4; }
     li.hecho { opacity: .5; box-shadow: none; }
+    li.editable .item-body { cursor: pointer; }
+    li.editando { flex-direction: column; align-items: stretch; gap: 10px; }
+    .editor label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 2px 4px;
+    }
+    .editor input, .editor select {
+      width: 100%;
+      font: inherit;
+      color: var(--text);
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      box-sizing: border-box;
+    }
+    .editor input:focus, .editor select:focus { border-color: var(--accent); }
+    .editor select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23888' stroke-width='2'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+    .editor .campo { margin-bottom: 10px; }
+    .editor .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .editor .acciones { display: flex; gap: 10px; justify-content: flex-end; }
+    .editor .acciones button {
+      appearance: none;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .editor .guardar { color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+    .editor .cancelar { color: var(--muted); background: var(--chip); }
     li.hecho .item-nombre { text-decoration: line-through; }
     li.hecho .check { background: var(--accent); }
     .borrar {
@@ -426,6 +471,7 @@
     let supermercados = {};
     let activa = null;
     let ocupado = false;
+    let editando = null; // texto del elemento que se está editando
 
     document.getElementById("fecha").textContent =
       new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "short" });
@@ -611,6 +657,16 @@
         if (i >= 0) l.splice(i, 1);
       }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": quitar " + partes(texto).nombre);
     }
+    function editar(clave, viejo, nuevo) {
+      editando = null;
+      if (!nuevo || nuevo === viejo) { render(); return; }
+      cambiar(d => {
+        const l = d[clave] || [];
+        const i = buscarIndice(l, viejo);
+        if (i < 0) return;
+        l[i] = esHecho(l[i]) ? { texto: nuevo, hecho: true } : nuevo;
+      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": editar " + partes(nuevo).nombre);
+    }
     function anadir(clave, texto) {
       if (clave === "compra") texto = completarCompra(texto);
       cambiar(d => {
@@ -692,8 +748,91 @@
       return form;
     }
 
+    function campo(etiqueta, control) {
+      const div = document.createElement("div");
+      div.className = "campo";
+      const l = document.createElement("label");
+      l.textContent = etiqueta;
+      div.append(l, control);
+      return div;
+    }
+
+    function editorLi(item) {
+      const texto = textoItem(item);
+      const p = partes(texto);
+      const esCompra = activa === "compra";
+      const li = document.createElement("li");
+      li.className = "editando";
+      const form = document.createElement("form");
+      form.className = "editor";
+
+      const nombre = document.createElement("input");
+      nombre.type = "text";
+      nombre.value = esCompra ? p.nombre : texto;
+      nombre.setAttribute("enterkeyhint", "done");
+      form.appendChild(campo(esCompra ? "Producto" : "Texto", nombre));
+
+      let cantidad, tienda;
+      if (esCompra) {
+        cantidad = document.createElement("input");
+        cantidad.type = "text";
+        cantidad.value = p.cantidad;
+        cantidad.placeholder = "Opcional";
+        cantidad.setAttribute("enterkeyhint", "done");
+        tienda = document.createElement("select");
+        const opciones = ORDEN_SUPER.concat("Sin súper");
+        if (p.tienda && !opciones.includes(p.tienda)) opciones.push(p.tienda);
+        opciones.forEach(o => {
+          const op = document.createElement("option");
+          op.value = op.textContent = o;
+          tienda.appendChild(op);
+        });
+        tienda.value = p.tienda || "Sin súper";
+        // Si cambias el producto y no has tocado el súper, se propone el de supermercados.json
+        let tiendaTocada = false;
+        tienda.addEventListener("change", () => { tiendaTocada = true; });
+        nombre.addEventListener("input", () => {
+          if (!tiendaTocada) tienda.value = superDe(nombre.value) || p.tienda || "Sin súper";
+        });
+        const fila = document.createElement("div");
+        fila.className = "fila";
+        fila.append(campo("Cantidad", cantidad), campo("Súper", tienda));
+        form.appendChild(fila);
+      }
+
+      const acciones = document.createElement("div");
+      acciones.className = "acciones";
+      const cancelar = document.createElement("button");
+      cancelar.type = "button";
+      cancelar.className = "cancelar";
+      cancelar.textContent = "Cancelar";
+      cancelar.addEventListener("click", () => { editando = null; render(); });
+      const guardar = document.createElement("button");
+      guardar.type = "submit";
+      guardar.className = "guardar";
+      guardar.textContent = "Guardar";
+      acciones.append(cancelar, guardar);
+      form.appendChild(acciones);
+
+      form.addEventListener("submit", ev => {
+        ev.preventDefault();
+        const n = nombre.value.replace(/\s+/g, " ").trim();
+        if (!n) return;
+        let nuevo = n;
+        if (esCompra) {
+          const c = cantidad.value.trim();
+          nuevo = n + (c ? " – " + c : "") + " · " + tienda.value;
+        }
+        editar(activa, texto, nuevo);
+      });
+      li.appendChild(form);
+      setTimeout(() => nombre.focus(), 0);
+      return li;
+    }
+
     function itemLi(item, i, q) {
       const texto = textoItem(item);
+      if (token && editando === texto) return editorLi(item);
       const hecho = esHecho(item);
       const p = partes(texto);
       const li = document.createElement("li");
@@ -734,6 +873,11 @@
       }
 
       li.append(check, body);
+      if (token) {
+        li.classList.add("editable");
+        body.title = "Toca para editar";
+        body.addEventListener("click", () => { editando = texto; render(); });
+      }
       if (token) {
         const x = document.createElement("button");
         x.className = "borrar";
@@ -815,6 +959,7 @@
 
     function seleccionar(clave) {
       activa = clave;
+      editando = null;
       history.replaceState(null, "", "#" + clave);
       render();
     }
@@ -866,7 +1011,7 @@
 
     // Al volver a la app, recarga por si cambió desde otro dispositivo
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible" && !ocupado) cargar();
+      if (document.visibilityState === "visible" && !ocupado && !editando) cargar();
     });
 
     estadoBase();

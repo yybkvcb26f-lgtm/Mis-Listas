@@ -4,7 +4,7 @@
   "cenas": [
     {
       "dia": "Lunes",
-      "plato": "Pollo a la plancha con arroz",
+      "plato": "Merluza a la plancha con brócoli y quinoa",
       "snack": "Zanahorias 100 g",
       "fruta": "Manzana 1 ud",
       "postre": "Yogur griego 125 g con granola 30 g y arándanos 50 g"
@@ -33,16 +33,62 @@
   ],
   "base": {
     "platos": [
-      { "nombre": "Pollo a la plancha con arroz", "racion": "Pechuga de pollo a la plancha 200 g con arroz 80 g (en crudo)", "kcal": 510, "proteina": 50 },
-      { "nombre": "Pollo al horno con verduras asadas", "racion": "Pechuga de pollo al horno 200 g con verduras asadas 300 g", "kcal": 430, "proteina": 48 },
-      { "nombre": "Tortilla de atún y tomate", "racion": "Tortilla de 3 huevos con atún 1 lata (80 g) y tomate 100 g", "kcal": 320, "proteina": 40 },
-      { "nombre": "Salmón con verduras salteadas", "racion": "Salmón 150 g con verduras salteadas 200 g", "kcal": 370, "proteina": 33 },
-      { "nombre": "Merluza a la plancha con brócoli y quinoa", "racion": "Merluza 200 g con brócoli 200 g y quinoa 60 g (en crudo)", "kcal": 450, "proteina": 50 },
-      { "nombre": "Wrap integral de pavo con aguacate", "racion": "2 wraps integrales con pavo 100 g y aguacate ½ (70 g)", "kcal": 600, "proteina": 33 },
-      { "nombre": "Wrap integral de atún con aguacate", "racion": "2 wraps integrales con atún 1 lata (80 g) y aguacate ½ (70 g)", "kcal": 585, "proteina": 32 }
+      {
+        "nombre": "Pollo a la plancha con arroz",
+        "racion": "Pechuga de pollo a la plancha 200 g con arroz 80 g (en crudo)",
+        "kcal": 510,
+        "proteina": 50
+      },
+      {
+        "nombre": "Pollo al horno con verduras asadas",
+        "racion": "Pechuga de pollo al horno 200 g con verduras asadas 300 g",
+        "kcal": 430,
+        "proteina": 48
+      },
+      {
+        "nombre": "Tortilla de atún y tomate",
+        "racion": "Tortilla de 3 huevos con atún 1 lata (80 g) y tomate 100 g",
+        "kcal": 320,
+        "proteina": 40
+      },
+      {
+        "nombre": "Salmón con verduras salteadas",
+        "racion": "Salmón 150 g con verduras salteadas 200 g",
+        "kcal": 370,
+        "proteina": 33
+      },
+      {
+        "nombre": "Merluza a la plancha con brócoli y quinoa",
+        "racion": "Merluza 200 g con brócoli 200 g y quinoa 60 g (en crudo)",
+        "kcal": 450,
+        "proteina": 50
+      },
+      {
+        "nombre": "Wrap integral de pavo con aguacate",
+        "racion": "2 wraps integrales con pavo 100 g y aguacate ½ (70 g)",
+        "kcal": 600,
+        "proteina": 33
+      },
+      {
+        "nombre": "Wrap integral de atún con aguacate",
+        "racion": "2 wraps integrales con atún 1 lata (80 g) y aguacate ½ (70 g)",
+        "kcal": 585,
+        "proteina": 32
+      }
     ],
-    "snacks": ["Zanahorias crudas o en palitos", "Tomates cherry"],
-    "frutas": ["Manzana", "Mandarina", "Kiwi", "Plátano"],
-    "postres": ["Yogur griego con granola sin azúcar y arándanos", "Leche con cacao 100% puro y avena"]
+    "snacks": [
+      "Zanahorias crudas o en palitos",
+      "Tomates cherry"
+    ],
+    "frutas": [
+      "Manzana",
+      "Mandarina",
+      "Kiwi",
+      "Plátano"
+    ],
+    "postres": [
+      "Yogur griego con granola sin azúcar y arándanos",
+      "Leche con cacao 100% puro y avena"
+    ]
   }
 }

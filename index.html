@@ -646,8 +646,8 @@
       const esMenu = ruta === "menu.json";
       const leerLocal = () => esMenu ? menu : listas;
       const ponerLocal = d => { if (esMenu) menu = d; else listas = d; };
-      if (!token) { pedirToken(); return; }
-      if (ocupado) return;
+      if (!token) { pedirToken(); return false; }
+      if (ocupado) return false;
       ocupado = true;
       // Vista previa inmediata
       const copia = JSON.parse(JSON.stringify(leerLocal()));
@@ -664,7 +664,7 @@
             ponerLocal(datos);
             estado("Guardado ✓");
             setTimeout(() => { if (estadoEl.textContent === "Guardado ✓") estadoBase(); }, 1500);
-            return;
+            return true;
           } catch (e) {
             if (e.message !== "conflicto") throw e;
           }
@@ -675,6 +675,7 @@
           ? "El token no vale o ha caducado. Toca la llave para cambiarlo."
           : "No se pudo guardar (" + e.message + "). Vuelve a intentarlo.", true);
         await cargar();
+        return false;
       } finally {
         ocupado = false;
         render();
@@ -739,7 +740,9 @@
     }
 
     function claves() {
-      return Object.keys(listas).concat(menu ? ["menu"] : []);
+      const ks = Object.keys(listas);
+      const orden = ks.filter(k => k === "compra").concat(menu ? ["menu"] : [], ks.filter(k => k !== "compra"));
+      return orden;
     }
 
     // --- Menú semanal ---
@@ -758,12 +761,102 @@
       const top = candidatos.slice(0, 2);
       return top[Math.floor(Math.random() * top.length)];
     }
-    function cambiarPlato(dia) {
+    // --- Ajuste de la compra al cambiar un plato ---
+    const FRACCIONES = { "½": 0.5, "¼": 0.25, "¾": 0.75, "⅓": 1 / 3, "⅔": 2 / 3 };
+    function leerNumero(t) {
+      const m = String(t).trim().match(/^(\d+(?:[.,]\d+)?)?\s*([½¼¾⅓⅔])?/);
+      if (!m || (!m[1] && !m[2])) return null;
+      return (m[1] ? parseFloat(m[1].replace(",", ".")) : 0) + (m[2] ? FRACCIONES[m[2]] : 0);
+    }
+    function unidadNorm(u) {
+      u = normaliza(u || "");
+      if (/^(ud|uds|unidad|unidades|u)$/.test(u)) return "ud";
+      if (/^latas?$/.test(u)) return "lata";
+      if (u === "kg") return "kg";
+      if (u === "l" || u === "litro" || u === "litros") return "l";
+      return u;
+    }
+    // "400 g" → {n:400,u:"g"}; "1 ud (usas ½)" → {n:0.5,u:"ud"}; "1 lata (80 g)" → {n:1,u:"lata"}
+    function leerCantidad(c) {
+      if (!c) return null;
+      const m = c.match(/^\s*([\d.,]*\s*[½¼¾⅓⅔]?)\s*([a-zA-Záéíóú]+)/);
+      if (!m) return null;
+      let n = leerNumero(m[1]);
+      if (n === null) return null;
+      const usas = c.match(/\(usas\s+([^)]+)\)/i);
+      if (usas && leerNumero(usas[1]) !== null) n = leerNumero(usas[1]);
+      let u = unidadNorm(m[2]);
+      if (u === "kg") { n *= 1000; u = "g"; }
+      if (u === "l") { n *= 1000; u = "ml"; }
+      return { n, u };
+    }
+    function bonito(n) {
+      const ent = Math.floor(n + 1e-9), fr = n - ent;
+      const f = Object.keys(FRACCIONES).find(k => Math.abs(FRACCIONES[k] - fr) < 0.01);
+      if (fr < 0.01) return String(ent);
+      if (f) return (ent ? ent : "") + f;
+      return String(Math.round(n * 10) / 10).replace(".", ",");
+    }
+    function escribirCantidad(n, u) {
+      if (u === "ud") {
+        if (Math.abs(n - Math.round(n)) < 0.01) return Math.round(n) + " ud";
+        return Math.ceil(n) + " ud (usas " + bonito(n) + ")";
+      }
+      if (u === "lata") return bonito(n) + (n > 1 ? " latas" : " lata");
+      return bonito(n) + " " + u;
+    }
+    function mismoProducto(a, b) {
+      return singular(normaliza(a)) === singular(normaliza(b));
+    }
+    // Suma (o resta, si delta < 0) una cantidad a un producto pendiente de la compra
+    function ajustarProducto(lista, producto, delta, unidad, avisos) {
+      const u = unidadNorm(unidad);
+      const i = lista.findIndex(it => !esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, producto));
+      if (i < 0) {
+        if (delta > 0) {
+          const s = superDe(producto) || "Sin súper";
+          lista.push(producto + " – " + escribirCantidad(delta, u) + " · " + s);
+        }
+        return;
+      }
+      const p = partes(textoItem(lista[i]));
+      const actual = leerCantidad(p.cantidad);
+      if (!actual || actual.u !== u) { avisos.push(p.nombre); return; }
+      const total = actual.n + delta;
+      if (total <= 0.001) { lista.splice(i, 1); return; }
+      lista[i] = p.nombre + " – " + escribirCantidad(total, u) + " · " + (p.tienda || superDe(p.nombre) || "Sin súper");
+    }
+    function ajustarCompra(lista, viejo, nuevo, avisos) {
+      const cambios = {};
+      const meter = (plato, signo) => ((plato && plato.ingredientes) || []).forEach(g => {
+        const k = singular(normaliza(g.producto)) + "|" + unidadNorm(g.unidad);
+        if (!cambios[k]) cambios[k] = { producto: g.producto, unidad: g.unidad, delta: 0 };
+        cambios[k].delta += signo * g.cantidad;
+      });
+      meter(viejo, -1);
+      meter(nuevo, +1);
+      Object.values(cambios).forEach(c => {
+        if (Math.abs(c.delta) > 0.001) ajustarProducto(lista, c.producto, c.delta, c.unidad, avisos);
+      });
+    }
+
+    async function cambiarPlato(dia) {
       const nuevo = platoParecido(dia);
-      if (!nuevo) { estado("No quedan platos distintos en la base.", true); return; }
+      if (!nuevo) { estado("No quedan platos distintos en la base.", true); render(); return; }
+      const viejo = platoBase(menu.cenas[dia].plato);
       const dianombre = menu.cenas[dia].dia;
-      cambiar(d => { if (d.cenas && d.cenas[dia]) d.cenas[dia].plato = nuevo.nombre; },
+      const ok = await cambiar(d => { if (d.cenas && d.cenas[dia]) d.cenas[dia].plato = nuevo.nombre; },
         "Menú: " + dianombre + " → " + nuevo.nombre, "menu.json");
+      if (!ok) return;
+      let avisos = [];
+      const okCompra = await cambiar(d => {
+        avisos = [];
+        if (!d.compra) d.compra = [];
+        ajustarCompra(d.compra, viejo, nuevo, avisos);
+      }, "Compra: ajustar por " + nuevo.nombre + " (" + dianombre + ")");
+      if (okCompra) estado(avisos.length
+        ? "Menú y compra actualizados. Revisa a mano: " + avisos.join(", ") + "."
+        : "Menú y compra actualizados ✓");
     }
 
     function renderMenu() {

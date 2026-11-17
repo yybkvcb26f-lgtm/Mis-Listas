@@ -29,7 +29,10 @@
   ],
   "tareas-ideas": [
     "Trastero CC",
-    "Valorar ideas Claude TikTok",
+    {
+      "texto": "Valorar ideas Claude TikTok",
+      "hecho": true
+    },
     "Ajustar cantidades lista de la compra",
     "Ajustar gasto ballenoil a transporte 83,04€",
     "Modificar listas para poder editar items creados"

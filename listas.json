@@ -40,7 +40,10 @@
       "texto": "Wraps integrales – 2 ud · Mercadona",
       "hecho": true
     },
-    "Tomates cherry – 200 g · BM",
+    {
+      "texto": "Tomates cherry – 200 g · BM",
+      "hecho": true
+    },
     "Salmón – 150 g · Sin súper",
     {
       "texto": "Prueba 2",

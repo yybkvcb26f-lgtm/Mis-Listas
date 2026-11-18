@@ -1,6 +1,9 @@
 {
   "compra": [
-    "Pavo en lonchas – 100 g · Lidl/Aldi",
+    {
+      "texto": "Pavo en lonchas – 100 g · Lidl/Aldi",
+      "hecho": true
+    },
     "Aguacate – 1 ud (usas ½) · Lidl/Aldi",
     "Tomate – 1 ud (100 g) · Lidl/Aldi",
     "Manzanas – 1 ud · Lidl/Aldi",

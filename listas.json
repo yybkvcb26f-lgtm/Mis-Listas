@@ -16,7 +16,10 @@
       "texto": "Manzanas – 1 ud · Lidl/Aldi",
       "hecho": true
     },
-    "Mandarinas – 2 ud · Lidl/Aldi",
+    {
+      "texto": "Mandarinas – 2 ud · Lidl/Aldi",
+      "hecho": true
+    },
     "Kiwis – 2 ud · Lidl/Aldi",
     "Plátanos – 1 ud · Lidl/Aldi",
     "Arándanos – 100 g · Lidl/Aldi",

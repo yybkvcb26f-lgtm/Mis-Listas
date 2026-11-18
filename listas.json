@@ -24,7 +24,10 @@
       "texto": "Kiwis – 2 ud · Lidl/Aldi",
       "hecho": true
     },
-    "Plátanos – 1 ud · Lidl/Aldi",
+    {
+      "texto": "Plátanos – 1 ud · Lidl/Aldi",
+      "hecho": true
+    },
     "Arándanos – 100 g · Lidl/Aldi",
     "Atún – 1 lata (80 g) · Mercadona",
     "Wraps integrales – 2 ud · Mercadona",

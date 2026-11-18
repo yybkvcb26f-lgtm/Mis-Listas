@@ -44,7 +44,10 @@
       "texto": "Tomates cherry – 200 g · BM",
       "hecho": true
     },
-    "Salmón – 150 g · Sin súper",
+    {
+      "texto": "Salmón – 150 g · Sin súper",
+      "hecho": true
+    },
     {
       "texto": "Prueba 2",
       "hecho": true

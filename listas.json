@@ -73,7 +73,10 @@
       "texto": "Merluza – 200 g · Sin súper",
       "hecho": true
     },
-    "Brócoli – 200 g · Sin súper",
+    {
+      "texto": "Brócoli – 200 g · Sin súper",
+      "hecho": true
+    },
     "Quinoa – 60 g · Sin súper",
     {
       "texto": "Atún – 1 lata · Mercadona",

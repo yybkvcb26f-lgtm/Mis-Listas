@@ -82,7 +82,10 @@
       "hecho": true
     },
     "Atún – 1 lata · Mercadona",
-    "Huevos – 3 ud · Lidl/Aldi",
+    {
+      "texto": "Huevos – 3 ud · Lidl/Aldi",
+      "hecho": true
+    },
     "Tomate – 1 ud · Lidl/Aldi",
     "Merluza – 200 g · Sin súper",
     "Brócoli – 200 g · Sin súper",

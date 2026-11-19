@@ -87,7 +87,10 @@
       "texto": "Tomate – 1 ud · Lidl/Aldi",
       "hecho": true
     },
-    "Merluza – 200 g · Sin súper",
+    {
+      "texto": "Merluza – 200 g · Sin súper",
+      "hecho": true
+    },
     "Brócoli – 200 g · Sin súper",
     "Quinoa – 60 g · Sin súper",
     {

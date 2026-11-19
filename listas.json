@@ -60,8 +60,14 @@
       "texto": "Prueba ipad",
       "hecho": true
     },
-    "Pechuga de pollo – 200 g · Lidl/Aldi",
-    "Verduras para asar – 300 g · Sin súper",
+    {
+      "texto": "Pechuga de pollo – 200 g · Lidl/Aldi",
+      "hecho": true
+    },
+    {
+      "texto": "Verduras para asar – 300 g · Sin súper",
+      "hecho": true
+    },
     {
       "texto": "Arroz – 80 g · Lidl/Aldi",
       "hecho": true
@@ -77,9 +83,7 @@
     {
       "texto": "Quinoa – 60 g · Sin súper",
       "hecho": true
-    },
-    "Pechuga de pollo – 200 g · Lidl/Aldi",
-    "Verduras para asar – 300 g · Sin súper"
+    }
   ],
   "tareas-ideas": [
     "Trastero CC",

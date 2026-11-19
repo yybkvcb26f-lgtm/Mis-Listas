@@ -77,7 +77,10 @@
       "texto": "Brócoli – 200 g · Sin súper",
       "hecho": true
     },
-    "Quinoa – 60 g · Sin súper",
+    {
+      "texto": "Quinoa – 60 g · Sin súper",
+      "hecho": true
+    },
     "Pechuga de pollo – 200 g · Lidl/Aldi",
     "Verduras para asar – 300 g · Sin súper"
   ],

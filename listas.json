@@ -81,7 +81,10 @@
       "texto": "Quinoa – 60 g · Sin súper",
       "hecho": true
     },
-    "Atún – 1 lata · Mercadona",
+    {
+      "texto": "Atún – 1 lata · Mercadona",
+      "hecho": true
+    },
     {
       "texto": "Huevos – 3 ud · Lidl/Aldi",
       "hecho": true

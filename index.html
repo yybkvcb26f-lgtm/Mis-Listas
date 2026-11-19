@@ -509,7 +509,7 @@
     let menu = null; // menu.json: menú semanal + base de platos
     let activa = null;
     let ocupado = false;
-    let editando = null; // texto del elemento que se está editando
+    let editando = null; // clave (estado|texto) del elemento que se está editando
 
     document.getElementById("fecha").textContent =
       new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "short" });
@@ -682,30 +682,39 @@
       }
     }
 
-    function buscarIndice(lista, texto) {
+    // Busca el elemento por texto y, si se indica, por estado (tachado o no):
+    // así un "Pollo" tachado y otro pendiente con el mismo texto no se confunden.
+    function buscarIndice(lista, texto, hecho) {
+      if (hecho !== undefined) {
+        const i = lista.findIndex(it => textoItem(it) === texto && esHecho(it) === hecho);
+        if (i >= 0) return i;
+      }
       return lista.findIndex(it => textoItem(it) === texto);
     }
-    function tachar(clave, texto) {
+    function claveEdicion(texto, hecho) {
+      return (hecho ? "1|" : "0|") + texto;
+    }
+    function tachar(clave, texto, hecho) {
       cambiar(d => {
         const l = d[clave] || [];
-        const i = buscarIndice(l, texto);
+        const i = buscarIndice(l, texto, hecho);
         if (i < 0) return;
         l[i] = esHecho(l[i]) ? textoItem(l[i]) : { texto: textoItem(l[i]), hecho: true };
       }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": tachar/destachar " + partes(texto).nombre);
     }
-    function borrar(clave, texto) {
+    function borrar(clave, texto, hecho) {
       cambiar(d => {
         const l = d[clave] || [];
-        const i = buscarIndice(l, texto);
+        const i = buscarIndice(l, texto, hecho);
         if (i >= 0) l.splice(i, 1);
       }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": quitar " + partes(texto).nombre);
     }
-    function editar(clave, viejo, nuevo) {
+    function editar(clave, viejo, nuevo, hecho) {
       editando = null;
       if (!nuevo || nuevo === viejo) { render(); return; }
       cambiar(d => {
         const l = d[clave] || [];
-        const i = buscarIndice(l, viejo);
+        const i = buscarIndice(l, viejo, hecho);
         if (i < 0) return;
         l[i] = esHecho(l[i]) ? { texto: nuevo, hecho: true } : nuevo;
       }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": editar " + partes(nuevo).nombre);
@@ -1072,7 +1081,7 @@
           const c = cantidad.value.trim();
           nuevo = n + (c ? " – " + c : "") + " · " + tienda.value;
         }
-        editar(activa, texto, nuevo);
+        editar(activa, texto, nuevo, esHecho(item));
       });
       li.appendChild(form);
       setTimeout(() => nombre.focus(), 0);
@@ -1081,7 +1090,7 @@
 
     function itemLi(item, i, q) {
       const texto = textoItem(item);
-      if (token && editando === texto) return editorLi(item);
+      if (token && editando === claveEdicion(texto, esHecho(item))) return editorLi(item);
       const hecho = esHecho(item);
       const p = partes(texto);
       const li = document.createElement("li");
@@ -1100,7 +1109,7 @@
           li.classList.toggle("hecho", ahora);
           check.textContent = ahora ? "✓" : "";
           check.setAttribute("aria-checked", ahora ? "true" : "false");
-          tachar(activa, texto);
+          tachar(activa, texto, hecho);
         });
       } else {
         check.disabled = true;
@@ -1125,14 +1134,14 @@
       if (token) {
         li.classList.add("editable");
         body.title = "Toca para editar";
-        body.addEventListener("click", () => { editando = texto; render(); });
+        body.addEventListener("click", () => { editando = claveEdicion(texto, hecho); render(); });
       }
       if (token) {
         const x = document.createElement("button");
         x.className = "borrar";
         x.setAttribute("aria-label", "Quitar");
         x.textContent = "✕";
-        x.addEventListener("click", ev => { ev.stopPropagation(); borrar(activa, texto); });
+        x.addEventListener("click", ev => { ev.stopPropagation(); borrar(activa, texto, hecho); });
         li.appendChild(x);
       }
       return li;

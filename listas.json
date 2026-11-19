@@ -68,7 +68,10 @@
       "texto": "Verduras para asar – 300 g · Sin súper",
       "hecho": true
     },
-    "Arroz – 80 g · Lidl/Aldi"
+    {
+      "texto": "Arroz – 80 g · Lidl/Aldi",
+      "hecho": true
+    }
   ],
   "tareas-ideas": [
     "Trastero CC",

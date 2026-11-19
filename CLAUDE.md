@@ -20,7 +20,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 - Cuando te pida apuntar algo, añádelo a la lista que corresponda (en la compra, con el formato de arriba).
 - Cuando te pida quitar algo, bórralo de la lista.
-- En cada actualización de la compra, revisa `supermercados.json`: añade los productos nuevos que aparezcan en la lista con su súper (si no lo sé, pon `[]` y pregúntame).
+- En cada actualización de la compra, revisa `supermercados.json`: añade los productos nuevos que aparezcan en la lista con su súper. Si un producto no tiene súper en `supermercados.json`, ponlo con `· Sin súper` en la compra y con `[]` en `supermercados.json`, sin preguntarme, y avísalo en el mensaje del commit.
 - Después de cada cambio, haz siempre commit con un mensaje corto y push a `main`, sin preguntarme. Antes de editar, haz `git pull` (yo también escribo desde la app).
 - No toques nada más del repo salvo que te lo pida.
 - Los cambios en la app (`index.html`, diseño, funciones) van siempre en una rama aparte con pull request, sin que te lo pida. Los cambios de las listas sí van directos a `main`.
@@ -31,8 +31,9 @@ Cada sábado se renueva `menu.json`: 4 platos distintos de `base.platos` (sin re
 
 Con ese menú se reescribe `"compra"` (las cantidades de los platos salen de `ingredientes`, con esos mismos nombres de producto, y las de snack/fruta/postre de su texto):
 
-1. Se borra todo lo tachado (`"hecho": true`).
-2. Lo pendiente que NO sea del menú anterior (añadido a mano) se mantiene.
-3. Se añaden los ingredientes del menú nuevo con la cantidad total de la semana, en formato `Producto – cantidad · Súper`. Si un ingrediente ya está pendiente, no se duplica: se deja uno solo con la cantidad nueva.
-4. Orden: por súper (Lidl/Aldi, Mercadona, BM, Carrefour, Sin súper) y dentro de cada súper como vengan.
-5. `"tareas-ideas"` no se toca.
+1. Se borra solo lo tachado (`"hecho": true`).
+2. Se mantiene TODO lo pendiente, sin distinguir si era del menú anterior o añadido a mano.
+3. Se añaden los ingredientes del menú nuevo con la cantidad total de la semana, en formato `Producto – cantidad · Súper`. Si un ingrediente ya está pendiente, no se duplica: se suman la cantidad que ya había y la que pide el menú. Si las unidades no se pueden sumar, se dejan dos líneas y se avisa en el mensaje del commit.
+4. Si un producto no tiene súper en `supermercados.json`: `· Sin súper` en la compra y `[]` en `supermercados.json`, sin preguntarme, y se avisa en el mensaje del commit.
+5. Orden: por súper (Lidl/Aldi, Mercadona, BM, Carrefour, Sin súper) y dentro de cada súper como vengan.
+6. `"tareas-ideas"` no se toca.

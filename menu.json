@@ -40,7 +40,7 @@
         "proteina": 68,
         "ingredientes": [
           {
-            "producto": "Pechuga de pollo",
+            "producto": "Pollo",
             "cantidad": 250,
             "unidad": "g"
           },
@@ -68,7 +68,7 @@
         "proteina": 66,
         "ingredientes": [
           {
-            "producto": "Pechuga de pollo",
+            "producto": "Pollo",
             "cantidad": 250,
             "unidad": "g"
           },

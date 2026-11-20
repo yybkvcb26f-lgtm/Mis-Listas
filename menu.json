@@ -38,6 +38,7 @@
         "racion": "Pechuga de pollo 250 g marinada (pimentón, ajo y limón) con arroz 100 g (en crudo), pimiento asado 150 g y salsa de yogur natural 60 g",
         "kcal": 800,
         "proteina": 68,
+        "grasa": 19,
         "ingredientes": [
           {
             "producto": "Pollo",
@@ -66,6 +67,7 @@
         "racion": "Pechuga de pollo 250 g guisada al curry con leche de coco 100 ml, verduras asadas 250 g y arroz 80 g (en crudo)",
         "kcal": 820,
         "proteina": 66,
+        "grasa": 26,
         "ingredientes": [
           {
             "producto": "Pollo",
@@ -94,6 +96,7 @@
         "racion": "Tortilla de 4 huevos con atún 1 lata (80 g) y tomate 100 g, y pan 100 g con tomate",
         "kcal": 660,
         "proteina": 54,
+        "grasa": 25,
         "ingredientes": [
           {
             "producto": "Huevos",
@@ -122,6 +125,7 @@
         "racion": "3 wraps integrales con pavo 150 g, aguacate ½ (70 g) y queso 40 g",
         "kcal": 1000,
         "proteina": 57,
+        "grasa": 40,
         "ingredientes": [
           {
             "producto": "Wraps integrales",
@@ -151,6 +155,7 @@
         "racion": "Entrecot 250 g a la plancha (sin la grasa) con boniato asado 300 g y pimiento 100 g",
         "kcal": 720,
         "proteina": 61,
+        "grasa": 24,
         "ingredientes": [
           {
             "producto": "Entrecot",
@@ -174,6 +179,7 @@
         "racion": "Presa ibérica 220 g con arroz 70 g (en crudo), pimiento 75 g y cebolla 75 g",
         "kcal": 940,
         "proteina": 49,
+        "grasa": 54,
         "ingredientes": [
           {
             "producto": "Presa ibérica",
@@ -203,6 +209,7 @@
         "racion": "Salmón 220 g al horno con boniato 250 g y verduras asadas 150 g",
         "kcal": 700,
         "proteina": 50,
+        "grasa": 29,
         "ingredientes": [
           {
             "producto": "Salmón",
@@ -226,6 +233,7 @@
         "racion": "Pasta 130 g (en crudo) con carne picada de ternera 150 g y sofrito de tomate triturado 150 g, cebolla 50 g y pimiento 50 g",
         "kcal": 860,
         "proteina": 48,
+        "grasa": 25,
         "ingredientes": [
           {
             "producto": "Pasta",
@@ -260,6 +268,7 @@
         "racion": "Quinoa 90 g (en crudo) con salmón 180 g, aguacate ½ (70 g) y tomate 100 g",
         "kcal": 830,
         "proteina": 50,
+        "grasa": 42,
         "ingredientes": [
           {
             "producto": "Quinoa",
@@ -288,6 +297,7 @@
         "racion": "Pan 130 g con tomate, jamón ibérico 80 g (o lomo ibérico) y queso 40 g",
         "kcal": 760,
         "proteina": 46,
+        "grasa": 33,
         "ingredientes": [
           {
             "producto": "Pan",
@@ -316,6 +326,7 @@
         "racion": "Pasta 130 g (en crudo) con jamón cocido 120 g, queso 30 g, tomate 100 g y zanahoria 50 g",
         "kcal": 740,
         "proteina": 46,
+        "grasa": 17,
         "ingredientes": [
           {
             "producto": "Pasta",

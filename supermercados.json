@@ -1,45 +1,58 @@
 {
   "Pollo": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Pavo en lonchas": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Huevos": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Aguacate": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Tomate": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Manzanas": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Mandarinas": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Kiwis": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Plátanos": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Arándanos": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Arroz": [
-    "Lidl/Aldi",
+    "Aldi",
+    "Lidl",
     "Mercadona"
   ],
   "Yogur griego": [
-    "Lidl/Aldi",
+    "Aldi",
+    "Lidl",
     "BM",
     "Mercadona"
   ],
   "Leche": [
-    "Lidl/Aldi",
+    "Aldi",
+    "Lidl",
     "Mercadona",
     "BM"
   ],
@@ -86,29 +99,32 @@
     "Mercadona"
   ],
   "Pimiento": [
-    "Lidl/Aldi"
+    "Aldi"
   ],
   "Yogur natural": [
-    "Lidl/Aldi",
+    "Aldi",
+    "Lidl",
     "Mercadona"
   ],
   "Leche de coco": [
     "BM"
   ],
   "Pan": [
-    "Lidl/Aldi"
+    "Lidl",
+    "Aldi"
   ],
   "Queso": [
-    "Lidl/Aldi"
+    "Aldi"
   ],
   "Entrecot": [
-    "Lidl/Aldi"
+    "Aldi"
   ],
   "Boniato": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Presa ibérica": [
-    "Lidl/Aldi"
+    "Aldi"
   ],
   "Cebolla": [
     "Mercadona"
@@ -118,31 +134,36 @@
     "Carrefour"
   ],
   "Carne picada de ternera": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Tomate triturado": [
-    "Lidl/Aldi"
+    "Aldi"
   ],
   "Jamón ibérico": [
-    "Lidl/Aldi"
+    "Lidl"
   ],
   "Lomo ibérico": [
     "Mercadona"
   ],
   "Jamón cocido": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Fresas": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Mango": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Frutos rojos": [
-    "Lidl/Aldi"
+    "Aldi",
+    "Lidl"
   ],
   "Chocolate 70%": [
-    "Lidl/Aldi",
+    "Aldi",
     "BM"
   ]
 }

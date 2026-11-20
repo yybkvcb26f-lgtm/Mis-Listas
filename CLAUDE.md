@@ -12,9 +12,9 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 ## Formato de los elementos
 
 - Pendiente: un texto. Tachado (ya comprado / hecho): `{"texto": "...", "hecho": true}`.
-- En `"compra"`, cada elemento es `Producto – cantidad · Súper` (p. ej. `Pollo – 400 g · Lidl/Aldi`). La cantidad es opcional.
+- En `"compra"`, cada elemento es `Producto – cantidad · Súper` (p. ej. `Pollo – 400 g · Aldi`). La cantidad es opcional.
 - El súper es el PRIMERO que indica `supermercados.json` para ese producto. Si no está o no tiene súper: `· Sin súper`.
-- Nombres de súper: `Lidl/Aldi`, `Mercadona`, `BM`, `Carrefour`.
+- Nombres de súper: `Aldi`, `Lidl`, `Mercadona`, `BM`, `Carrefour`. Aldi y Lidl son súpers distintos: nunca `Lidl/Aldi`.
 
 ## Reglas
 
@@ -37,7 +37,7 @@ Con ese menú se reescribe `"compra"` (las cantidades de los platos salen de `in
 2. Se mantiene TODO lo pendiente, sin distinguir si era del menú anterior o añadido a mano.
 3. Se añaden los ingredientes del menú nuevo con la cantidad total de la semana, en formato `Producto – cantidad · Súper`. Si un ingrediente ya está pendiente, no se duplica: se suman la cantidad que ya había y la que pide el menú. Si las unidades no se pueden sumar, se dejan dos líneas y se avisa en el mensaje del commit.
 4. Si un producto no tiene súper en `supermercados.json`: `· Sin súper` en la compra y `[]` en `supermercados.json`, sin preguntarme, y se avisa en el mensaje del commit.
-5. Orden: por súper (Lidl/Aldi, Mercadona, BM, Carrefour, Sin súper) y dentro de cada súper como vengan.
+5. Orden: por súper (Aldi, Lidl, Mercadona, BM, Carrefour, Sin súper) y dentro de cada súper como vengan.
 6. `"tareas-ideas"` no se toca.
 
 ## Pendientes

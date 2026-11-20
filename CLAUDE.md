@@ -6,7 +6,14 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 - `listas.json`: las listas `"compra"` y `"tareas-ideas"`. Es la ÚNICA lista de la compra (no hay copias en otros sitios).
 - `supermercados.json`: base de productos con su súper o súpers, en orden de preferencia: `{"Producto": ["Súper 1", "Súper 2"]}`. Lista vacía = súper sin decidir.
-- `menu.json`: el menú semanal (pestaña «Menú»). `cenas`: lunes a jueves con `plato` (nombre de un plato de la base), `snack`, `fruta` y `postre` (con cantidades). `base`: la base de platos; cada plato tiene `nombre`, `racion` (texto con cantidades por ración), `ingredientes` (`[{"producto", "cantidad", "unidad"}]`, unidad `g`, `ml`, `ud` o `lata`; `producto` con el mismo nombre que se usa en la compra), `kcal` y `proteina` (estimados), y además listas de `snacks`, `frutas` y `postres` (solo nombres). Desde la app, el botón ↻ de cada día cambia el plato por otro de la base con valores nutricionales parecidos y ajusta sola la compra: resta los `ingredientes` del plato viejo y suma los del nuevo (si un producto queda a 0 se quita; si no estaba, se añade con su súper).
+- `menu.json`: el menú semanal (pestaña «Menú»). `semana`, `nota` y `dias`: los 7 días (Lunes a Domingo), cada uno `{"dia", "desayuno"?, "comida", "cena"}`.
+  - Lunes a viernes, `comida` es `{"trabajo": true}` (como en el trabajo, sin plato). La app enseña la meta de esa comida: objetivo diario − cena.
+  - Sábado y domingo: `desayuno` `{"texto", "kcal", "proteina", "grasa"}` y `comida` `{"plato"}`.
+  - Todas las cenas: `{"plato", "snack", "fruta", "postre", "extras"}`. `extras` = `{"kcal", "proteina", "grasa"}` estimados de snack + fruta + postre juntos.
+  - `base`: la base de platos; cada plato tiene `nombre`, `racion` (texto con cantidades por ración), `kcal`, `proteina` y `grasa` (estimados), `ingredientes` (`[{"producto", "cantidad", "unidad"}]`, unidad `g`, `ml`, `ud` o `lata`; `producto` con el mismo nombre que se usa en la compra) y, si toca, `"postre_ligero": true`. Además, listas de `snacks`, `frutas`, `postres` y `postres_ligeros` (solo nombres).
+  - Desde la app, el botón ↻ de cada comida o cena cambia el plato por otro de la base con valores nutricionales parecidos y ajusta sola la compra: resta los `ingredientes` del plato viejo y suma los del nuevo (si un producto queda a 0 se quita; si no estaba, se añade con su súper).
+  - La app también entiende el formato antiguo (`cenas`, solo lunes a jueves), pero ya no se usa.
+- **Objetivo diario (kcal, proteína, grasa): es privado y NO va nunca en el repo** (el repo es público). Lo tiene la tarea programada del sábado y yo lo guardo en el navegador de mis dispositivos. No lo escribas en ningún archivo, commit ni PR; si no lo tienes, no lo inventes.
 - `index.html`: la app. Desde ella añado, tacho y quito elementos (con un token de GitHub guardado solo en mi navegador).
 
 ## Formato de los elementos
@@ -27,11 +34,18 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 ## Renovación del sábado (menú semanal)
 
-Cada sábado se renueva `menu.json`: 4 platos distintos de `base.platos` (sin repetir los de la semana anterior), snack, fruta y postre de la base con su cantidad, y `semana` con las fechas de lunes a jueves. Si te pido un plato nuevo, añádelo a `base.platos` con `racion`, `ingredientes`, `kcal` y `proteina`.
+Cada sábado se renueva `menu.json` con la semana siguiente (lunes a domingo):
+
+- `semana`: «Semana del <lunes> al <domingo> de <mes> de <año>». `nota`: «Comidas de lunes a viernes en el comedor del trabajo.»
+- 9 platos distintos de `base.platos` (7 cenas + comida del sábado + comida del domingo), sin repetir en la semana y eligiendo primero los que no salieron la semana anterior.
+- Lunes a viernes: `comida` = `{"trabajo": true}`.
+- Sábado y domingo: `desayuno` = `{"texto": "Leche 200 ml y tostadas con aceite y jamón (o aguacate y jamón, o lomo)", "kcal": 400, "proteina": 20, "grasa": 15}` y `comida` = `{"plato"}`. Desayuno + comida + cena de esos días tienen que acercarse al objetivo diario (aprox. ±10 %): elige la pareja de platos y ajusta snack, fruta y postre para cuadrarlo, y evita juntar dos platos con mucha grasa.
+- Cada cena: snack, fruta y postre de la base con su cantidad, y `extras` con sus kcal, proteína y grasa estimados.
+- Si te pido un plato nuevo, añádelo a `base.platos` con `racion`, `ingredientes`, `kcal`, `proteina` y `grasa`.
 
 Postres: en `menu.json` existe la lista `base.postres_ligeros`, además de `base.postres`. Los platos con `"postre_ligero": true` llevan un postre de `base.postres_ligeros` (con cantidad); el resto, uno de `base.postres` (con cantidad).
 
-Con ese menú se reescribe `"compra"` (las cantidades de los platos salen de `ingredientes`, con esos mismos nombres de producto, y las de snack/fruta/postre de su texto):
+Con ese menú se reescribe `"compra"` (las cantidades de los 9 platos salen de `ingredientes`, con esos mismos nombres de producto, y las de snack/fruta/postre de su texto; el desayuno no se añade a la compra):
 
 1. Se borra solo lo tachado (`"hecho": true`).
 2. Se mantiene TODO lo pendiente, sin distinguir si era del menú anterior o añadido a mano.

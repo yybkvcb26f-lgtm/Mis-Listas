@@ -942,8 +942,9 @@
       contenidoEl.appendChild(h);
       const card = document.createElement("div");
       card.className = "base";
-      [["Platos principales", (base.platos || []).map(p => p.nombre)], ["Snacks de verdura", base.snacks],
-       ["Fruta", base.frutas], ["Postres", base.postres]].forEach(([t, arr]) => {
+      [["Platos principales", (base.platos || []).map(p => p.nombre + (p.postre_ligero ? " · postre ligero" : ""))],
+       ["Snacks de verdura", base.snacks], ["Fruta", base.frutas], ["Postres", base.postres],
+       ["Postres ligeros", base.postres_ligeros]].forEach(([t, arr]) => {
         if (!arr || !arr.length) return;
         const st = document.createElement("div"); st.className = "base-titulo"; st.textContent = t;
         const l = document.createElement("ul"); l.className = "base-lista";

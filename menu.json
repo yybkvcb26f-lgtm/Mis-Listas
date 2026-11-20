@@ -34,14 +34,52 @@
   "base": {
     "platos": [
       {
-        "nombre": "Pollo a la plancha con arroz",
-        "racion": "Pechuga de pollo a la plancha 200 g con arroz 80 g (en crudo)",
-        "kcal": 510,
-        "proteina": 50,
+        "nombre": "Pollo marinado con arroz y pimientos asados",
+        "racion": "Pechuga de pollo 250 g marinada (pimentón, ajo y limón) con arroz 100 g (en crudo), pimiento asado 150 g y salsa de yogur natural 60 g",
+        "kcal": 800,
+        "proteina": 68,
         "ingredientes": [
           {
             "producto": "Pechuga de pollo",
-            "cantidad": 200,
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Arroz",
+            "cantidad": 100,
+            "unidad": "g"
+          },
+          {
+            "producto": "Pimiento",
+            "cantidad": 150,
+            "unidad": "g"
+          },
+          {
+            "producto": "Yogur natural",
+            "cantidad": 60,
+            "unidad": "g"
+          }
+        ]
+      },
+      {
+        "nombre": "Pollo al curry con leche de coco y verduras asadas",
+        "racion": "Pechuga de pollo 250 g guisada al curry con leche de coco 100 ml, verduras asadas 250 g y arroz 80 g (en crudo)",
+        "kcal": 820,
+        "proteina": 66,
+        "ingredientes": [
+          {
+            "producto": "Pechuga de pollo",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Leche de coco",
+            "cantidad": 100,
+            "unidad": "ml"
+          },
+          {
+            "producto": "Verduras para asar",
+            "cantidad": 250,
             "unidad": "g"
           },
           {
@@ -52,32 +90,14 @@
         ]
       },
       {
-        "nombre": "Pollo al horno con verduras asadas",
-        "racion": "Pechuga de pollo al horno 200 g con verduras asadas 300 g",
-        "kcal": 430,
-        "proteina": 48,
-        "ingredientes": [
-          {
-            "producto": "Pechuga de pollo",
-            "cantidad": 200,
-            "unidad": "g"
-          },
-          {
-            "producto": "Verduras para asar",
-            "cantidad": 300,
-            "unidad": "g"
-          }
-        ]
-      },
-      {
-        "nombre": "Tortilla de atún y tomate",
-        "racion": "Tortilla de 3 huevos con atún 1 lata (80 g) y tomate 100 g",
-        "kcal": 320,
-        "proteina": 40,
+        "nombre": "Tortilla de atún y tomate con pan con tomate",
+        "racion": "Tortilla de 4 huevos con atún 1 lata (80 g) y tomate 100 g, y pan 100 g con tomate",
+        "kcal": 660,
+        "proteina": 54,
         "ingredientes": [
           {
             "producto": "Huevos",
-            "cantidad": 3,
+            "cantidad": 4,
             "unidad": "ud"
           },
           {
@@ -89,110 +109,264 @@
             "producto": "Tomate",
             "cantidad": 1,
             "unidad": "ud"
-          }
-        ]
-      },
-      {
-        "nombre": "Salmón con verduras salteadas",
-        "racion": "Salmón 150 g con verduras salteadas 200 g",
-        "kcal": 370,
-        "proteina": 33,
-        "ingredientes": [
-          {
-            "producto": "Salmón",
-            "cantidad": 150,
-            "unidad": "g"
           },
           {
-            "producto": "Verduras salteadas de bolsa",
-            "cantidad": 200,
+            "producto": "Pan",
+            "cantidad": 100,
             "unidad": "g"
           }
         ]
       },
       {
-        "nombre": "Merluza a la plancha con brócoli y quinoa",
-        "racion": "Merluza 200 g con brócoli 200 g y quinoa 60 g (en crudo)",
-        "kcal": 450,
-        "proteina": 50,
-        "ingredientes": [
-          {
-            "producto": "Merluza",
-            "cantidad": 200,
-            "unidad": "g"
-          },
-          {
-            "producto": "Brócoli",
-            "cantidad": 200,
-            "unidad": "g"
-          },
-          {
-            "producto": "Quinoa",
-            "cantidad": 60,
-            "unidad": "g"
-          }
-        ]
-      },
-      {
-        "nombre": "Wrap integral de pavo con aguacate",
-        "racion": "2 wraps integrales con pavo 100 g y aguacate ½ (70 g)",
-        "kcal": 600,
-        "proteina": 33,
+        "nombre": "Wraps de pavo, aguacate y queso",
+        "racion": "3 wraps integrales con pavo 150 g, aguacate ½ (70 g) y queso 40 g",
+        "kcal": 1000,
+        "proteina": 57,
         "ingredientes": [
           {
             "producto": "Wraps integrales",
-            "cantidad": 2,
+            "cantidad": 3,
             "unidad": "ud"
           },
           {
             "producto": "Pavo en lonchas",
-            "cantidad": 100,
+            "cantidad": 150,
             "unidad": "g"
           },
           {
             "producto": "Aguacate",
             "cantidad": 0.5,
             "unidad": "ud"
+          },
+          {
+            "producto": "Queso",
+            "cantidad": 40,
+            "unidad": "g"
+          }
+        ],
+        "postre_ligero": true
+      },
+      {
+        "nombre": "Entrecot con boniato asado y pimiento",
+        "racion": "Entrecot 250 g a la plancha (sin la grasa) con boniato asado 300 g y pimiento 100 g",
+        "kcal": 720,
+        "proteina": 61,
+        "ingredientes": [
+          {
+            "producto": "Entrecot",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Boniato",
+            "cantidad": 300,
+            "unidad": "g"
+          },
+          {
+            "producto": "Pimiento",
+            "cantidad": 100,
+            "unidad": "g"
           }
         ]
       },
       {
-        "nombre": "Wrap integral de atún con aguacate",
-        "racion": "2 wraps integrales con atún 1 lata (80 g) y aguacate ½ (70 g)",
-        "kcal": 585,
-        "proteina": 32,
+        "nombre": "Presa ibérica con arroz, pimiento y cebolla",
+        "racion": "Presa ibérica 220 g con arroz 70 g (en crudo), pimiento 75 g y cebolla 75 g",
+        "kcal": 940,
+        "proteina": 49,
         "ingredientes": [
           {
-            "producto": "Wraps integrales",
-            "cantidad": 2,
-            "unidad": "ud"
+            "producto": "Presa ibérica",
+            "cantidad": 220,
+            "unidad": "g"
           },
           {
-            "producto": "Atún",
-            "cantidad": 1,
-            "unidad": "lata"
+            "producto": "Arroz",
+            "cantidad": 70,
+            "unidad": "g"
+          },
+          {
+            "producto": "Pimiento",
+            "cantidad": 75,
+            "unidad": "g"
+          },
+          {
+            "producto": "Cebolla",
+            "cantidad": 75,
+            "unidad": "g"
+          }
+        ],
+        "postre_ligero": true
+      },
+      {
+        "nombre": "Salmón al horno con boniato",
+        "racion": "Salmón 220 g al horno con boniato 250 g y verduras asadas 150 g",
+        "kcal": 700,
+        "proteina": 50,
+        "ingredientes": [
+          {
+            "producto": "Salmón",
+            "cantidad": 220,
+            "unidad": "g"
+          },
+          {
+            "producto": "Boniato",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Verduras para asar",
+            "cantidad": 150,
+            "unidad": "g"
+          }
+        ]
+      },
+      {
+        "nombre": "Pasta con carne picada de ternera y sofrito",
+        "racion": "Pasta 130 g (en crudo) con carne picada de ternera 150 g y sofrito de tomate triturado 150 g, cebolla 50 g y pimiento 50 g",
+        "kcal": 860,
+        "proteina": 48,
+        "ingredientes": [
+          {
+            "producto": "Pasta",
+            "cantidad": 130,
+            "unidad": "g"
+          },
+          {
+            "producto": "Carne picada de ternera",
+            "cantidad": 150,
+            "unidad": "g"
+          },
+          {
+            "producto": "Tomate triturado",
+            "cantidad": 150,
+            "unidad": "g"
+          },
+          {
+            "producto": "Cebolla",
+            "cantidad": 50,
+            "unidad": "g"
+          },
+          {
+            "producto": "Pimiento",
+            "cantidad": 50,
+            "unidad": "g"
+          }
+        ],
+        "postre_ligero": true
+      },
+      {
+        "nombre": "Bowl de quinoa con salmón, aguacate y tomate",
+        "racion": "Quinoa 90 g (en crudo) con salmón 180 g, aguacate ½ (70 g) y tomate 100 g",
+        "kcal": 830,
+        "proteina": 50,
+        "ingredientes": [
+          {
+            "producto": "Quinoa",
+            "cantidad": 90,
+            "unidad": "g"
+          },
+          {
+            "producto": "Salmón",
+            "cantidad": 180,
+            "unidad": "g"
           },
           {
             "producto": "Aguacate",
             "cantidad": 0.5,
             "unidad": "ud"
+          },
+          {
+            "producto": "Tomate",
+            "cantidad": 1,
+            "unidad": "ud"
+          }
+        ]
+      },
+      {
+        "nombre": "Tostas de jamón ibérico, tomate y queso",
+        "racion": "Pan 130 g con tomate, jamón ibérico 80 g (o lomo ibérico) y queso 40 g",
+        "kcal": 760,
+        "proteina": 46,
+        "ingredientes": [
+          {
+            "producto": "Pan",
+            "cantidad": 130,
+            "unidad": "g"
+          },
+          {
+            "producto": "Jamón ibérico",
+            "cantidad": 80,
+            "unidad": "g"
+          },
+          {
+            "producto": "Queso",
+            "cantidad": 40,
+            "unidad": "g"
+          },
+          {
+            "producto": "Tomate",
+            "cantidad": 1,
+            "unidad": "ud"
+          }
+        ]
+      },
+      {
+        "nombre": "Ensalada templada de pasta con jamón cocido",
+        "racion": "Pasta 130 g (en crudo) con jamón cocido 120 g, queso 30 g, tomate 100 g y zanahoria 50 g",
+        "kcal": 740,
+        "proteina": 46,
+        "ingredientes": [
+          {
+            "producto": "Pasta",
+            "cantidad": 130,
+            "unidad": "g"
+          },
+          {
+            "producto": "Jamón cocido",
+            "cantidad": 120,
+            "unidad": "g"
+          },
+          {
+            "producto": "Queso",
+            "cantidad": 30,
+            "unidad": "g"
+          },
+          {
+            "producto": "Tomate",
+            "cantidad": 1,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Zanahorias",
+            "cantidad": 50,
+            "unidad": "g"
           }
         ]
       }
     ],
     "snacks": [
       "Zanahorias crudas o en palitos",
-      "Tomates cherry"
+      "Tomates cherry",
+      "Pimiento en tiras"
     ],
     "frutas": [
       "Manzana",
       "Mandarina",
       "Kiwi",
-      "Plátano"
+      "Plátano",
+      "Fresas",
+      "Mango",
+      "Frutos rojos"
     ],
     "postres": [
       "Yogur griego con granola sin azúcar y arándanos",
+      "Yogur natural con frutos rojos y granola",
       "Leche con cacao 100% puro y avena"
+    ],
+    "postres_ligeros": [
+      "Chocolate 70% (20 g)",
+      "Yogur natural solo"
     ]
   }
 }

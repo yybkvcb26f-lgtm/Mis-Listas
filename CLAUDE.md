@@ -29,6 +29,8 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 Cada sábado se renueva `menu.json`: 4 platos distintos de `base.platos` (sin repetir los de la semana anterior), snack, fruta y postre de la base con su cantidad, y `semana` con las fechas de lunes a jueves. Si te pido un plato nuevo, añádelo a `base.platos` con `racion`, `ingredientes`, `kcal` y `proteina`.
 
+Postres: en `menu.json` existe la lista `base.postres_ligeros`, además de `base.postres`. Los platos con `"postre_ligero": true` llevan un postre de `base.postres_ligeros` (con cantidad); el resto, uno de `base.postres` (con cantidad).
+
 Con ese menú se reescribe `"compra"` (las cantidades de los platos salen de `ingredientes`, con esos mismos nombres de producto, y las de snack/fruta/postre de su texto):
 
 1. Se borra solo lo tachado (`"hecho": true`).

@@ -344,6 +344,22 @@
     .cena-racion { margin-top: 4px; font-size: 0.88rem; color: var(--muted); line-height: 1.35; }
     .cena-extras { border-top: 1px solid var(--border); padding-top: 8px; display: grid; gap: 4px; font-size: 0.9rem; }
     .cena-etq { display: inline-block; min-width: 54px; font-size: 0.75rem; font-weight: 700; color: var(--muted); }
+    .toma { display: grid; gap: 4px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .toma:first-of-type { border-top: none; padding-top: 0; }
+    .toma-etq { font-size: 0.72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+    .toma-total, .meta-comida { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .meta-comida { color: var(--accent); }
+    .dia-total { border-top: 1px dashed var(--border); padding-top: 8px; font-size: 0.82rem; font-weight: 600; color: var(--muted); line-height: 1.4; }
+    .objetivo { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 12px 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
+    .objetivo-titulo { font-weight: 700; }
+    .objetivo-nota { margin: 4px 0 10px; font-size: 0.82rem; color: var(--muted); }
+    .objetivo-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .objetivo-form label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); }
+    .objetivo-form input { width: 76px; font: inherit; font-size: 1rem; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--input); color: var(--text); }
+    .objetivo-form button, .objetivo-editar { font: inherit; font-weight: 700; border: none; border-radius: 10px; padding: 10px 14px; min-height: 44px; cursor: pointer; }
+    .objetivo-guardar { background: var(--accent); color: #fff; }
+    .objetivo-cancelar, .objetivo-editar { background: var(--chip); color: var(--text); }
+    .objetivo-linea { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.9rem; }
     .menu-nota { margin: -4px 4px 12px; font-size: 0.85rem; color: var(--muted); }
     .refrescar {
       appearance: none; border: none; flex-shrink: 0;
@@ -477,7 +493,9 @@
     const CLAVE_TOKEN = "misListasToken";
 
     // Orden de los supermercados en la lista de la compra
-    const ORDEN_SUPER = ["Lidl/Aldi", "Mercadona", "BM", "Carrefour"];
+    const ORDEN_SUPER = ["Aldi", "Lidl", "Mercadona", "BM", "Carrefour"];
+    // Objetivo diario (kcal, proteína, grasa): se guarda SOLO en este navegador, nunca en el repo
+    const CLAVE_OBJETIVO = "misListasObjetivo";
 
     const LISTAS = {
       "compra": {
@@ -758,14 +776,79 @@
     function platoBase(nombre) {
       return ((menu && menu.base && menu.base.platos) || []).find(p => normaliza(p.nombre) === normaliza(nombre || ""));
     }
+    // Días del menú. Formato nuevo: menu.dias = [{dia, desayuno?, comida, cena}].
+    // Formato antiguo: menu.cenas = [{dia, plato, …}] (solo cenas de lunes a jueves).
+    function diasMenu(m) {
+      m = m || menu;
+      if (!m) return [];
+      if (Array.isArray(m.dias)) return m.dias;
+      if (Array.isArray(m.cenas)) return m.cenas.map(c => ({ dia: c.dia, cena: c }));
+      return [];
+    }
+    // La comida o la cena de un día (t = "comida" | "cena"), dentro de un menú m
+    function toma(m, d, t) {
+      if (Array.isArray(m.dias)) return m.dias[d] ? m.dias[d][t] : null;
+      if (t === "cena" && Array.isArray(m.cenas)) return m.cenas[d] || null;
+      return null;
+    }
+    // Todos los platos de la semana (comidas y cenas)
+    function platosSemana() {
+      const out = [];
+      diasMenu().forEach(x => ["comida", "cena"].forEach(t => { if (x[t] && x[t].plato) out.push(x[t].plato); }));
+      return out;
+    }
+
+    // --- Macros ---
+    function leerObjetivo() {
+      try {
+        const o = JSON.parse(localStorage.getItem(CLAVE_OBJETIVO) || "null");
+        return o && o.kcal > 0 ? o : null;
+      } catch (e) { return null; }
+    }
+    function guardarObjetivo(o) {
+      try { if (o) localStorage.setItem(CLAVE_OBJETIVO, JSON.stringify(o)); else localStorage.removeItem(CLAVE_OBJETIVO); } catch (e) {}
+    }
+    let objetivo = leerObjetivo();
+    let editandoObjetivo = false;
+
+    const CERO = { kcal: 0, proteina: 0, grasa: 0 };
+    function sumar(...ms) {
+      return ms.reduce((a, m) => m ? {
+        kcal: a.kcal + (+m.kcal || 0), proteina: a.proteina + (+m.proteina || 0), grasa: a.grasa + (+m.grasa || 0)
+      } : a, { ...CERO });
+    }
+    function restar(a, b) {
+      return { kcal: a.kcal - b.kcal, proteina: a.proteina - b.proteina, grasa: a.grasa - b.grasa };
+    }
+    // Macros de una comida o cena: plato de la base + snack/fruta/postre (campo "extras")
+    function macrosToma(c) {
+      if (!c || c.trabajo) return null;
+      const b = platoBase(c.plato);
+      if (!b && !c.extras) return null;
+      return sumar(b, c.extras);
+    }
+    function textoMacros(m) {
+      return "≈ " + Math.round(m.kcal) + " kcal · " + Math.round(m.proteina) + " g proteína · " + Math.round(m.grasa) + " g grasa";
+    }
+    function chipsMacros(m) {
+      const meta = document.createElement("div");
+      meta.className = "item-meta";
+      ["≈ " + Math.round(m.kcal) + " kcal", Math.round(m.proteina) + " g proteína", Math.round(m.grasa) + " g grasa"].forEach(t => {
+        const ch = document.createElement("span"); ch.className = "chip"; ch.textContent = t; meta.appendChild(ch);
+      });
+      return meta;
+    }
+
     // Otro plato de la base con valores nutricionales parecidos y que no esté ya en la semana
-    function platoParecido(dia) {
-      const actual = platoBase(menu.cenas[dia].plato);
-      const usados = menu.cenas.map(c => normaliza(c.plato));
+    function platoParecido(d, t) {
+      const c = toma(menu, d, t);
+      const actual = platoBase(c && c.plato);
+      const usados = platosSemana().map(normaliza);
       const candidatos = menu.base.platos.filter(p => !usados.includes(normaliza(p.nombre)));
       if (!candidatos.length) return null;
       if (!actual) return candidatos[Math.floor(Math.random() * candidatos.length)];
-      const dist = p => Math.abs(p.kcal - actual.kcal) / 100 + Math.abs(p.proteina - actual.proteina) / 10;
+      const dist = p => Math.abs(p.kcal - actual.kcal) / 100 + Math.abs(p.proteina - actual.proteina) / 10
+        + Math.abs((p.grasa || 0) - (actual.grasa || 0)) / 10;
       candidatos.sort((a, b) => dist(a) - dist(b));
       const top = candidatos.slice(0, 2);
       return top[Math.floor(Math.random() * top.length)];
@@ -849,12 +932,13 @@
       });
     }
 
-    async function cambiarPlato(dia) {
-      const nuevo = platoParecido(dia);
+    async function cambiarPlato(dia, t) {
+      t = t || "cena";
+      const nuevo = platoParecido(dia, t);
       if (!nuevo) { estado("No quedan platos distintos en la base.", true); render(); return; }
-      const viejo = platoBase(menu.cenas[dia].plato);
-      const dianombre = menu.cenas[dia].dia;
-      const ok = await cambiar(d => { if (d.cenas && d.cenas[dia]) d.cenas[dia].plato = nuevo.nombre; },
+      const viejo = platoBase(toma(menu, dia, t).plato);
+      const dianombre = diasMenu()[dia].dia + " (" + t + ")";
+      const ok = await cambiar(d => { const c = toma(d, dia, t); if (c) c.plato = nuevo.nombre; },
         "Menú: " + dianombre + " → " + nuevo.nombre, "menu.json");
       if (!ok) return;
       let avisos = [];
@@ -868,9 +952,163 @@
         : "Menú y compra actualizados ✓");
     }
 
+    // Tarjeta del objetivo diario (guardado solo en este navegador)
+    function tarjetaObjetivo() {
+      const card = document.createElement("div");
+      card.className = "objetivo";
+      if (!objetivo || editandoObjetivo) {
+        const t = document.createElement("div");
+        t.className = "objetivo-titulo";
+        t.textContent = "Tu objetivo diario";
+        const p = document.createElement("p");
+        p.className = "objetivo-nota";
+        p.textContent = "Se guarda solo en este dispositivo, no en el repo. Sirve para calcular la meta de la comida del trabajo.";
+        const f = document.createElement("form");
+        f.className = "objetivo-form";
+        const campos = [["kcal", "kcal"], ["proteina", "g proteína"], ["grasa", "g grasa"]].map(([k, etq]) => {
+          const lab = document.createElement("label");
+          const inp = document.createElement("input");
+          inp.type = "number"; inp.inputMode = "numeric"; inp.min = "0"; inp.required = true; inp.name = k;
+          if (objetivo) inp.value = objetivo[k];
+          const s = document.createElement("span"); s.textContent = etq;
+          lab.append(inp, s);
+          f.appendChild(lab);
+          return inp;
+        });
+        const ok = document.createElement("button");
+        ok.type = "submit"; ok.className = "objetivo-guardar"; ok.textContent = "Guardar";
+        f.appendChild(ok);
+        if (objetivo) {
+          const cancelar = document.createElement("button");
+          cancelar.type = "button"; cancelar.className = "objetivo-cancelar"; cancelar.textContent = "Cancelar";
+          cancelar.addEventListener("click", () => { editandoObjetivo = false; render(); });
+          f.appendChild(cancelar);
+        }
+        f.addEventListener("submit", ev => {
+          ev.preventDefault();
+          const [kcal, proteina, grasa] = campos.map(c => Math.round(parseFloat(c.value)));
+          if (!(kcal > 0) || !(proteina >= 0) || !(grasa >= 0)) return;
+          objetivo = { kcal, proteina, grasa };
+          guardarObjetivo(objetivo);
+          editandoObjetivo = false;
+          render();
+        });
+        card.append(t, p, f);
+      } else {
+        const t = document.createElement("div");
+        t.className = "objetivo-linea";
+        const s = document.createElement("span");
+        s.innerHTML = "<strong>Objetivo diario:</strong> ";
+        s.appendChild(document.createTextNode(objetivo.kcal + " kcal · " + objetivo.proteina + " g proteína · " + objetivo.grasa + " g grasa"));
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "objetivo-editar"; b.textContent = "Cambiar";
+        b.addEventListener("click", () => { editandoObjetivo = true; render(); });
+        t.append(s, b);
+        card.appendChild(t);
+      }
+      return card;
+    }
+
+    function etiquetaToma(texto) {
+      const e = document.createElement("div");
+      e.className = "toma-etq";
+      e.textContent = texto;
+      return e;
+    }
+
+    function bloqueDesayuno(d) {
+      const div = document.createElement("div");
+      div.className = "toma";
+      div.appendChild(etiquetaToma("Desayuno"));
+      const t = document.createElement("div");
+      t.className = "cena-racion";
+      t.textContent = d.texto || "";
+      div.appendChild(t);
+      div.appendChild(chipsMacros(sumar(d)));
+      return div;
+    }
+
+    // Una comida o cena: plato con ↻, ración, macros y snack/fruta/postre.
+    // Si es comida de trabajo: meta = objetivo − desayuno − cena.
+    function bloqueToma(titulo, c, i, t, ctx) {
+      const div = document.createElement("div");
+      div.className = "toma";
+      div.appendChild(etiquetaToma(titulo));
+
+      if (c.trabajo) {
+        const nom = document.createElement("div");
+        nom.className = "item-nombre";
+        nom.textContent = "En el trabajo";
+        div.appendChild(nom);
+        const m = document.createElement("div");
+        m.className = "meta-comida";
+        if (objetivo && ctx && ctx.cena) {
+          const meta = restar(objetivo, sumar(ctx.desayuno, ctx.cena));
+          const pos = n => Math.max(0, Math.round(n));
+          m.textContent = "Meta aprox.: " + pos(meta.kcal) + " kcal · " + pos(meta.proteina) + " g proteína · " + pos(meta.grasa) + " g grasa";
+          const nota = document.createElement("div");
+          nota.className = "cena-racion";
+          nota.textContent = "Lo que queda del objetivo tras la cena. Si desayunas o picas algo, réstalo de aquí.";
+          div.append(m, nota);
+        } else {
+          m.textContent = objetivo ? "Meta: falta saber qué suma la cena." : "Guarda tu objetivo diario (arriba) para ver la meta de esta comida.";
+          div.appendChild(m);
+        }
+        return div;
+      }
+
+      const fila = document.createElement("div");
+      fila.className = "cena-plato";
+      const info = document.createElement("div");
+      info.className = "item-body";
+      const nom = document.createElement("div");
+      nom.className = "item-nombre";
+      nom.textContent = c.plato || "";
+      info.appendChild(nom);
+      const b = platoBase(c.plato);
+      if (b) {
+        const r = document.createElement("div");
+        r.className = "cena-racion";
+        r.textContent = b.racion;
+        info.append(r, chipsMacros(sumar(b)));
+      }
+      fila.appendChild(info);
+      if (token && c.plato) {
+        const btn = document.createElement("button");
+        btn.className = "refrescar";
+        btn.setAttribute("aria-label", "Cambiar " + c.plato + " por otro parecido");
+        btn.title = "Cambiar por otro plato parecido";
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>';
+        btn.addEventListener("click", () => { btn.classList.add("gira"); cambiarPlato(i, t); });
+        fila.appendChild(btn);
+      }
+      div.appendChild(fila);
+
+      const extras = document.createElement("div");
+      extras.className = "cena-extras";
+      [["Snack", c.snack], ["Fruta", c.fruta], ["Postre", c.postre]].forEach(([k, v]) => {
+        if (!v) return;
+        const d = document.createElement("div");
+        const e = document.createElement("span"); e.className = "cena-etq"; e.textContent = k;
+        d.append(e, document.createTextNode(v));
+        extras.appendChild(d);
+      });
+      if (extras.childNodes.length) {
+        if (c.extras && b) {
+          const tot = document.createElement("div");
+          tot.className = "toma-total";
+          tot.textContent = titulo + " completa " + textoMacros(sumar(b, c.extras));
+          extras.appendChild(tot);
+        }
+        div.appendChild(extras);
+      }
+      return div;
+    }
+
     function renderMenu() {
       contenidoEl.innerHTML = "";
-      if (!menu || !menu.cenas) { contenidoEl.appendChild(vacio("🍽️", "Sin menú", "Aún no hay menú esta semana.")); return; }
+      const dias = diasMenu();
+      if (!dias.length) { contenidoEl.appendChild(vacio("🍽️", "Sin menú", "Aún no hay menú esta semana.")); return; }
       const cab = document.createElement("div");
       cab.className = "resumen";
       cab.textContent = menu.semana || "";
@@ -881,55 +1119,41 @@
         n.textContent = menu.nota;
         contenidoEl.appendChild(n);
       }
+      contenidoEl.appendChild(tarjetaObjetivo());
+
       const ul = document.createElement("ul");
       ul.className = "menu";
-      menu.cenas.forEach((c, i) => {
+      dias.forEach((x, i) => {
         const li = document.createElement("li");
         li.className = "cena";
         li.style.animationDelay = Math.min(i * 40, 300) + "ms";
         const dia = document.createElement("div");
         dia.className = "cena-dia";
-        dia.textContent = c.dia;
-        const fila = document.createElement("div");
-        fila.className = "cena-plato";
-        const info = document.createElement("div");
-        info.className = "item-body";
-        const nom = document.createElement("div");
-        nom.className = "item-nombre";
-        nom.textContent = c.plato;
-        info.appendChild(nom);
-        const b = platoBase(c.plato);
-        if (b) {
-          const r = document.createElement("div");
-          r.className = "cena-racion";
-          r.textContent = b.racion;
-          const meta = document.createElement("div");
-          meta.className = "item-meta";
-          [ "≈ " + b.kcal + " kcal", b.proteina + " g proteína" ].forEach(t => {
-            const ch = document.createElement("span"); ch.className = "chip"; ch.textContent = t; meta.appendChild(ch);
-          });
-          info.append(r, meta);
+        dia.textContent = x.dia;
+        li.appendChild(dia);
+
+        const cena = macrosToma(x.cena);
+        const comida = macrosToma(x.comida);
+        const desayuno = x.desayuno ? sumar(x.desayuno) : null;
+
+        if (x.desayuno) li.appendChild(bloqueDesayuno(x.desayuno));
+        if (x.comida) li.appendChild(bloqueToma("Comida", x.comida, i, "comida", { cena, desayuno }));
+        if (x.cena) li.appendChild(bloqueToma("Cena", x.cena, i, "cena"));
+
+        // Total del día (solo si no hay comida de trabajo, que no se puede sumar)
+        if (x.comida && !x.comida.trabajo && comida && cena) {
+          const total = sumar(desayuno, comida, cena);
+          const t = document.createElement("div");
+          t.className = "dia-total";
+          let txt = "Total del día " + textoMacros(total);
+          if (objetivo) {
+            const r = restar(objetivo, total);
+            const fmt = (n, u) => (n >= 0 ? "faltan " : "sobran ") + Math.abs(Math.round(n)) + u;
+            txt += " — objetivo: " + fmt(r.kcal, " kcal") + ", " + fmt(r.proteina, " g proteína") + ", " + fmt(r.grasa, " g grasa");
+          }
+          t.textContent = txt;
+          li.appendChild(t);
         }
-        fila.appendChild(info);
-        if (token) {
-          const btn = document.createElement("button");
-          btn.className = "refrescar";
-          btn.setAttribute("aria-label", "Cambiar " + c.plato + " por otro parecido");
-          btn.title = "Cambiar por otro plato parecido";
-          btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>';
-          btn.addEventListener("click", () => { btn.classList.add("gira"); cambiarPlato(i); });
-          fila.appendChild(btn);
-        }
-        const extras = document.createElement("div");
-        extras.className = "cena-extras";
-        [["Snack", c.snack], ["Fruta", c.fruta], ["Postre", c.postre]].forEach(([k, v]) => {
-          if (!v) return;
-          const d = document.createElement("div");
-          const e = document.createElement("span"); e.className = "cena-etq"; e.textContent = k;
-          d.append(e, document.createTextNode(v));
-          extras.appendChild(d);
-        });
-        li.append(dia, fila, extras);
         ul.appendChild(li);
       });
       contenidoEl.appendChild(ul);
@@ -1154,6 +1378,7 @@
     function ordenGrupo(g) {
       const i = ORDEN_SUPER.indexOf(g);
       if (i >= 0) return i;
+      if (g === "Lidl/Aldi") return 0.5; // nombre antiguo, por si queda alguno
       return normaliza(g).startsWith("sin") ? 999 : 500;
     }
 

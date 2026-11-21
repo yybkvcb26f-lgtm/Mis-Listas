@@ -36,7 +36,10 @@
     },
     "Pasta – 1 paquete de 500 g (necesitas 260 g) · BM",
     "Zanahorias – 1 bolsa de 1 kg (necesitas 350 g) · BM",
-    "Granola – 1 sobre de 250 g (necesitas 90 g) · BM",
+    {
+      "texto": "Granola – 1 sobre de 250 g (necesitas 90 g) · BM",
+      "hecho": true
+    },
     "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
     "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
     "Salmón – 220 g · Sin súper"

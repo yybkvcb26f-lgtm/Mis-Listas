@@ -1,42 +1,43 @@
 {
   "compra": [
-    {
-      "texto": "Wraps integrales – 2 ud · Mercadona",
-      "hecho": true
-    },
-    {
-      "texto": "Tomates cherry – 200 g · BM",
-      "hecho": true
-    },
-    {
-      "texto": "Salmón – 150 g · Sin súper",
-      "hecho": true
-    },
-    {
-      "texto": "Prueba 2",
-      "hecho": true
-    },
-    {
-      "texto": "Atún – 1 lata · Mercadona",
-      "hecho": true
-    },
-    {
-      "texto": "Tomate – 1 ud · Aldi",
-      "hecho": true
-    },
-    {
-      "texto": "Quinoa – 60 g · Sin súper",
-      "hecho": true
-    },
-    {
-      "texto": "Pollo – 200 g · Aldi",
-      "hecho": true
-    },
-    {
-      "texto": "Verduras para asar – 300 g · Sin súper",
-      "hecho": true
-    },
-    "Cacao 100% – 1 ud · Mercadona"
+    "Pollo – 500 g · Aldi",
+    "Arroz – 180 g · Aldi",
+    "Huevos – 4 ud · Aldi",
+    "Tomate – 3 ud · Aldi",
+    "Carne picada de ternera – 150 g · Aldi",
+    "Tomate triturado – 150 g · Aldi",
+    "Pimiento – 500 g · Aldi",
+    "Queso – 110 g · Aldi",
+    "Pavo en lonchas – 150 g · Aldi",
+    "Aguacate – 1 ud (usas ½) · Aldi",
+    "Entrecot – 250 g · Aldi",
+    "Boniato – 550 g · Aldi",
+    "Jamón cocido – 120 g · Aldi",
+    "Yogur natural – 435 g · Aldi",
+    "Manzanas – 2 ud · Aldi",
+    "Yogur griego – 125 g · Aldi",
+    "Arándanos – 50 g · Aldi",
+    "Mandarinas – 4 ud · Aldi",
+    "Leche – 500 ml · Aldi",
+    "Kiwis – 4 ud · Aldi",
+    "Chocolate 70% – 20 g · Aldi",
+    "Plátanos – 1 ud · Aldi",
+    "Frutos rojos – 160 g · Aldi",
+    "Pan – 230 g · Lidl",
+    "Jamón ibérico – 80 g · Lidl",
+    "Cacao 100% – 1 ud · Mercadona",
+    "Verduras para asar – 400 g · Mercadona",
+    "Atún – 1 lata · Mercadona",
+    "Cebolla – 50 g · Mercadona",
+    "Wraps integrales – 3 ud · Mercadona",
+    "Cacao 100% – 20 g · Mercadona",
+    "Leche de coco – 100 ml · BM",
+    "Pasta – 260 g · BM",
+    "Zanahorias – 350 g · BM",
+    "Granola – 90 g · BM",
+    "Tomates cherry – 200 g · BM",
+    "Avena – 60 g · BM",
+    "Salmón – 220 g · Sin súper"
   ],
   "tareas-ideas": [
     "Trastero CC",

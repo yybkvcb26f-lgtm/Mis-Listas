@@ -1,34 +1,137 @@
 {
-  "semana": "Semana del 16 al 19 de noviembre de 2026",
-  "nota": "Comidas de lunes a viernes en el comedor del trabajo; aquí solo cenas.",
-  "cenas": [
+  "semana": "Semana del 23 al 29 de noviembre de 2026",
+  "nota": "Comidas de lunes a viernes en el comedor del trabajo.",
+  "dias": [
     {
       "dia": "Lunes",
-      "plato": "Tortilla de atún y tomate",
-      "snack": "Zanahorias 100 g",
-      "fruta": "Manzana 1 ud",
-      "postre": "Yogur griego 125 g con granola 30 g y arándanos 50 g"
+      "comida": {
+        "trabajo": true
+      },
+      "cena": {
+        "plato": "Pollo al curry con leche de coco y verduras asadas",
+        "snack": "Zanahorias 100 g",
+        "fruta": "Manzana 1 ud",
+        "postre": "Yogur griego 125 g con granola 30 g y arándanos 50 g",
+        "extras": {
+          "kcal": 445,
+          "proteina": 9,
+          "grasa": 19
+        }
+      }
     },
     {
       "dia": "Martes",
-      "plato": "Merluza a la plancha con brócoli y quinoa",
-      "snack": "Tomates cherry 100 g",
-      "fruta": "Mandarinas 2 ud",
-      "postre": "Leche 250 ml con cacao 100% 10 g y avena 30 g"
+      "comida": {
+        "trabajo": true
+      },
+      "cena": {
+        "plato": "Tortilla de atún y tomate con pan con tomate",
+        "snack": "Tomates cherry 100 g",
+        "fruta": "Mandarinas 2 ud",
+        "postre": "Leche 250 ml con cacao 100% 10 g y avena 30 g",
+        "extras": {
+          "kcal": 355,
+          "proteina": 16,
+          "grasa": 7
+        }
+      }
     },
     {
       "dia": "Miércoles",
-      "plato": "Pollo al horno con verduras asadas",
-      "snack": "Zanahorias 100 g",
-      "fruta": "Kiwis 2 ud",
-      "postre": "Yogur griego 125 g con granola 30 g y arándanos 50 g"
+      "comida": {
+        "trabajo": true
+      },
+      "cena": {
+        "plato": "Pasta con carne picada de ternera y sofrito",
+        "snack": "Pimiento en tiras 100 g",
+        "fruta": "Kiwis 2 ud",
+        "postre": "Chocolate 70% 20 g",
+        "extras": {
+          "kcal": 230,
+          "proteina": 5,
+          "grasa": 9
+        }
+      }
     },
     {
       "dia": "Jueves",
-      "plato": "Wrap integral de pavo con aguacate",
-      "snack": "Tomates cherry 100 g",
-      "fruta": "Plátano 1 ud",
-      "postre": "Leche 250 ml con cacao 100% 10 g y avena 30 g"
+      "comida": {
+        "trabajo": true
+      },
+      "cena": {
+        "plato": "Tostas de jamón ibérico, tomate y queso",
+        "snack": "Zanahorias 100 g",
+        "fruta": "Plátano 1 ud",
+        "postre": "Yogur natural 125 g con frutos rojos 80 g y granola 30 g",
+        "extras": {
+          "kcal": 390,
+          "proteina": 11,
+          "grasa": 10
+        }
+      }
+    },
+    {
+      "dia": "Viernes",
+      "comida": {
+        "trabajo": true
+      },
+      "cena": {
+        "plato": "Wraps de pavo, aguacate y queso",
+        "snack": "Tomates cherry 100 g",
+        "fruta": "Manzana 1 ud",
+        "postre": "Yogur natural 125 g",
+        "extras": {
+          "kcal": 175,
+          "proteina": 6,
+          "grasa": 4
+        }
+      }
+    },
+    {
+      "dia": "Sábado",
+      "desayuno": {
+        "texto": "Leche 200 ml y tostadas con aceite y jamón (o aguacate y jamón, o lomo)",
+        "kcal": 400,
+        "proteina": 20,
+        "grasa": 15
+      },
+      "comida": {
+        "plato": "Entrecot con boniato asado y pimiento"
+      },
+      "cena": {
+        "plato": "Ensalada templada de pasta con jamón cocido",
+        "snack": "Zanahorias 100 g",
+        "fruta": "Kiwis 2 ud",
+        "postre": "Yogur natural 125 g con frutos rojos 80 g y granola 30 g",
+        "extras": {
+          "kcal": 375,
+          "proteina": 12,
+          "grasa": 11
+        }
+      }
+    },
+    {
+      "dia": "Domingo",
+      "desayuno": {
+        "texto": "Leche 200 ml y tostadas con aceite y jamón (o aguacate y jamón, o lomo)",
+        "kcal": 400,
+        "proteina": 20,
+        "grasa": 15
+      },
+      "comida": {
+        "plato": "Pollo marinado con arroz y pimientos asados"
+      },
+      "cena": {
+        "plato": "Salmón al horno con boniato",
+        "snack": "Pimiento en tiras 100 g",
+        "fruta": "Mandarinas 2 ud",
+        "postre": "Leche 250 ml con cacao 100% 10 g y avena 30 g",
+        "extras": {
+          "kcal": 360,
+          "proteina": 16,
+          "grasa": 7
+        }
+      }
     }
   ],
   "base": {

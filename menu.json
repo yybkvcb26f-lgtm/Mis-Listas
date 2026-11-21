@@ -11,11 +11,11 @@
         "plato": "Pollo al curry con leche de coco y verduras asadas",
         "snack": "Zanahorias 100 g",
         "fruta": "Manzana 1 ud",
-        "postre": "Yogur griego 125 g con granola 30 g y arándanos 50 g",
+        "postre": "Yogur natural 125 g con granola 30 g y arándanos 50 g",
         "extras": {
-          "kcal": 445,
-          "proteina": 9,
-          "grasa": 19
+          "kcal": 360,
+          "proteina": 10,
+          "grasa": 11
         }
       }
     },
@@ -27,12 +27,12 @@
       "cena": {
         "plato": "Tortilla de atún y tomate con pan con tomate",
         "snack": "Tomates cherry 100 g",
-        "fruta": "Mandarinas 2 ud",
+        "fruta": "Kiwis 2 ud",
         "postre": "Leche 250 ml con cacao 100% 10 g y avena 30 g",
         "extras": {
-          "kcal": 355,
-          "proteina": 16,
-          "grasa": 7
+          "kcal": 375,
+          "proteina": 17,
+          "grasa": 8
         }
       }
     },
@@ -124,10 +124,10 @@
       "cena": {
         "plato": "Salmón al horno con boniato",
         "snack": "Pimiento en tiras 100 g",
-        "fruta": "Mandarinas 2 ud",
+        "fruta": "Fresas 150 g",
         "postre": "Leche 250 ml con cacao 100% 10 g y avena 30 g",
         "extras": {
-          "kcal": 360,
+          "kcal": 340,
           "proteina": 16,
           "grasa": 7
         }
@@ -154,7 +154,7 @@
             "unidad": "g"
           },
           {
-            "producto": "Pimiento",
+            "producto": "Verduras para asar",
             "cantidad": 150,
             "unidad": "g"
           },
@@ -271,7 +271,7 @@
             "unidad": "g"
           },
           {
-            "producto": "Pimiento",
+            "producto": "Verduras para asar",
             "cantidad": 100,
             "unidad": "g"
           }
@@ -295,7 +295,7 @@
             "unidad": "g"
           },
           {
-            "producto": "Pimiento",
+            "producto": "Verduras para asar",
             "cantidad": 75,
             "unidad": "g"
           },
@@ -359,7 +359,7 @@
             "unidad": "g"
           },
           {
-            "producto": "Pimiento",
+            "producto": "Verduras para asar",
             "cantidad": 50,
             "unidad": "g"
           }
@@ -466,7 +466,6 @@
     ],
     "frutas": [
       "Manzana",
-      "Mandarina",
       "Kiwi",
       "Plátano",
       "Fresas",
@@ -474,7 +473,7 @@
       "Frutos rojos"
     ],
     "postres": [
-      "Yogur griego con granola sin azúcar y arándanos",
+      "Yogur natural con granola sin azúcar y arándanos",
       "Yogur natural con frutos rojos y granola",
       "Leche con cacao 100% puro y avena"
     ],

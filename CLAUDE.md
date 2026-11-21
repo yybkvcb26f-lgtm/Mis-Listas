@@ -29,6 +29,10 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
   - Si ya hay uno pendiente y con esos envases basta para la semana, se dejan los envases como están (solo se actualiza el «necesitas» con lo de la semana nueva). Si no basta, se sube al número de envases necesario (no se suman los dos). Al cambiar un plato con ↻, la app suma o resta al «necesitas» y los envases solo suben, nunca bajan.
   - Los productos que no están en `envases.json` (pimiento, cebolla, boniato, tomate, aguacate, fruta, entrecot, presa, salmón, atún…) siguen con su cantidad exacta. El atún va siempre en gramos (`Atún – 160 g · Mercadona`), nunca en latas: unas veces lo compro en lata y otras en bote.
   - Yo tacho lo que ya tenga en casa. La app (botón ↻) sigue las mismas reglas.
+- Productos unificados (no aparecen nunca sueltos en la compra ni en el menú):
+  - Pimiento → se compra como `Verduras para asar` (también el snack «Pimiento en tiras»): sus gramos se suman a las verduras para asar.
+  - Yogur griego → solo `Yogur natural`.
+  - Mandarinas: no las compro; no se ponen como fruta (mejor kiwis o fresas).
 
 ## Reglas
 

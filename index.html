@@ -376,6 +376,18 @@
     .refrescar:active { transform: scale(.92); }
     .refrescar.gira svg { animation: gira .6s linear infinite; }
     @keyframes gira { to { transform: rotate(360deg); } }
+    /* Botón ✓ de comida hecha */
+    .hecho-btn {
+      appearance: none; border: 2px solid color-mix(in srgb, var(--muted) 45%, transparent); flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: grid; place-items: center; cursor: pointer;
+      color: transparent; background: transparent; font-weight: 800; font-size: 1rem;
+    }
+    .hecho-btn:active { transform: scale(.92); }
+    .hecho-btn[aria-pressed="true"] { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+    .hecho-btn:disabled { opacity: .5; }
+    .toma.hecha .item-body, .toma.hecha .cena-extras { opacity: .45; }
+    .toma.hecha .item-nombre { text-decoration: line-through; text-decoration-thickness: 2px; }
     .base {
       background: var(--card); border: 1px solid var(--border); border-radius: 18px;
       padding: 14px 16px; box-shadow: var(--shadow);
@@ -1048,6 +1060,127 @@
       });
     }
 
+    // --- Comida hecha: descuenta de la compra lo que lleva (plato + snack/fruta/postre) ---
+    // Productos que en el menú se llaman distinto que en la compra
+    const ALIAS_COMPRA = { "pimiento en tiras": "Verduras para asar", "pimiento": "Verduras para asar",
+      "cacao": "Cacao 100%", "yogur griego": "Yogur natural", "frutos rojos": "Frambuesas" };
+    function productoCompra(nombre, lista) {
+      const n = normaliza(nombre);
+      if (ALIAS_COMPRA[n]) return ALIAS_COMPRA[n];
+      const conocidos = Object.keys(supermercados).concat(Object.keys(envases),
+        (lista || []).map(it => partes(textoItem(it)).nombre));
+      const k = conocidos.find(x => mismoProducto(x, nombre));
+      return k || (nombre.charAt(0).toUpperCase() + nombre.slice(1));
+    }
+    // "Yogur natural 125 g con granola 30 g y arándanos 50 g" → [{producto, cantidad, unidad}, …]
+    function leerExtra(texto, lista) {
+      const out = [];
+      (texto || "").split(/\s+(?:con|y)\s+|,\s*/).forEach(trozo => {
+        const m = trozo.trim().match(/^(.*?)\s+([\d.,]+)\s*(g|kg|ml|l|ud)\s*$/i);
+        if (!m) return;
+        let n = parseFloat(m[2].replace(",", ".")), u = unidadNorm(m[3]);
+        if (u === "kg") { n *= 1000; u = "g"; }
+        if (u === "l") { n *= 1000; u = "ml"; }
+        out.push({ producto: productoCompra(m[1], lista), cantidad: n, unidad: u });
+      });
+      return out;
+    }
+    function cosasDeToma(c, lista) {
+      const todo = [];
+      const b = platoBase(c.plato);
+      ((b && b.ingredientes) || []).forEach(g => todo.push({ producto: g.producto, cantidad: g.cantidad, unidad: unidadNorm(g.unidad) }));
+      [c.snack, c.fruta, c.postre].forEach(t => leerExtra(t, lista).forEach(x => todo.push(x)));
+      // juntar el mismo producto
+      const junto = {};
+      todo.forEach(x => {
+        const k = singular(normaliza(x.producto)) + "|" + x.unidad;
+        if (!junto[k]) junto[k] = { ...x, cantidad: 0 };
+        junto[k].cantidad += x.cantidad;
+      });
+      return Object.values(junto);
+    }
+    // Resta de lo PENDIENTE (lo tachado no se toca). Devuelve lo que se ha descontado de verdad.
+    function descontarCompra(lista, cosas, avisos) {
+      const hecho = [];
+      cosas.forEach(x => {
+        const u = unidadNorm(x.unidad);
+        const i = lista.findIndex(it => !esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, x.producto));
+        if (i < 0) return;
+        const p = partes(textoItem(lista[i]));
+        const env = envaseDe(x.producto);
+        if (env && typeof env === "object") {
+          const uE = unidadNorm(env.unidad);
+          const nec = leerCantidad(textoNecesitas(p.cantidad));
+          if (u !== uE || !nec || nec.u !== uE) { avisos.push(p.nombre); return; }
+          const q = Math.min(x.cantidad, nec.n);
+          const queda = nec.n - q;
+          if (queda <= 0.001) lista.splice(i, 1);
+          else lista[i] = p.nombre + " – " + textoEnvases(Math.ceil(queda / env.envase - 1e-9), env)
+            + " (necesitas " + textoCantidad(queda, uE) + ") · " + (p.tienda || superDe(p.nombre) || "Sin súper");
+          hecho.push({ producto: x.producto, cantidad: q, unidad: uE });
+        } else {
+          const actual = leerCantidad(p.cantidad);
+          if (!actual || actual.u !== u) { avisos.push(p.nombre); return; }
+          const q = Math.min(x.cantidad, actual.n);
+          const queda = actual.n - q;
+          if (queda <= 0.001) lista.splice(i, 1);
+          else lista[i] = p.nombre + " – " + escribirCantidad(queda, u) + " · " + (p.tienda || superDe(p.nombre) || "Sin súper");
+          hecho.push({ producto: x.producto, cantidad: q, unidad: u });
+        }
+      });
+      return hecho;
+    }
+    // Vuelve a poner en la compra exactamente lo que se descontó
+    function devolverCompra(lista, descontado, avisos) {
+      (descontado || []).forEach(x => {
+        const env = envaseDe(x.producto);
+        if (!(env && typeof env === "object")) { ajustarProducto(lista, x.producto, x.cantidad, x.unidad, avisos); return; }
+        const uE = unidadNorm(env.unidad);
+        const i = lista.findIndex(it => !esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, x.producto));
+        if (i < 0) {
+          lista.push(x.producto + " – " + textoEnvases(Math.max(1, Math.ceil(x.cantidad / env.envase - 1e-9)), env)
+            + " (necesitas " + textoCantidad(x.cantidad, uE) + ") · " + (superDe(x.producto) || "Sin súper"));
+          return;
+        }
+        const p = partes(textoItem(lista[i]));
+        const nec = leerCantidad(textoNecesitas(p.cantidad));
+        const total = (nec && nec.u === uE ? nec.n : 0) + x.cantidad;
+        const ya = cuantosEnvases(quitarNecesitas(p.cantidad), env) || 0;
+        lista[i] = p.nombre + " – " + textoEnvases(Math.max(ya, Math.ceil(total / env.envase - 1e-9)), env)
+          + " (necesitas " + textoCantidad(total, uE) + ") · " + (p.tienda || superDe(p.nombre) || "Sin súper");
+      });
+    }
+
+    async function marcarHecha(dia, t) {
+      const c = toma(menu, dia, t);
+      if (!c || !c.plato) return;
+      const nombre = diasMenu()[dia].dia + " (" + t + ")";
+      let avisos = [];
+      if (!c.hecha) {
+        let descontado = [];
+        const okCompra = await cambiar(d => {
+          avisos = [];
+          if (!d.compra) d.compra = [];
+          descontado = descontarCompra(d.compra, cosasDeToma(c, d.compra), avisos);
+        }, "Compra: descontar " + nombre + " (hecha)");
+        if (!okCompra) return;
+        const okMenu = await cambiar(d => { const x = toma(d, dia, t); if (x) { x.hecha = true; x.descontado = descontado; } },
+          "Menú: " + nombre + " hecha", "menu.json");
+        if (okMenu) estado(avisos.length ? "Hecha ✓. Revisa a mano: " + avisos.join(", ") + "." : "Hecha ✓ — descontada de la compra");
+      } else {
+        const descontado = c.descontado || [];
+        const okCompra = await cambiar(d => {
+          avisos = [];
+          if (!d.compra) d.compra = [];
+          devolverCompra(d.compra, descontado, avisos);
+        }, "Compra: devolver " + nombre + " (desmarcada)");
+        if (!okCompra) return;
+        const okMenu = await cambiar(d => { const x = toma(d, dia, t); if (x) { delete x.hecha; delete x.descontado; } },
+          "Menú: " + nombre + " sin hacer", "menu.json");
+        if (okMenu) estado(avisos.length ? "Desmarcada. Revisa a mano: " + avisos.join(", ") + "." : "Desmarcada — vuelve a la compra");
+      }
+    }
+
     async function cambiarPlato(dia, t) {
       t = t || "cena";
       const nuevo = platoParecido(dia, t);
@@ -1149,7 +1282,7 @@
     function bloqueToma(titulo, c, i, t, ctx) {
       const div = document.createElement("div");
       div.className = "toma";
-      div.appendChild(etiquetaToma(titulo));
+      div.appendChild(etiquetaToma(titulo + (c.hecha ? " · hecha ✓" : "")));
 
       if (c.trabajo) {
         const nom = document.createElement("div");
@@ -1173,6 +1306,7 @@
         return div;
       }
 
+      if (c.hecha) div.classList.add("hecha");
       const fila = document.createElement("div");
       fila.className = "cena-plato";
       const info = document.createElement("div");
@@ -1190,6 +1324,16 @@
       }
       fila.appendChild(info);
       if (token && c.plato) {
+        const ok = document.createElement("button");
+        ok.className = "hecho-btn";
+        ok.textContent = "✓";
+        ok.setAttribute("aria-pressed", c.hecha ? "true" : "false");
+        ok.setAttribute("aria-label", (c.hecha ? "Desmarcar " : "Marcar como hecha: ") + c.plato);
+        ok.title = c.hecha ? "Desmarcar (vuelve a la compra)" : "Marcar como hecha (se descuenta de la compra)";
+        ok.addEventListener("click", () => { ok.disabled = true; marcarHecha(i, t); });
+        fila.appendChild(ok);
+      }
+      if (token && c.plato && !c.hecha) {
         const btn = document.createElement("button");
         btn.className = "refrescar";
         btn.setAttribute("aria-label", "Cambiar " + c.plato + " por otro parecido");

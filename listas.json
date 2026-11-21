@@ -5,7 +5,10 @@
     "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
     "Tomate – 3 ud · Aldi",
     "Carne picada de ternera – 1 bandeja de 400 g (necesitas 150 g) · Aldi",
-    "Tomate triturado – 1 bote de 400 g (necesitas 150 g) · Aldi",
+    {
+      "texto": "Tomate triturado – 1 bote de 400 g (necesitas 150 g) · Aldi",
+      "hecho": true
+    },
     "Queso – 1 paquete de 250 g (necesitas 110 g) · Aldi",
     "Pavo en lonchas – 1 paquete de 150 g (necesitas 150 g) · Aldi",
     "Aguacate – 1 ud (usas ½) · Aldi",

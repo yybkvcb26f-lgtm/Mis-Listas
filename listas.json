@@ -41,7 +41,10 @@
       "hecho": true
     },
     "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
-    "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
+    {
+      "texto": "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
+      "hecho": true
+    },
     "Salmón – 220 g · Sin súper"
   ],
   "tareas-ideas": [

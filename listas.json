@@ -49,7 +49,10 @@
       "texto": "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
       "hecho": true
     },
-    "Zanahorias – 1 bolsa de 1 kg (necesitas 300 g) · BM",
+    {
+      "texto": "Zanahorias – 1 bolsa de 1 kg (necesitas 300 g) · BM",
+      "hecho": true
+    },
     {
       "texto": "Granola – 1 sobre de 250 g (necesitas 90 g) · BM",
       "hecho": true

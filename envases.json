@@ -95,7 +95,7 @@
     "singular": "pack",
     "plural": "packs"
   },
-  "Frutos rojos": {
+  "Frambuesas": {
     "envase": 150,
     "unidad": "g",
     "singular": "tarrina",
@@ -120,7 +120,7 @@
     "plural": "bolsas"
   },
   "Verduras para asar": {
-    "envase": 400,
+    "envase": 450,
     "unidad": "g",
     "singular": "bolsa",
     "plural": "bolsas"
@@ -148,5 +148,11 @@
     "unidad": "ud",
     "singular": "docena",
     "plural": "docenas"
+  },
+  "Cebolla": {
+    "envase": 450,
+    "unidad": "g",
+    "singular": "bolsa",
+    "plural": "bolsas"
   }
 }

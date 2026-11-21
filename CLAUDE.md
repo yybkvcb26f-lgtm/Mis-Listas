@@ -27,12 +27,13 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
   - En la compra van en envases enteros, nunca en gramos: se calcula lo que pide el menú de la semana (platos + snack/fruta/postre) y se redondea HACIA ARRIBA: 600 g de pasta → `Pasta – 2 paquetes de 500 g · BM`; 180 g de arroz → `Arroz – 2 vasitos de 100 g · Aldi`; 40 g de chocolate → `Chocolate 70% – 1 tableta de 100 g · Aldi`; 1,5 l de leche → `Leche – 2 bricks de 1 l · Aldi`. Siempre «N envases de <tamaño>», con el tamaño de 1 envase (en kg o l si llega a 1000). Singular con 1 y plural con más.
   - Detrás, entre paréntesis, lo que pide el menú de esa semana: `Pasta – 1 paquete de 500 g (necesitas 260 g) · BM`; `Leche – 1 brick de 1 l (necesitas 500 ml) · Aldi`; `Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi`. La app lo enseña como un segundo globo discreto. En kg o l si llega a 1000 (`necesitas 1,5 l`).
   - Si ya hay uno pendiente y con esos envases basta para la semana, se dejan los envases como están (solo se actualiza el «necesitas» con lo de la semana nueva). Si no basta, se sube al número de envases necesario (no se suman los dos). Al cambiar un plato con ↻, la app suma o resta al «necesitas» y los envases solo suben, nunca bajan.
-  - Los productos que no están en `envases.json` (pimiento, cebolla, boniato, tomate, aguacate, fruta, entrecot, presa, salmón, atún…) siguen con su cantidad exacta. El atún va siempre en gramos (`Atún – 160 g · Mercadona`), nunca en latas: unas veces lo compro en lata y otras en bote.
+  - Los productos que no están en `envases.json` (boniato, tomate, aguacate, fruta, entrecot, presa, salmón, atún…) siguen con su cantidad exacta. El atún va siempre en gramos (`Atún – 160 g · Mercadona`), nunca en latas: unas veces lo compro en lata y otras en bote.
   - Yo tacho lo que ya tenga en casa. La app (botón ↻) sigue las mismas reglas.
 - Productos unificados (no aparecen nunca sueltos en la compra ni en el menú):
   - Pimiento → se compra como `Verduras para asar` (también el snack «Pimiento en tiras»): sus gramos se suman a las verduras para asar.
   - Yogur griego → solo `Yogur natural`.
   - Mandarinas: no las compro; no se ponen como fruta (mejor kiwis o fresas).
+  - Frutos rojos → se llaman `Frambuesas` (en el menú y en la compra).
 
 ## Reglas
 

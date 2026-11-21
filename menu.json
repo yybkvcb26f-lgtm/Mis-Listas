@@ -62,7 +62,7 @@
         "plato": "Tostas de jamón ibérico, tomate y queso",
         "snack": "Zanahorias 100 g",
         "fruta": "Plátano 1 ud",
-        "postre": "Yogur natural 125 g con frutos rojos 80 g y granola 30 g",
+        "postre": "Yogur natural 125 g con frambuesas 80 g y granola 30 g",
         "extras": {
           "kcal": 390,
           "proteina": 11,
@@ -102,7 +102,7 @@
         "plato": "Ensalada templada de pasta con jamón cocido",
         "snack": "Zanahorias 100 g",
         "fruta": "Kiwis 2 ud",
-        "postre": "Yogur natural 125 g con frutos rojos 80 g y granola 30 g",
+        "postre": "Yogur natural 125 g con frambuesas 80 g y granola 30 g",
         "extras": {
           "kcal": 375,
           "proteina": 12,
@@ -470,11 +470,11 @@
       "Plátano",
       "Fresas",
       "Mango",
-      "Frutos rojos"
+      "Frambuesas"
     ],
     "postres": [
       "Yogur natural con granola sin azúcar y arándanos",
-      "Yogur natural con frutos rojos y granola",
+      "Yogur natural con frambuesas y granola",
       "Leche con cacao 100% puro y avena"
     ],
     "postres_ligeros": [

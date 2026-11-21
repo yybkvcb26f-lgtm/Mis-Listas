@@ -13,6 +13,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
   - Todas las cenas: `{"plato", "snack", "fruta", "postre", "extras"}`. `extras` = `{"kcal", "proteina", "grasa"}` estimados de snack + fruta + postre juntos.
   - `base`: la base de platos; cada plato tiene `nombre`, `racion` (texto con cantidades por ración), `kcal`, `proteina` y `grasa` (estimados), `ingredientes` (`[{"producto", "cantidad", "unidad"}]`, unidad `g`, `ml`, `ud` o `lata`; `producto` con el mismo nombre que se usa en la compra) y, si toca, `"postre_ligero": true`. Además, listas de `snacks`, `frutas`, `postres` y `postres_ligeros` (solo nombres).
   - Desde la app, el botón ↻ de cada comida o cena cambia el plato por otro de la base con valores nutricionales parecidos y ajusta sola la compra: resta los `ingredientes` del plato viejo y suma los del nuevo (si un producto queda a 0 se quita; si no estaba, se añade con su súper). En los productos por envase ajusta el «necesitas»: los envases solo suben si dejan de bastar, y si el «necesitas» llega a 0 el producto se quita.
+  - Botón ✓ de cada comida o cena con plato («hecha»): descuenta de lo PENDIENTE de la compra lo que lleva (ingredientes del plato + snack/fruta/postre; lo tachado no se toca; en los productos por envase baja el «necesitas» y los envases pueden bajar; si algo llega a 0 se quita). Guarda en esa comida `"hecha": true` y `"descontado": [{"producto", "cantidad", "unidad"}]` con lo que se descontó de verdad. Al desmarcar, devuelve exactamente eso a la compra y borra los dos campos. Mientras está hecha no tiene ↻.
   - La app también entiende el formato antiguo (`cenas`, solo lunes a jueves), pero ya no se usa.
 - **Objetivo diario (kcal, proteína, grasa): es privado y NO va nunca en el repo** (el repo es público). Lo tiene la tarea programada del sábado y yo lo guardo en el navegador de mis dispositivos. No lo escribas en ningún archivo, commit ni PR; si no lo tienes, no lo inventes.
 - `envases.json`: productos que se compran por envase y cuánto es un envase (ver «Formato de los elementos»).
@@ -55,6 +56,7 @@ Cada sábado se renueva `menu.json` con la semana siguiente (lunes a domingo):
 - Lunes a viernes: `comida` = `{"trabajo": true}`.
 - Sábado y domingo: `desayuno` = `{"texto": "Leche 200 ml y tostadas con aceite y jamón (o aguacate y jamón, o lomo)", "kcal": 400, "proteina": 20, "grasa": 15}` y `comida` = `{"plato"}`. Desayuno + comida + cena de esos días tienen que acercarse al objetivo diario (aprox. ±10 %): elige la pareja de platos y ajusta snack, fruta y postre para cuadrarlo, y evita juntar dos platos con mucha grasa.
 - Cada cena: snack, fruta y postre de la base con su cantidad, y `extras` con sus kcal, proteína y grasa estimados.
+- La semana nueva empieza sin comidas hechas (sin `hecha` ni `descontado`).
 - Si te pido un plato nuevo, añádelo a `base.platos` con `racion`, `ingredientes`, `kcal`, `proteina` y `grasa`.
 
 Postres: en `menu.json` existe la lista `base.postres_ligeros`, además de `base.postres`. Los platos con `"postre_ligero": true` llevan un postre de `base.postres_ligeros` (con cantidad); el resto, uno de `base.postres` (con cantidad).

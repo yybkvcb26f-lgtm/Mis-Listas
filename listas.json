@@ -64,6 +64,9 @@
     },
     "Salmón – 220 g · Sin súper",
     "Presa ibérica – 220 g · Aldi",
-    "Cebolla – 1 bolsa de 450 g (necesitas 125 g) · Mercadona"
+    {
+      "texto": "Cebolla – 1 bolsa de 450 g (necesitas 125 g) · Mercadona",
+      "hecho": true
+    }
   ]
 }

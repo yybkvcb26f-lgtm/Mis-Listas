@@ -248,6 +248,12 @@
       color: var(--accent);
       background: var(--accent-soft);
     }
+    /* Lo que pide el menú esta semana: discreto, al lado del envase */
+    .chip.necesitas {
+      font-weight: 500;
+      background: transparent;
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--muted) 35%, transparent);
+    }
     mark {
       background: color-mix(in srgb, var(--accent-2) 30%, transparent);
       color: inherit;
@@ -906,6 +912,22 @@
       const k = Object.keys(envases).find(e => mismoProducto(e, producto));
       return k === undefined ? null : envases[k];
     }
+    // "1 paquete de 500 g (necesitas 260 g)": lo de dentro del paréntesis es lo que pide el menú esta semana
+    const RE_NECESITAS = /\s*\(necesitas\s+([^)]+)\)\s*$/i;
+    function textoNecesitas(cantidad) {
+      const m = (cantidad || "").match(RE_NECESITAS);
+      return m ? m[1].trim() : "";
+    }
+    function quitarNecesitas(cantidad) {
+      return (cantidad || "").replace(RE_NECESITAS, "").trim();
+    }
+    // 260, "g" → "260 g"; 1500, "ml" → "1,5 l"; 1200, "g" → "1,2 kg"
+    function textoCantidad(n, u) {
+      const dec = x => String(Math.round(x * 100) / 100).replace(".", ",");
+      if (u === "g" && n >= 1000) return dec(n / 1000) + " kg";
+      if (u === "ml" && n >= 1000) return dec(n / 1000) + " l";
+      return dec(n) + " " + u;
+    }
     // "2 paquetes" → 2; "1 l" → 1; "180 g" → envases necesarios para 180 g; "1 ud" o sin cantidad → 1
     function cuantosEnvases(cantidad, env) {
       if (!cantidad || !cantidad.trim()) return 1;
@@ -925,10 +947,7 @@
       return n + " " + (n === 1 ? env.singular : env.plural) + " de " + tamanoEnvase(env);
     }
     function tamanoEnvase(env) {
-      const u = unidadNorm(env.unidad), t = env.envase;
-      if (u === "g" && t >= 1000) return bonito(t / 1000) + " kg";
-      if (u === "ml" && t >= 1000) return bonito(t / 1000) + " l";
-      return bonito(t) + " " + u;
+      return textoCantidad(env.envase, unidadNorm(env.unidad));
     }
     // Cantidad que piden los platos del menú de la semana para un producto (en su unidad)
     function necesidadSemana(producto, u) {
@@ -951,17 +970,24 @@
       if (env && typeof env === "object") {
         const uE = unidadNorm(env.unidad);
         if (unidadNorm(unidad) !== uE) { avisos.push(producto); return; }
-        if (delta <= 0) return; // lo que ya está en la lista no se resta
-        const necesidad = Math.max(necesidadSemana(producto, uE), delta);
-        const req = Math.max(1, Math.ceil(necesidad / env.envase - 1e-9));
+        const escribir = (envs, necesidad, tienda) => producto + " – " + textoEnvases(envs, env)
+          + (necesidad > 0 ? " (necesitas " + textoCantidad(necesidad, uE) + ")" : "")
+          + " · " + (tienda || superDe(producto) || "Sin súper");
         if (i >= 0) {
           const p = partes(textoItem(lista[i]));
-          const ya = cuantosEnvases(p.cantidad, env);
+          const ya = cuantosEnvases(quitarNecesitas(p.cantidad), env);
           if (ya === null) { avisos.push(p.nombre); return; }
-          if (ya >= req) return;
-          lista[i] = producto + " – " + textoEnvases(req, env) + " · " + (p.tienda || superDe(producto) || "Sin súper");
-        } else {
-          lista.push(producto + " – " + textoEnvases(req, env) + " · " + (superDe(producto) || "Sin súper"));
+          const nec = leerCantidad(textoNecesitas(p.cantidad));
+          let necesidad;
+          if (nec && nec.u === uE) necesidad = Math.max(0, nec.n + delta); // se recalcula lo que pide la semana
+          else if (delta > 0) necesidad = Math.max(necesidadSemana(producto, uE), delta);
+          else return;
+          const req = necesidad > 0 ? Math.ceil(necesidad / env.envase - 1e-9) : 0;
+          // Opción A: los envases nunca bajan; solo suben si no bastan
+          lista[i] = escribir(Math.max(ya, req), necesidad, p.tienda);
+        } else if (delta > 0) {
+          const necesidad = Math.max(necesidadSemana(producto, uE), delta);
+          lista.push(escribir(Math.max(1, Math.ceil(necesidad / env.envase - 1e-9)), necesidad));
         }
         return;
       }
@@ -1419,7 +1445,11 @@
       if (p.cantidad || (p.tienda && activa !== "compra")) {
         const meta = document.createElement("div");
         meta.className = "item-meta";
-        if (p.cantidad) { const c = document.createElement("span"); c.className = "chip"; c.textContent = p.cantidad; meta.appendChild(c); }
+        if (p.cantidad) {
+          const nec = textoNecesitas(p.cantidad);
+          const c = document.createElement("span"); c.className = "chip"; c.textContent = quitarNecesitas(p.cantidad); meta.appendChild(c);
+          if (nec) { const n = document.createElement("span"); n.className = "chip necesitas"; n.textContent = "necesitas " + nec; meta.appendChild(n); }
+        }
         if (p.tienda && activa !== "compra") { const t = document.createElement("span"); t.className = "chip tienda"; t.textContent = p.tienda; meta.appendChild(t); }
         body.appendChild(meta);
       }

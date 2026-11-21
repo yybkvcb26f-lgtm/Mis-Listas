@@ -125,7 +125,40 @@
           "kcal": 375,
           "proteina": 12,
           "grasa": 11
-        }
+        },
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Presa ibérica",
+            "cantidad": 220,
+            "unidad": "g"
+          },
+          {
+            "producto": "Arroz",
+            "cantidad": 70,
+            "unidad": "g"
+          },
+          {
+            "producto": "Verduras para asar",
+            "cantidad": 75,
+            "unidad": "g"
+          },
+          {
+            "producto": "Kiwis",
+            "cantidad": 2,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Yogur natural",
+            "cantidad": 125,
+            "unidad": "g"
+          },
+          {
+            "producto": "Frambuesas",
+            "cantidad": 80,
+            "unidad": "g"
+          }
+        ]
       }
     },
     {

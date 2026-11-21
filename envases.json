@@ -50,8 +50,8 @@
   "Leche": {
     "envase": 1000,
     "unidad": "ml",
-    "singular": "l",
-    "plural": "l"
+    "singular": "brick",
+    "plural": "bricks"
   },
   "Pan": {
     "envase": 250,

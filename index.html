@@ -920,8 +920,15 @@
       if (c && c.u === "ud") return c.n;
       return null;
     }
+    // 2 → "2 paquetes de 500 g"; 1 → "1 brick de 1 l"
     function textoEnvases(n, env) {
-      return n + " " + (n === 1 ? env.singular : env.plural);
+      return n + " " + (n === 1 ? env.singular : env.plural) + " de " + tamanoEnvase(env);
+    }
+    function tamanoEnvase(env) {
+      const u = unidadNorm(env.unidad), t = env.envase;
+      if (u === "g" && t >= 1000) return bonito(t / 1000) + " kg";
+      if (u === "ml" && t >= 1000) return bonito(t / 1000) + " l";
+      return bonito(t) + " " + u;
     }
     // Cantidad que piden los platos del menú de la semana para un producto (en su unidad)
     function necesidadSemana(producto, u) {

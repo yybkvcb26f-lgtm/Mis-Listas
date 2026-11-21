@@ -1,15 +1,152 @@
 {
-  "Chocolate 70%": "1 ud",
-  "Cacao 100%": "1 ud",
+  "Arroz": {
+    "envase": 100,
+    "unidad": "g",
+    "singular": "vasito",
+    "plural": "vasitos"
+  },
+  "Pasta": {
+    "envase": 500,
+    "unidad": "g",
+    "singular": "paquete",
+    "plural": "paquetes"
+  },
+  "Tomate triturado": {
+    "envase": 400,
+    "unidad": "g",
+    "singular": "bote",
+    "plural": "botes"
+  },
+  "Leche de coco": {
+    "envase": 200,
+    "unidad": "ml",
+    "singular": "brick",
+    "plural": "bricks"
+  },
+  "Avena": {
+    "envase": 250,
+    "unidad": "g",
+    "singular": "sobre",
+    "plural": "sobres"
+  },
+  "Granola": {
+    "envase": 250,
+    "unidad": "g",
+    "singular": "sobre",
+    "plural": "sobres"
+  },
+  "Chocolate 70%": {
+    "envase": 100,
+    "unidad": "g",
+    "singular": "tableta",
+    "plural": "tabletas"
+  },
+  "Cacao 100%": {
+    "envase": 250,
+    "unidad": "g",
+    "singular": "bote",
+    "plural": "botes"
+  },
   "Leche": {
     "envase": 1000,
     "unidad": "ml",
-    "texto": "l"
+    "singular": "l",
+    "plural": "l"
   },
-  "Tomate triturado": "1 ud",
-  "Leche de coco": "1 ud",
-  "Pasta": "1 ud",
-  "Arroz": "",
-  "Avena": "1 ud",
-  "Granola": "1 ud"
+  "Pan": {
+    "envase": 250,
+    "unidad": "g",
+    "singular": "barra",
+    "plural": "barras"
+  },
+  "Queso": {
+    "envase": 250,
+    "unidad": "g",
+    "singular": "paquete",
+    "plural": "paquetes"
+  },
+  "Pavo en lonchas": {
+    "envase": 150,
+    "unidad": "g",
+    "singular": "paquete",
+    "plural": "paquetes"
+  },
+  "Jamón cocido": {
+    "envase": 200,
+    "unidad": "g",
+    "singular": "paquete",
+    "plural": "paquetes"
+  },
+  "Jamón ibérico": {
+    "envase": 100,
+    "unidad": "g",
+    "singular": "sobre",
+    "plural": "sobres"
+  },
+  "Yogur natural": {
+    "envase": 500,
+    "unidad": "g",
+    "singular": "pack",
+    "plural": "packs"
+  },
+  "Yogur griego": {
+    "envase": 500,
+    "unidad": "g",
+    "singular": "pack",
+    "plural": "packs"
+  },
+  "Frutos rojos": {
+    "envase": 150,
+    "unidad": "g",
+    "singular": "tarrina",
+    "plural": "tarrinas"
+  },
+  "Arándanos": {
+    "envase": 125,
+    "unidad": "g",
+    "singular": "tarrina",
+    "plural": "tarrinas"
+  },
+  "Tomates cherry": {
+    "envase": 250,
+    "unidad": "g",
+    "singular": "tarrina",
+    "plural": "tarrinas"
+  },
+  "Zanahorias": {
+    "envase": 1000,
+    "unidad": "g",
+    "singular": "bolsa",
+    "plural": "bolsas"
+  },
+  "Verduras para asar": {
+    "envase": 400,
+    "unidad": "g",
+    "singular": "bolsa",
+    "plural": "bolsas"
+  },
+  "Carne picada de ternera": {
+    "envase": 400,
+    "unidad": "g",
+    "singular": "bandeja",
+    "plural": "bandejas"
+  },
+  "Pollo": {
+    "envase": 500,
+    "unidad": "g",
+    "singular": "bandeja",
+    "plural": "bandejas"
+  },
+  "Wraps integrales": {
+    "envase": 6,
+    "unidad": "ud",
+    "singular": "paquete",
+    "plural": "paquetes"
+  },
+  "Huevos": {
+    "envase": 12,
+    "unidad": "ud",
+    "singular": "docena",
+    "plural": "docenas"
+  }
 }

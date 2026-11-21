@@ -4,7 +4,8 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 ## Archivos
 
-- `listas.json`: las listas `"compra"` y `"tareas-ideas"`. Es la ÚNICA lista de la compra (no hay copias en otros sitios).
+- `listas.json`: la lista `"compra"`. Es la ÚNICA lista de la compra (no hay copias en otros sitios).
+- **Tareas e ideas: están en el repositorio PRIVADO `yybkvcb26f-lgtm/Tareas-ideas-privado`, archivo `ideas.json` (`{"tareas-ideas": [...]}`, mismo formato de elementos).** Nunca las escribas en este repo (es público): ni en `listas.json` ni en ningún otro archivo, commit o PR. La app las lee y guarda allí con mi token; sin token, la pestaña sale con un candado.
 - `supermercados.json`: base de productos con su súper o súpers, en orden de preferencia: `{"Producto": ["Súper 1", "Súper 2"]}`. Lista vacía = súper sin decidir.
 - `menu.json`: el menú semanal (pestaña «Menú»). `semana`, `nota` y `dias`: los 7 días (Lunes a Domingo), cada uno `{"dia", "desayuno"?, "comida", "cena"}`.
   - Lunes a viernes, `comida` es `{"trabajo": true}` (como en el trabajo, sin plato). La app enseña la meta de esa comida: objetivo diario − cena.
@@ -38,6 +39,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 ## Reglas
 
 - Cuando te pida apuntar algo, añádelo a la lista que corresponda (en la compra, con el formato de arriba).
+- Las tareas e ideas se apuntan, tachan y quitan en `Tareas-ideas-privado/ideas.json` (git pull antes, commit corto y push a `main` de ese repo, sin preguntarme). Si ese repo no está en la sesión, añádelo (add_repo, acceso push) y clónalo; si no puedes, avísame y NO las apuntes en este repo.
 - Cuando te pida quitar algo, bórralo de la lista.
 - En cada actualización de la compra, revisa `supermercados.json`: añade los productos nuevos que aparezcan en la lista con su súper. Si un producto no tiene súper en `supermercados.json`, ponlo con `· Sin súper` en la compra y con `[]` en `supermercados.json`, sin preguntarme, y avísalo en el mensaje del commit.
 - Después de cada cambio, haz siempre commit con un mensaje corto y push a `main`, sin preguntarme. Antes de editar, haz `git pull` (yo también escribo desde la app).
@@ -64,7 +66,7 @@ Con ese menú se reescribe `"compra"` (las cantidades de los 9 platos salen de `
 3. Se añaden los ingredientes del menú nuevo con la cantidad total de la semana, en formato `Producto – cantidad · Súper`. Si un ingrediente ya está pendiente, no se duplica: se suman la cantidad que ya había y la que pide el menú. Si las unidades no se pueden sumar, se dejan dos líneas y se avisa en el mensaje del commit. EXCEPCIÓN: los productos de `envases.json` NO se suman así; siguen la regla de «Productos que se compran por envase» (envases enteros + «necesitas» con lo de la semana nueva).
 4. Si un producto no tiene súper en `supermercados.json`: `· Sin súper` en la compra y `[]` en `supermercados.json`, sin preguntarme, y se avisa en el mensaje del commit.
 5. Orden: por súper (Aldi, Lidl, Mercadona, BM, Carrefour, Sin súper) y dentro de cada súper como vengan.
-6. `"tareas-ideas"` no se toca.
+6. Las tareas e ideas (repo privado) no se tocan.
 
 ## Pendientes
 

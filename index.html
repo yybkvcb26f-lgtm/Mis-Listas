@@ -496,6 +496,14 @@
     const REPO = "yybkvcb26f-lgtm/Mis-Listas";
     const RAMA = "main";
     const API = "https://api.github.com/repos/" + REPO + "/contents/";
+    // Las tareas e ideas viven en un repositorio PRIVADO: solo se leen y guardan con el token
+    const REPO_IDEAS = "yybkvcb26f-lgtm/Tareas-ideas-privado";
+    const API_IDEAS = "https://api.github.com/repos/" + REPO_IDEAS + "/contents/";
+    const CLAVE_IDEAS = "tareas-ideas";
+    const RUTA_IDEAS = "ideas.json";
+    let estadoIdeas = "cargando"; // "ok" | "sin-token" | "error"
+    function apiDe(ruta) { return ruta === RUTA_IDEAS ? API_IDEAS : API; }
+    function rutaDe(clave) { return clave === CLAVE_IDEAS ? RUTA_IDEAS : "listas.json"; }
     const CLAVE_TOKEN = "misListasToken";
 
     // Orden de los supermercados en la lista de la compra
@@ -640,7 +648,7 @@
       return btoa(bin);
     }
     async function leerApi(ruta) {
-      const r = await fetch(API + ruta + "?ref=" + RAMA + "&t=" + Date.now(), {
+      const r = await fetch(apiDe(ruta) + ruta + "?ref=" + RAMA + "&t=" + Date.now(), {
         headers: { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json" },
         cache: "no-store"
       });
@@ -650,7 +658,7 @@
       return { datos: JSON.parse(decodificar(j.content)), sha: j.sha };
     }
     async function escribirApi(ruta, datos, sha, mensaje) {
-      const r = await fetch(API + ruta, {
+      const r = await fetch(apiDe(ruta) + ruta, {
         method: "PUT",
         headers: { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json" },
         body: JSON.stringify({
@@ -669,9 +677,20 @@
     async function cambiar(fn, mensaje, ruta) {
       ruta = ruta || "listas.json";
       const esMenu = ruta === "menu.json";
-      const leerLocal = () => esMenu ? menu : listas;
-      const ponerLocal = d => { if (esMenu) menu = d; else listas = d; };
+      const esIdeas = ruta === RUTA_IDEAS;
+      const leerLocal = () => esMenu ? menu : esIdeas ? { [CLAVE_IDEAS]: listas[CLAVE_IDEAS] || [] } : listas;
+      const ponerLocal = d => {
+        if (esMenu) menu = d;
+        else if (esIdeas) listas[CLAVE_IDEAS] = d[CLAVE_IDEAS] || [];
+        else {
+          // listas.json (repo público) no lleva las ideas: se conservan las del repo privado
+          const ideasPriv = listas[CLAVE_IDEAS] || [];
+          listas = d;
+          listas[CLAVE_IDEAS] = ideasPriv;
+        }
+      };
       if (!token) { pedirToken(); return false; }
+      if (esIdeas && estadoIdeas !== "ok") return false;
       if (ocupado) return false;
       ocupado = true;
       // Vista previa inmediata
@@ -725,14 +744,14 @@
         const i = buscarIndice(l, texto, hecho);
         if (i < 0) return;
         l[i] = esHecho(l[i]) ? textoItem(l[i]) : { texto: textoItem(l[i]), hecho: true };
-      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": tachar/destachar " + partes(texto).nombre);
+      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": tachar/destachar " + partes(texto).nombre, rutaDe(clave));
     }
     function borrar(clave, texto, hecho) {
       cambiar(d => {
         const l = d[clave] || [];
         const i = buscarIndice(l, texto, hecho);
         if (i >= 0) l.splice(i, 1);
-      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": quitar " + partes(texto).nombre);
+      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": quitar " + partes(texto).nombre, rutaDe(clave));
     }
     function editar(clave, viejo, nuevo, hecho) {
       editando = null;
@@ -742,7 +761,7 @@
         const i = buscarIndice(l, viejo, hecho);
         if (i < 0) return;
         l[i] = esHecho(l[i]) ? { texto: nuevo, hecho: true } : nuevo;
-      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": editar " + partes(nuevo).nombre);
+      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": editar " + partes(nuevo).nombre, rutaDe(clave));
     }
     function anadir(clave, texto) {
       if (clave === "compra") texto = completarCompra(texto);
@@ -750,14 +769,14 @@
         if (!d[clave]) d[clave] = [];
         const ya = d[clave].some(it => !esHecho(it) && normaliza(textoItem(it)) === normaliza(texto));
         if (!ya) d[clave].push(texto);
-      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": añadir " + partes(texto).nombre);
+      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": añadir " + partes(texto).nombre, rutaDe(clave));
     }
 
     function pedirToken() {
       const t = prompt(
         token
           ? "Token de GitHub guardado en este navegador. Pega uno nuevo o deja vacío para desconectar:"
-          : "Pega tu token de GitHub (solo con permiso de contenido en Mis-Listas). Se guarda solo en este navegador:",
+          : "Pega tu token de GitHub (con permiso de contenido en Mis-Listas y Tareas-ideas-privado). Se guarda solo en este navegador:",
         ""
       );
       if (t === null) return;
@@ -1288,7 +1307,7 @@
         label.textContent = info.nombre;
         const c = document.createElement("span");
         c.className = "count";
-        c.textContent = pendientes(clave);
+        c.textContent = (clave === CLAVE_IDEAS && estadoIdeas !== "ok") ? "🔒" : pendientes(clave);
         btn.append(label);
         if (clave !== "menu") btn.append(c);
         btn.addEventListener("click", () => seleccionar(clave));
@@ -1487,6 +1506,14 @@
       const todos = listas[activa] || [];
       const q = buscarEl.value.trim();
       contenidoEl.innerHTML = "";
+      if (activa === CLAVE_IDEAS && estadoIdeas !== "ok") {
+        contenidoEl.appendChild(estadoIdeas === "sin-token"
+          ? vacio("🔒", "Ideas privadas", "Están en un repositorio privado. Toca la llave y pon tu token para verlas.")
+          : estadoIdeas === "cargando"
+            ? vacio("⏳", "Cargando…", "Leyendo tus ideas del repositorio privado.")
+            : vacio("🔒", "No se pudieron cargar", "Revisa que tu token tenga acceso a Tareas-ideas-privado (permiso de contenido)."));
+        return;
+      }
       if (token) contenidoEl.appendChild(formAnadir());
 
       if (todos.length === 0) {
@@ -1577,6 +1604,21 @@
           const r = await fetch("listas.json", { cache: "no-store" });
           if (!r.ok) throw new Error("HTTP " + r.status);
           listas = await r.json();
+        }
+        // Tareas e ideas: solo desde el repo privado y con token (nunca desde listas.json público)
+        delete listas[CLAVE_IDEAS];
+        if (token) {
+          try {
+            const d = (await leerApi(RUTA_IDEAS)).datos;
+            listas[CLAVE_IDEAS] = d[CLAVE_IDEAS] || [];
+            estadoIdeas = "ok";
+          } catch (e) {
+            listas[CLAVE_IDEAS] = [];
+            estadoIdeas = "error";
+          }
+        } else {
+          listas[CLAVE_IDEAS] = [];
+          estadoIdeas = "sin-token";
         }
         try {
           const s = await fetch("supermercados.json", { cache: "no-store" });

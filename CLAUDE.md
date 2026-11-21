@@ -14,6 +14,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
   - Desde la app, el botón ↻ de cada comida o cena cambia el plato por otro de la base con valores nutricionales parecidos y ajusta sola la compra: resta los `ingredientes` del plato viejo y suma los del nuevo (si un producto queda a 0 se quita; si no estaba, se añade con su súper).
   - La app también entiende el formato antiguo (`cenas`, solo lunes a jueves), pero ya no se usa.
 - **Objetivo diario (kcal, proteína, grasa): es privado y NO va nunca en el repo** (el repo es público). Lo tiene la tarea programada del sábado y yo lo guardo en el navegador de mis dispositivos. No lo escribas en ningún archivo, commit ni PR; si no lo tienes, no lo inventes.
+- `envases.json`: productos que se compran por envase y cuánto es un envase (ver «Formato de los elementos»).
 - `index.html`: la app. Desde ella añado, tacho y quito elementos (con un token de GitHub guardado solo en mi navegador).
 
 ## Formato de los elementos
@@ -22,7 +23,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 - En `"compra"`, cada elemento es `Producto – cantidad · Súper` (p. ej. `Pollo – 400 g · Aldi`). La cantidad es opcional.
 - El súper es el PRIMERO que indica `supermercados.json` para ese producto. Si no está o no tiene súper: `· Sin súper`.
 - Nombres de súper: `Aldi`, `Lidl`, `Mercadona`, `BM`, `Carrefour`. Aldi y Lidl son súpers distintos: nunca `Lidl/Aldi`.
-- Productos que se compran por envase: `Chocolate 70%` (tableta) y `Cacao 100%` (bote). En la compra van siempre como `1 ud` (un envase), nunca en gramos. Si ya hay uno pendiente, no se añade otro ni se suman cantidades; si no hay ninguno y el menú lo usa, se añade `1 ud`. Yo lo tacho si ya tengo en casa.
+- Productos que se compran por envase: están en `envases.json` (`{"Producto": "cantidad de 1 envase"}`; `""` = sin cantidad, p. ej. `Arroz · Aldi`). En la compra van siempre con esa cantidad fija (p. ej. `Pasta – 1 ud · BM`, `Leche – 1 l · Aldi`), nunca con lo que pide el menú. Si ya hay uno pendiente, no se añade otro ni se suman cantidades; si no hay ninguno y el menú lo usa, se añade uno. Yo lo tacho si ya tengo en casa. La app (botón ↻) sigue la misma regla.
 
 ## Reglas
 

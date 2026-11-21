@@ -611,7 +611,7 @@
       texto = texto.replace(/\s+-\s+/, " – ").trim();
       if (texto.includes(" · ")) return texto;
       const s = superDe(partes(texto).nombre);
-      return s ? texto + " · " + s : texto;
+      return texto + " · " + (s || "Sin súper");
     }
 
     function resalta(texto, q) {
@@ -982,7 +982,9 @@
           if (nec && nec.u === uE) necesidad = Math.max(0, nec.n + delta); // se recalcula lo que pide la semana
           else if (delta > 0) necesidad = Math.max(necesidadSemana(producto, uE), delta);
           else return;
-          const req = necesidad > 0 ? Math.ceil(necesidad / env.envase - 1e-9) : 0;
+          // Ningún plato de la semana lo pide ya: se quita, igual que los productos en gramos que llegan a 0
+          if (necesidad <= 0.001) { lista.splice(i, 1); return; }
+          const req = Math.ceil(necesidad / env.envase - 1e-9);
           // Opción A: los envases nunca bajan; solo suben si no bastan
           lista[i] = escribir(Math.max(ya, req), necesidad, p.tienda);
         } else if (delta > 0) {

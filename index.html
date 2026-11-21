@@ -1650,13 +1650,39 @@
       }
     }
 
-    // Al volver a la app, recarga por si cambió desde otro dispositivo
+    // --- Versión de la app: si hay una nueva publicada, se recarga sola ---
+    // Compara el código que se está ejecutando con el de la página publicada. Si son distintos,
+    // recarga con una dirección nueva (?v=…) para que el navegador no use la copia guardada.
+    const CODIGO_ACTUAL = document.currentScript ? document.currentScript.textContent : "";
+    async function comprobarVersion() {
+      if (!CODIGO_ACTUAL || ocupado || editando) return;
+      try {
+        const r = await fetch(location.pathname + "?comprobar=" + Date.now(), { cache: "no-store" });
+        if (!r.ok) return;
+        const html = await r.text();
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const s = doc.querySelector("script:not([src])");
+        if (!s || s.textContent === CODIGO_ACTUAL) return;
+        // Evita bucles: como mucho una recarga por minuto
+        let ultima = 0;
+        try { ultima = +sessionStorage.getItem("misListasRecarga") || 0; } catch (e) {}
+        if (Date.now() - ultima < 60000) return;
+        try { sessionStorage.setItem("misListasRecarga", String(Date.now())); } catch (e) {}
+        location.replace(location.pathname + "?v=" + Date.now() + location.hash);
+      } catch (e) {}
+    }
+
+    // Al volver a la app, recarga por si cambió desde otro dispositivo (y por si hay versión nueva)
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible" && !ocupado && !editando) cargar();
+      if (document.visibilityState === "visible" && !ocupado && !editando) {
+        cargar();
+        comprobarVersion();
+      }
     });
 
     estadoBase();
     cargar();
+    comprobarVersion();
   </script>
 </body>
 </html>

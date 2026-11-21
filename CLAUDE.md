@@ -22,6 +22,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 - En `"compra"`, cada elemento es `Producto – cantidad · Súper` (p. ej. `Pollo – 400 g · Aldi`). La cantidad es opcional.
 - El súper es el PRIMERO que indica `supermercados.json` para ese producto. Si no está o no tiene súper: `· Sin súper`.
 - Nombres de súper: `Aldi`, `Lidl`, `Mercadona`, `BM`, `Carrefour`. Aldi y Lidl son súpers distintos: nunca `Lidl/Aldi`.
+- Productos que se compran por envase: `Chocolate 70%` (tableta) y `Cacao 100%` (bote). En la compra van siempre como `1 ud` (un envase), nunca en gramos. Si ya hay uno pendiente, no se añade otro ni se suman cantidades; si no hay ninguno y el menú lo usa, se añade `1 ud`. Yo lo tacho si ya tengo en casa.
 
 ## Reglas
 

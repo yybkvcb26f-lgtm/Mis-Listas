@@ -25,7 +25,10 @@
     "Frutos rojos – 2 tarrinas de 150 g (necesitas 160 g) · Aldi",
     "Pan – 1 barra de 250 g (necesitas 230 g) · Lidl",
     "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
-    "Cacao 100% – 1 bote de 250 g (necesitas 20 g) · Mercadona",
+    {
+      "texto": "Cacao 100% – 1 bote de 250 g (necesitas 20 g) · Mercadona",
+      "hecho": true
+    },
     "Verduras para asar – 1 bolsa de 400 g (necesitas 400 g) · Mercadona",
     "Atún – 80 g · Mercadona",
     "Cebolla – 50 g · Mercadona",

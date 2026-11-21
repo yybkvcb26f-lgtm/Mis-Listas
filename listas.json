@@ -20,7 +20,10 @@
     "Mandarinas – 4 ud · Aldi",
     "Leche – 1 brick de 1 l (necesitas 500 ml) · Aldi",
     "Kiwis – 4 ud · Aldi",
-    "Chocolate 70% – 1 tableta de 100 g (necesitas 20 g) · Aldi",
+    {
+      "texto": "Chocolate 70% – 1 tableta de 100 g (necesitas 20 g) · Aldi",
+      "hecho": true
+    },
     "Plátanos – 1 ud · Aldi",
     "Frutos rojos – 2 tarrinas de 150 g (necesitas 160 g) · Aldi",
     "Pan – 1 barra de 250 g (necesitas 230 g) · Lidl",

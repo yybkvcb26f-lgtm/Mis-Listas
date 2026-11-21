@@ -23,7 +23,10 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 - En `"compra"`, cada elemento es `Producto – cantidad · Súper` (p. ej. `Pollo – 400 g · Aldi`). La cantidad es opcional.
 - El súper es el PRIMERO que indica `supermercados.json` para ese producto. Si no está o no tiene súper: `· Sin súper`.
 - Nombres de súper: `Aldi`, `Lidl`, `Mercadona`, `BM`, `Carrefour`. Aldi y Lidl son súpers distintos: nunca `Lidl/Aldi`.
-- Productos que se compran por envase: están en `envases.json` (`{"Producto": "cantidad de 1 envase"}`; `""` = sin cantidad, p. ej. `Arroz · Aldi`). En la compra van siempre con esa cantidad fija (p. ej. `Pasta – 1 ud · BM`, `Leche – 1 l · Aldi`), nunca con lo que pide el menú. Si ya hay uno pendiente, no se añade otro ni se suman cantidades; si no hay ninguno y el menú lo usa, se añade uno. Yo lo tacho si ya tengo en casa. La app (botón ↻) sigue la misma regla.
+- Productos que se compran por envase: están en `envases.json`. Dos tipos:
+  - Texto fijo (`"1 ud"`, o `""` = sin cantidad, p. ej. `Arroz · Aldi`): en la compra van siempre con esa cantidad (p. ej. `Pasta – 1 ud · BM`), nunca con lo que pide el menú. Si ya hay uno pendiente, no se añade otro ni se suman cantidades; si no hay ninguno y el menú lo usa, se añade uno.
+  - Objeto `{"envase": 1000, "unidad": "ml", "texto": "l"}` (la leche, en bricks de 1 l): se suma lo que ya había pendiente y lo que pide el menú, y se redondea HACIA ARRIBA a envases enteros: 500 ml → `Leche – 1 l`; 1,5 l → `Leche – 2 l`; 2,2 l → `Leche – 3 l`.
+  - Yo tacho lo que ya tenga en casa. La app (botón ↻) sigue las mismas reglas.
 
 ## Reglas
 

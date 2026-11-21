@@ -208,8 +208,8 @@
           },
           {
             "producto": "Atún",
-            "cantidad": 1,
-            "unidad": "lata"
+            "cantidad": 80,
+            "unidad": "g"
           },
           {
             "producto": "Tomate",

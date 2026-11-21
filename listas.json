@@ -18,7 +18,10 @@
     "Yogur griego – 1 pack de 500 g (necesitas 125 g) · Aldi",
     "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
     "Mandarinas – 4 ud · Aldi",
-    "Leche – 1 brick de 1 l (necesitas 500 ml) · Aldi",
+    {
+      "texto": "Leche – 1 brick de 1 l (necesitas 500 ml) · Aldi",
+      "hecho": true
+    },
     "Kiwis – 4 ud · Aldi",
     {
       "texto": "Chocolate 70% – 1 tableta de 100 g (necesitas 20 g) · Aldi",

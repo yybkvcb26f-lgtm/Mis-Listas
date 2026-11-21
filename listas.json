@@ -48,6 +48,9 @@
     "Seguimiento de procesos de selección (empresas, fases y fechas)",
     "Skills Claude",
     "Revisar curso de Claude Academy “Introduction to Agent Skills”",
-    "Leccion ia nueva: optimización de recursos"
+    {
+      "texto": "Leccion ia nueva: optimización de recursos",
+      "hecho": true
+    }
   ]
 }

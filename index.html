@@ -524,6 +524,7 @@
     const ajustesEl = document.getElementById("ajustes");
     let listas = {};
     let supermercados = {};
+    let envases = {}; // envases.json: productos por envase → texto fijo ("1 ud", "" = sin cantidad) u objeto {envase, unidad, texto} para redondear (leche)
     let menu = null; // menu.json: menú semanal + base de platos
     let activa = null;
     let ocupado = false;
@@ -900,10 +901,42 @@
     function mismoProducto(a, b) {
       return singular(normaliza(a)) === singular(normaliza(b));
     }
+    // Si el producto se compra por envase (envases.json), devuelve su regla: texto fijo u objeto {envase, unidad, texto}
+    function envaseDe(producto) {
+      const k = Object.keys(envases).find(e => mismoProducto(e, producto));
+      return k === undefined ? null : envases[k];
+    }
     // Suma (o resta, si delta < 0) una cantidad a un producto pendiente de la compra
     function ajustarProducto(lista, producto, delta, unidad, avisos) {
       const u = unidadNorm(unidad);
       const i = lista.findIndex(it => !esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, producto));
+      const env = envaseDe(producto);
+      // Envase con tamaño (p. ej. leche en bricks de 1000 ml): se suma lo pendiente y lo nuevo y se redondea hacia arriba
+      if (env && typeof env === "object") {
+        if (delta <= 0) return; // lo que ya está en la lista no se resta
+        const uE = unidadNorm(env.unidad);
+        if (unidadNorm(unidad) !== uE) { avisos.push(producto); return; }
+        let actual = 0, tienda = "";
+        if (i >= 0) {
+          const p = partes(textoItem(lista[i]));
+          tienda = p.tienda;
+          const c = leerCantidad(p.cantidad);
+          if (c && c.u === uE) actual = c.n;
+          else if (c) { avisos.push(p.nombre); return; }
+        }
+        const n = Math.max(1, Math.ceil((actual + delta) / env.envase - 1e-9));
+        const txt = producto + " – " + n + " " + env.texto + " · " + (tienda || superDe(producto) || "Sin súper");
+        if (i >= 0) lista[i] = txt; else lista.push(txt);
+        return;
+      }
+      // Envase de texto fijo: no se suman ni se restan cantidades; si no hay ninguno pendiente y hace falta, se añade uno
+      if (env !== null) {
+        if (i < 0 && delta > 0) {
+          const s = superDe(producto) || "Sin súper";
+          lista.push(producto + (env ? " – " + env : "") + " · " + s);
+        }
+        return;
+      }
       if (i < 0) {
         if (delta > 0) {
           const s = superDe(producto) || "Sin súper";
@@ -1480,6 +1513,10 @@
         try {
           const s = await fetch("supermercados.json", { cache: "no-store" });
           if (s.ok) supermercados = await s.json();
+        } catch (e) {}
+        try {
+          const en = await fetch("envases.json", { cache: "no-store" });
+          if (en.ok) envases = await en.json();
         } catch (e) {}
         try {
           if (token) menu = (await leerApi("menu.json")).datos;

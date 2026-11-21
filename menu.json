@@ -96,7 +96,25 @@
         "grasa": 15
       },
       "comida": {
-        "plato": "Entrecot con boniato asado y pimiento"
+        "plato": "Entrecot con boniato asado y pimiento",
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Entrecot",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Boniato",
+            "cantidad": 300,
+            "unidad": "g"
+          },
+          {
+            "producto": "Verduras para asar",
+            "cantidad": 100,
+            "unidad": "g"
+          }
+        ]
       },
       "cena": {
         "plato": "Ensalada templada de pasta con jamón cocido",

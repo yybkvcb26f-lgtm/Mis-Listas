@@ -45,7 +45,10 @@
       "texto": "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
       "hecho": true
     },
-    "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
+    {
+      "texto": "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
+      "hecho": true
+    },
     "Zanahorias – 1 bolsa de 1 kg (necesitas 300 g) · BM",
     {
       "texto": "Granola – 1 sobre de 250 g (necesitas 90 g) · BM",

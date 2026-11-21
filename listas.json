@@ -30,7 +30,10 @@
     "Atún – 1 lata · Mercadona",
     "Cebolla – 50 g · Mercadona",
     "Wraps integrales – 1 paquete de 6 ud · Mercadona",
-    "Leche de coco – 1 brick de 200 ml · BM",
+    {
+      "texto": "Leche de coco – 1 brick de 200 ml · BM",
+      "hecho": true
+    },
     "Pasta – 1 paquete de 500 g · BM",
     "Zanahorias – 1 bolsa de 1 kg · BM",
     "Granola – 1 sobre de 250 g · BM",

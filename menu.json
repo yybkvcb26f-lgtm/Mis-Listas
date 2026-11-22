@@ -96,7 +96,9 @@
         "grasa": 15
       },
       "comida": {
-        "plato": "Entrecot con boniato asado y pimiento"
+        "plato": "Entrecot con boniato asado y pimiento",
+        "hecha": true,
+        "descontado": []
       },
       "cena": {
         "plato": "Presa ibérica con arroz, pimiento y cebolla",

@@ -98,7 +98,24 @@
       "comida": {
         "plato": "Entrecot con boniato asado y pimiento",
         "hecha": true,
-        "descontado": []
+        "descontado": [],
+        "comprados": [
+          {
+            "producto": "Entrecot",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Boniato",
+            "cantidad": 300,
+            "unidad": "g"
+          },
+          {
+            "producto": "Verduras para asar",
+            "cantidad": 100,
+            "unidad": "g"
+          }
+        ]
       },
       "cena": {
         "plato": "Presa ibérica con arroz, pimiento y cebolla",
@@ -142,6 +159,23 @@
             "cantidad": 80,
             "unidad": "g"
           }
+        ],
+        "comprados": [
+          {
+            "producto": "Cebolla",
+            "cantidad": 75,
+            "unidad": "g"
+          },
+          {
+            "producto": "Zanahorias",
+            "cantidad": 100,
+            "unidad": "g"
+          },
+          {
+            "producto": "Granola",
+            "cantidad": 30,
+            "unidad": "g"
+          }
         ]
       }
     },
@@ -177,7 +211,8 @@
             "cantidad": 60,
             "unidad": "g"
           }
-        ]
+        ],
+        "comprados": []
       },
       "cena": {
         "plato": "Salmón al horno con boniato",
@@ -209,6 +244,23 @@
           {
             "producto": "Fresas",
             "cantidad": 150,
+            "unidad": "g"
+          }
+        ],
+        "comprados": [
+          {
+            "producto": "Leche",
+            "cantidad": 250,
+            "unidad": "ml"
+          },
+          {
+            "producto": "Cacao 100%",
+            "cantidad": 10,
+            "unidad": "g"
+          },
+          {
+            "producto": "Avena",
+            "cantidad": 30,
             "unidad": "g"
           }
         ]

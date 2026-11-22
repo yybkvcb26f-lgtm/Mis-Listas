@@ -13,7 +13,10 @@
       "texto": "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
       "hecho": true
     },
-    "Leche – 1 brick de 1 l (necesitas 250 ml) · Aldi",
+    {
+      "texto": "Leche – 1 brick de 1 l (necesitas 250 ml) · Aldi",
+      "hecho": true
+    },
     "Chocolate 70% – 1 tableta de 100 g (necesitas 20 g) · Aldi",
     "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",
     "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",

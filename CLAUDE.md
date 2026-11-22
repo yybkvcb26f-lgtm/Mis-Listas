@@ -6,7 +6,7 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 - `listas.json`: la lista `"compra"`. Es la ÚNICA lista de la compra (no hay copias en otros sitios).
 - **Tareas e ideas: están en el repositorio PRIVADO `yybkvcb26f-lgtm/Tareas-ideas-privado`, archivo `ideas.json` (`{"tareas-ideas": [...]}`, mismo formato de elementos).** Nunca las escribas en este repo (es público): ni en `listas.json` ni en ningún otro archivo, commit o PR. La app las lee y guarda allí con mi token; sin token, la pestaña sale con un candado.
-- `supermercados.json`: base de productos con su súper o súpers, en orden de preferencia: `{"Producto": ["Súper 1", "Súper 2"]}`. Lista vacía = súper sin decidir.
+- `supermercados.json`: base de productos con su súper o súpers, en orden de preferencia: `{"Producto": ["Súper 1", "Súper 2"]}`. Lista vacía = súper sin decidir. La app también la actualiza: si cambio el súper de un producto en la compra, ese súper pasa a ser el primero de ese producto (elegir «Sin súper» no cambia la base); si añado o renombro un producto que no está en la base, lo apunta (con el súper que lleve, o `[]`).
 - `menu.json`: el menú semanal (pestaña «Menú»). `semana`, `nota` y `dias`: los 7 días (Lunes a Domingo), cada uno `{"dia", "desayuno"?, "comida", "cena"}`.
   - Lunes a viernes, `comida` es `{"trabajo": true}` (como en el trabajo, sin plato). La app enseña la meta de esa comida: objetivo diario − cena.
   - Sábado y domingo: `desayuno` `{"texto", "kcal", "proteina", "grasa"}` y `comida` `{"plato"}`.

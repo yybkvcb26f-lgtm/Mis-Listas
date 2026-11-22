@@ -49,7 +49,10 @@
       "texto": "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
       "hecho": true
     },
-    "Avena – 1 sobre de 250 g (necesitas 30 g) · BM",
+    {
+      "texto": "Avena – 1 sobre de 250 g (necesitas 30 g) · BM",
+      "hecho": true
+    },
     {
       "texto": "Entrecot – 250 g · Aldi",
       "hecho": true

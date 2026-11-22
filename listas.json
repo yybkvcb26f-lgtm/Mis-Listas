@@ -13,7 +13,7 @@
       "hecho": true
     },
     {
-      "texto": "Arándanos – 1 tarrina de 125 g (necesitas 100 g) · Aldi",
+      "texto": "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
       "hecho": true
     },
     {
@@ -48,13 +48,10 @@
       "texto": "Wraps integrales – 1 paquete de 6 ud (necesitas 3 ud) · Mercadona",
       "hecho": true
     },
-    "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
     {
       "texto": "Pasta – 1 paquete de 500 g (necesitas 260 g) · BM",
       "hecho": true
     },
-    "Zanahorias – 1 bolsa de 1 kg (necesitas 100 g) · BM",
-    "Granola – 1 sobre de 250 g (necesitas 30 g) · BM",
     {
       "texto": "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
       "hecho": true
@@ -67,11 +64,6 @@
       "texto": "Boniato – 300 g · Aldi",
       "hecho": true
     },
-    "Verduras para asar – 1 bolsa de 450 g (necesitas 250 g) · Mercadona",
-    "Papel cocina – 1 ud · Aldi",
-    "Pollo – 1 bandeja de 500 g (necesitas 250 g) · Aldi",
-    "Arroz – 1 vasito de 100 g (necesitas 80 g) · Aldi",
-    "Manzanas – 1 ud · Aldi",
-    "Yogur natural – 1 pack de 500 g (necesitas 125 g) · Aldi"
+    "Papel cocina – 1 ud · Aldi"
   ]
 }

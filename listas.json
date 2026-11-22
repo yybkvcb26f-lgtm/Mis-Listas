@@ -97,6 +97,9 @@
     "Verduras para asar – 1 bolsa de 450 g (necesitas 250 g) · Mercadona",
     "Zanahorias – 1 bolsa de 1 kg (necesitas 100 g) · BM",
     "Granola – 1 sobre de 250 g (necesitas 30 g) · BM",
-    "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi"
+    {
+      "texto": "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
+      "hecho": true
+    }
   ]
 }

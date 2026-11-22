@@ -74,7 +74,10 @@
     },
     "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
     "Entrecot – 250 g · Aldi",
-    "Boniato – 300 g · Aldi",
+    {
+      "texto": "Boniato – 300 g · Aldi",
+      "hecho": true
+    },
     {
       "texto": "Verduras para asar – 1 bolsa de 450 g (necesitas 100 g) · Mercadona",
       "hecho": true

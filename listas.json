@@ -72,7 +72,10 @@
       "hecho": true
     },
     "Arroz – 1 vasito de 100 g (necesitas 80 g) · Aldi",
-    "Zanahorias – 1 bolsa de 1 kg (necesitas 200 g) · BM",
+    {
+      "texto": "Zanahorias – 1 bolsa de 1 kg (necesitas 200 g) · BM",
+      "hecho": true
+    },
     "Manzanas – 2 ud · Aldi",
     "Yogur natural – 1 pack de 500 g (necesitas 375 g) · Aldi",
     {

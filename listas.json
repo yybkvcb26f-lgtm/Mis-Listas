@@ -33,7 +33,10 @@
       "hecho": true
     },
     "Pan – 1 barra de 250 g (necesitas 230 g) · Aldi",
-    "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
+    {
+      "texto": "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
+      "hecho": true
+    },
     {
       "texto": "Cacao 100% – 1 bote de 250 g (necesitas 20 g) · Mercadona",
       "hecho": true

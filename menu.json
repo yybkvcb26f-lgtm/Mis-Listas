@@ -17,30 +17,7 @@
           "proteina": 10,
           "grasa": 11
         },
-        "hecha": true,
-        "descontado": [
-          {
-            "producto": "Pollo",
-            "cantidad": 250,
-            "unidad": "g"
-          },
-          {
-            "producto": "Arroz",
-            "cantidad": 80,
-            "unidad": "g"
-          },
-          {
-            "producto": "Manzanas",
-            "cantidad": 1,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Yogur natural",
-            "cantidad": 125,
-            "unidad": "g"
-          }
-        ],
-        "comprados": [
+        "repuesto": [
           {
             "producto": "Leche de coco",
             "cantidad": 100,

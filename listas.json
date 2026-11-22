@@ -13,7 +13,10 @@
       "hecho": true
     },
     "Queso – 1 paquete de 250 g (necesitas 80 g) · Aldi",
-    "Pavo en lonchas – 1 paquete de 150 g (necesitas 150 g) · Aldi",
+    {
+      "texto": "Pavo en lonchas – 1 paquete de 150 g (necesitas 150 g) · Aldi",
+      "hecho": true
+    },
     "Aguacate – 1 ud (usas ½) · Aldi",
     "Yogur natural – 1 pack de 500 g (necesitas 375 g) · Aldi",
     "Manzanas – 2 ud · Aldi",

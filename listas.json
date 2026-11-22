@@ -1,6 +1,9 @@
 {
   "compra": [
-    "Carne picada de ternera – 1 bandeja de 400 g (necesitas 150 g) · Lidl",
+    {
+      "texto": "Carne picada de ternera – 1 bandeja de 400 g (necesitas 150 g) · Lidl",
+      "hecho": true
+    },
     {
       "texto": "Tomate triturado – 1 bote de 400 g (necesitas 150 g) · Aldi",
       "hecho": true

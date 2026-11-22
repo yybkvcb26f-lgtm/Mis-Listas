@@ -9,9 +9,9 @@
       "texto": "Tomate triturado – 1 bote de 400 g (necesitas 150 g) · Aldi",
       "hecho": true
     },
-    "Queso – 1 paquete de 250 g (necesitas 80 g) · Aldi",
+    "Queso – 1 paquete de 250 g (necesitas 110 g) · Aldi",
     "Pavo en lonchas – 1 paquete de 150 g (necesitas 150 g) · Aldi",
-    "Aguacate – 1 ud · Aldi",
+    "Aguacate – 1 ud (usas ½) · Aldi",
     "Boniato – 250 g · Aldi",
     "Yogur natural – 1 pack de 500 g (necesitas 375 g) · Aldi",
     "Manzanas – 2 ud · Aldi",
@@ -62,11 +62,13 @@
       "texto": "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
       "hecho": true
     },
-    "Salmón – 400 g · Sin súper",
+    "Salmón – 220 g · Sin súper",
     {
       "texto": "Cebolla – 1 bolsa de 450 g (necesitas 125 g) · Mercadona",
       "hecho": true
     },
-    "Quinoa – 90 g · Sin súper"
+    "Pasta – 1 paquete de 500 g (necesitas 260 g) · BM",
+    "Jamón cocido – 1 paquete de 200 g (necesitas 120 g) · Aldi",
+    "Zanahorias – 1 bolsa de 1 kg (necesitas 50 g) · BM"
   ]
 }

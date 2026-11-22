@@ -1,7 +1,5 @@
 {
   "compra": [
-    "Pollo – 1 bandeja de 500 g (necesitas 250 g) · Aldi",
-    "Arroz – 1 vasito de 100 g (necesitas 80 g) · Aldi",
     "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
     "Tomate – 2 ud · Aldi",
     {
@@ -18,8 +16,8 @@
       "hecho": true
     },
     "Aguacate – 1 ud (usas ½) · Aldi",
-    "Yogur natural – 1 pack de 500 g (necesitas 375 g) · Aldi",
-    "Manzanas – 2 ud · Aldi",
+    "Yogur natural – 1 pack de 500 g (necesitas 250 g) · Aldi",
+    "Manzanas – 1 ud · Aldi",
     {
       "texto": "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
       "hecho": true

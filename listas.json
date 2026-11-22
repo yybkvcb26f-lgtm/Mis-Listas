@@ -1,6 +1,5 @@
 {
   "compra": [
-    "Tomate – 1 ud · Aldi",
     {
       "texto": "Carne picada de ternera – 1 bandeja de 400 g (necesitas 150 g) · Lidl",
       "hecho": true
@@ -9,13 +8,13 @@
       "texto": "Tomate triturado – 1 bote de 400 g (necesitas 150 g) · Aldi",
       "hecho": true
     },
-    "Queso – 1 paquete de 250 g (necesitas 80 g) · Aldi",
+    "Queso – 1 paquete de 250 g (necesitas 40 g) · Aldi",
     {
       "texto": "Pavo en lonchas – 1 paquete de 150 g (necesitas 150 g) · Aldi",
       "hecho": true
     },
     "Aguacate – 1 ud (usas ½) · Aldi",
-    "Yogur natural – 1 pack de 500 g (necesitas 250 g) · Aldi",
+    "Yogur natural – 1 pack de 500 g (necesitas 125 g) · Aldi",
     "Manzanas – 1 ud · Aldi",
     {
       "texto": "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
@@ -29,12 +28,10 @@
       "texto": "Chocolate 70% – 1 tableta de 100 g (necesitas 20 g) · Aldi",
       "hecho": true
     },
-    "Plátanos – 1 ud · Aldi",
     {
       "texto": "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",
       "hecho": true
     },
-    "Pan – 1 barra de 250 g (necesitas 130 g) · Aldi",
     {
       "texto": "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
       "hecho": true

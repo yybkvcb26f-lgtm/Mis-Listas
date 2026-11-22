@@ -17,7 +17,30 @@
           "proteina": 10,
           "grasa": 11
         },
-        "repuesto": [
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Pollo",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Arroz",
+            "cantidad": 80,
+            "unidad": "g"
+          },
+          {
+            "producto": "Manzanas",
+            "cantidad": 1,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Yogur natural",
+            "cantidad": 125,
+            "unidad": "g"
+          }
+        ],
+        "comprados": [
           {
             "producto": "Leche de coco",
             "cantidad": 100,
@@ -36,11 +59,6 @@
           {
             "producto": "Granola",
             "cantidad": 30,
-            "unidad": "g"
-          },
-          {
-            "producto": "Arándanos",
-            "cantidad": 50,
             "unidad": "g"
           }
         ]

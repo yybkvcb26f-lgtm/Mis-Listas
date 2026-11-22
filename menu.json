@@ -274,7 +274,47 @@
           "kcal": 175,
           "proteina": 6,
           "grasa": 4
-        }
+        },
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Aguacate",
+            "cantidad": 0.5,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Queso",
+            "cantidad": 40,
+            "unidad": "g"
+          },
+          {
+            "producto": "Tomates cherry",
+            "cantidad": 100,
+            "unidad": "g"
+          },
+          {
+            "producto": "Manzanas",
+            "cantidad": 1,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Yogur natural",
+            "cantidad": 125,
+            "unidad": "g"
+          }
+        ],
+        "comprados": [
+          {
+            "producto": "Wraps integrales",
+            "cantidad": 3,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Pavo en lonchas",
+            "cantidad": 150,
+            "unidad": "g"
+          }
+        ]
       }
     },
     {

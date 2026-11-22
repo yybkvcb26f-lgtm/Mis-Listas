@@ -72,7 +72,10 @@
       "texto": "Cebolla – 1 bolsa de 450 g (necesitas 125 g) · Mercadona",
       "hecho": true
     },
-    "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
+    {
+      "texto": "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
+      "hecho": true
+    },
     {
       "texto": "Entrecot – 250 g · Aldi",
       "hecho": true

@@ -204,7 +204,30 @@
           "kcal": 340,
           "proteina": 16,
           "grasa": 7
-        }
+        },
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Salmón",
+            "cantidad": 220,
+            "unidad": "g"
+          },
+          {
+            "producto": "Boniato",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Verduras para asar",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Fresas",
+            "cantidad": 150,
+            "unidad": "g"
+          }
+        ]
       }
     }
   ],

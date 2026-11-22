@@ -28,7 +28,10 @@
       "hecho": true
     },
     "Plátanos – 1 ud · Aldi",
-    "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",
+    {
+      "texto": "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",
+      "hecho": true
+    },
     "Pan – 1 barra de 250 g (necesitas 230 g) · Aldi",
     "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
     {

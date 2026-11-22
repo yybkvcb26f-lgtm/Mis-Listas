@@ -690,9 +690,11 @@
       ruta = ruta || "listas.json";
       const esMenu = ruta === "menu.json";
       const esIdeas = ruta === RUTA_IDEAS;
-      const leerLocal = () => esMenu ? menu : esIdeas ? { [CLAVE_IDEAS]: listas[CLAVE_IDEAS] || [] } : listas;
+      const esSuper = ruta === "supermercados.json";
+      const leerLocal = () => esMenu ? menu : esSuper ? supermercados : esIdeas ? { [CLAVE_IDEAS]: listas[CLAVE_IDEAS] || [] } : listas;
       const ponerLocal = d => {
         if (esMenu) menu = d;
+        else if (esSuper) supermercados = d;
         else if (esIdeas) listas[CLAVE_IDEAS] = d[CLAVE_IDEAS] || [];
         else {
           // listas.json (repo público) no lleva las ideas: se conservan las del repo privado
@@ -767,21 +769,47 @@
     }
     function editar(clave, viejo, nuevo, hecho) {
       editando = null;
-      if (!nuevo || nuevo === viejo) { render(); return; }
-      cambiar(d => {
+      if (!nuevo || nuevo === viejo) { render(); return Promise.resolve(false); }
+      return cambiar(d => {
         const l = d[clave] || [];
         const i = buscarIndice(l, viejo, hecho);
         if (i < 0) return;
         l[i] = esHecho(l[i]) ? { texto: nuevo, hecho: true } : nuevo;
       }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": editar " + partes(nuevo).nombre, rutaDe(clave));
     }
-    function anadir(clave, texto) {
+    async function anadir(clave, texto) {
       if (clave === "compra") texto = completarCompra(texto);
-      cambiar(d => {
+      const ok = await cambiar(d => {
         if (!d[clave]) d[clave] = [];
         const ya = d[clave].some(it => !esHecho(it) && normaliza(textoItem(it)) === normaliza(texto));
         if (!ya) d[clave].push(texto);
       }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": añadir " + partes(texto).nombre, rutaDe(clave));
+      if (ok && clave === "compra") await registrarProducto(texto);
+    }
+
+    // --- Base de supermercados (supermercados.json) desde la app ---
+    function claveSuper(base, nombre) {
+      return Object.keys(base || {}).find(k => mismoProducto(k, nombre));
+    }
+    // Producto nuevo en la compra: se apunta en la base (con el súper que lleve, o [] si es «Sin súper»)
+    async function registrarProducto(texto) {
+      const p = partes(texto);
+      if (!p.nombre || claveSuper(supermercados, p.nombre)) return;
+      const s = ORDEN_SUPER.includes(p.tienda) ? p.tienda : null;
+      await cambiar(d => {
+        if (claveSuper(d, p.nombre)) return;
+        d[p.nombre] = s ? [s] : [];
+      }, "Supermercados: añadir " + p.nombre + (s ? " → " + s : " (sin súper)"), "supermercados.json");
+    }
+    // Cambio de súper en un producto: pasa a ser su súper preferido (el primero) en la base
+    async function guardarSuper(nombre, s) {
+      if (!nombre || !ORDEN_SUPER.includes(s)) return;
+      const k = claveSuper(supermercados, nombre);
+      if (k && (supermercados[k] || [])[0] === s) return;
+      await cambiar(d => {
+        const kk = claveSuper(d, nombre) || nombre;
+        d[kk] = [s].concat((d[kk] || []).filter(x => x !== s));
+      }, "Supermercados: " + nombre + " → " + s, "supermercados.json");
     }
 
     function pedirToken() {
@@ -1566,7 +1594,12 @@
           const c = cantidad.value.trim();
           nuevo = n + (c ? " – " + c : "") + " · " + tienda.value;
         }
-        editar(activa, texto, nuevo, esHecho(item));
+        const superNuevo = esCompra && tienda.value !== (p.tienda || "Sin súper") ? tienda.value : null;
+        editar(activa, texto, nuevo, esHecho(item)).then(ok => {
+          if (!ok || !esCompra) return;
+          if (superNuevo) guardarSuper(n, superNuevo);
+          else registrarProducto(nuevo); // si le has cambiado el nombre a uno que no está en la base
+        });
       });
       li.appendChild(form);
       setTimeout(() => nombre.focus(), 0);

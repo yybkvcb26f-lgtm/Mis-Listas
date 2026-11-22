@@ -79,7 +79,10 @@
       "hecho": true
     },
     "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
-    "Entrecot – 250 g · Aldi",
+    {
+      "texto": "Entrecot – 250 g · Aldi",
+      "hecho": true
+    },
     {
       "texto": "Boniato – 300 g · Aldi",
       "hecho": true

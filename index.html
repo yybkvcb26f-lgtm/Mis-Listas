@@ -1179,32 +1179,110 @@
       });
     }
 
+    // Cantidad de una línea de la compra en la unidad u (envases × tamaño en los productos por envase)
+    function cantidadLinea(it, producto, u) {
+      const p = partes(textoItem(it));
+      const env = envaseDe(producto);
+      if (env && typeof env === "object") {
+        if (unidadNorm(env.unidad) !== u) return 0;
+        const n = cuantosEnvases(quitarNecesitas(p.cantidad), env);
+        return n ? n * env.envase : 0;
+      }
+      const c = leerCantidad(p.cantidad);
+      return c && c.u === u ? c.n : 0;
+    }
+    // Lo comprado (tachado) de un producto
+    function stockComprado(lista, producto, u) {
+      return lista.filter(it => esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, producto))
+        .reduce((a, it) => a + cantidadLinea(it, producto, u), 0);
+    }
+    function sumaDe(arr, producto, u) {
+      return (arr || []).filter(x => mismoProducto(x.producto, producto) && unidadNorm(x.unidad) === u)
+        .reduce((a, x) => a + x.cantidad, 0);
+    }
+    // Lo comprado que ya han gastado OTRAS comidas (las hechas, y las desmarcadas que lo devolvieron a la compra)
+    function consumidoOtras(m, producto, u, dia, t) {
+      let total = 0;
+      diasMenu(m).forEach((x, i) => ["comida", "cena"].forEach(tt => {
+        if (i === dia && tt === t) return;
+        const c = x[tt];
+        if (!c) return;
+        if (c.hecha) total += sumaDe(c.comprados, producto, u);
+        total += sumaDe(c.repuesto, producto, u);
+      }));
+      return total;
+    }
+    function juntar(arr) {
+      const j = {};
+      arr.forEach(x => {
+        if (!(x.cantidad > 0.001)) return;
+        const k = singular(normaliza(x.producto)) + "|" + unidadNorm(x.unidad);
+        if (!j[k]) j[k] = { producto: x.producto, cantidad: 0, unidad: unidadNorm(x.unidad) };
+        j[k].cantidad += x.cantidad;
+      });
+      return Object.values(j);
+    }
+    // Marcar como hecha: primero se gasta lo comprado (no se toca lo pendiente); si no llega, se descuenta de lo pendiente.
+    function aplicarHecha(lista, m, c, dia, t, avisos) {
+      const descontado = [], comprados = [];
+      cosasDeToma(c, lista).forEach(x => {
+        const u = unidadNorm(x.unidad);
+        let q = x.cantidad;
+        // 1) Lo que se devolvió a la compra al desmarcarla antes: se vuelve a quitar de lo pendiente
+        const r = Math.min(sumaDe(c.repuesto, x.producto, u), q);
+        let quitado = 0;
+        if (r > 0) {
+          quitado = sumaDe(descontarCompra(lista, [{ producto: x.producto, cantidad: r, unidad: u }], avisos), x.producto, u);
+          comprados.push({ producto: x.producto, cantidad: quitado, unidad: u });
+          q -= r;
+        }
+        // 2) Lo que cubre lo comprado (tachado) que no han gastado otras comidas
+        const libre = stockComprado(lista, x.producto, u) - consumidoOtras(m, x.producto, u, dia, t) - quitado;
+        const deComprado = Math.max(0, Math.min(libre, q));
+        if (deComprado > 0) comprados.push({ producto: x.producto, cantidad: deComprado, unidad: u });
+        q -= deComprado;
+        // 3) El resto se descuenta de lo pendiente
+        if (q > 0.001) descontarCompra(lista, [{ producto: x.producto, cantidad: q, unidad: u }], avisos)
+          .forEach(d => descontado.push(d));
+      });
+      return { descontado: juntar(descontado), comprados: juntar(comprados) };
+    }
+
     async function marcarHecha(dia, t) {
       const c = toma(menu, dia, t);
       if (!c || !c.plato) return;
       const nombre = diasMenu()[dia].dia + " (" + t + ")";
       let avisos = [];
       if (!c.hecha) {
-        let descontado = [];
+        let res = { descontado: [], comprados: [] };
         const okCompra = await cambiar(d => {
           avisos = [];
           if (!d.compra) d.compra = [];
-          descontado = descontarCompra(d.compra, cosasDeToma(c, d.compra), avisos);
+          res = aplicarHecha(d.compra, menu, c, dia, t, avisos);
         }, "Compra: descontar " + nombre + " (hecha)");
         if (!okCompra) return;
-        const okMenu = await cambiar(d => { const x = toma(d, dia, t); if (x) { x.hecha = true; x.descontado = descontado; } },
-          "Menú: " + nombre + " hecha", "menu.json");
+        const okMenu = await cambiar(d => {
+          const x = toma(d, dia, t);
+          if (!x) return;
+          x.hecha = true; x.descontado = res.descontado; x.comprados = res.comprados;
+          delete x.repuesto;
+        }, "Menú: " + nombre + " hecha", "menu.json");
         if (okMenu) estado(avisos.length ? "Hecha ✓. Revisa a mano: " + avisos.join(", ") + "." : "Hecha ✓ — descontada de la compra");
       } else {
-        const descontado = c.descontado || [];
+        const devolver = (c.descontado || []).concat(c.comprados || []);
+        const comprados = c.comprados || [];
         const okCompra = await cambiar(d => {
           avisos = [];
           if (!d.compra) d.compra = [];
-          devolverCompra(d.compra, descontado, avisos);
+          devolverCompra(d.compra, devolver, avisos);
         }, "Compra: devolver " + nombre + " (desmarcada)");
         if (!okCompra) return;
-        const okMenu = await cambiar(d => { const x = toma(d, dia, t); if (x) { delete x.hecha; delete x.descontado; } },
-          "Menú: " + nombre + " sin hacer", "menu.json");
+        const okMenu = await cambiar(d => {
+          const x = toma(d, dia, t);
+          if (!x) return;
+          delete x.hecha; delete x.descontado; delete x.comprados;
+          if (comprados.length) x.repuesto = comprados; else delete x.repuesto;
+        }, "Menú: " + nombre + " sin hacer", "menu.json");
         if (okMenu) estado(avisos.length ? "Desmarcada. Revisa a mano: " + avisos.join(", ") + "." : "Desmarcada — vuelve a la compra");
       }
     }
@@ -1215,7 +1293,7 @@
       if (!nuevo) { estado("No quedan platos distintos en la base.", true); render(); return; }
       const viejo = platoBase(toma(menu, dia, t).plato);
       const dianombre = diasMenu()[dia].dia + " (" + t + ")";
-      const ok = await cambiar(d => { const c = toma(d, dia, t); if (c) c.plato = nuevo.nombre; },
+      const ok = await cambiar(d => { const c = toma(d, dia, t); if (c) { c.plato = nuevo.nombre; delete c.repuesto; } },
         "Menú: " + dianombre + " → " + nuevo.nombre, "menu.json");
       if (!ok) return;
       let avisos = [];

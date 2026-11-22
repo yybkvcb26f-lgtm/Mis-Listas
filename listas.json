@@ -55,7 +55,10 @@
     "Papel cocina – 1 ud · Aldi",
     "Pollo – 1 bandeja de 500 g (necesitas 250 g) · Aldi",
     "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
-    "Verduras para asar – 1 bolsa de 450 g (necesitas 400 g) · Mercadona",
+    {
+      "texto": "Verduras para asar – 1 bolsa de 450 g (necesitas 400 g) · Mercadona",
+      "hecho": true
+    },
     "Arroz – 1 vasito de 100 g (necesitas 80 g) · Aldi",
     "Zanahorias – 1 bolsa de 1 kg (necesitas 200 g) · BM",
     "Manzanas – 2 ud · Aldi",

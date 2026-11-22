@@ -150,7 +150,47 @@
           "kcal": 230,
           "proteina": 5,
           "grasa": 9
-        }
+        },
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Kiwis",
+            "cantidad": 2,
+            "unidad": "ud"
+          }
+        ],
+        "comprados": [
+          {
+            "producto": "Pasta",
+            "cantidad": 130,
+            "unidad": "g"
+          },
+          {
+            "producto": "Carne picada de ternera",
+            "cantidad": 150,
+            "unidad": "g"
+          },
+          {
+            "producto": "Tomate triturado",
+            "cantidad": 150,
+            "unidad": "g"
+          },
+          {
+            "producto": "Cebolla",
+            "cantidad": 50,
+            "unidad": "g"
+          },
+          {
+            "producto": "Verduras para asar",
+            "cantidad": 100,
+            "unidad": "g"
+          },
+          {
+            "producto": "Chocolate 70%",
+            "cantidad": 20,
+            "unidad": "g"
+          }
+        ]
       }
     },
     {

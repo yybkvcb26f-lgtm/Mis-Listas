@@ -14,7 +14,10 @@
     "Aguacate – 1 ud (usas ½) · Aldi",
     "Yogur natural – 1 pack de 500 g (necesitas 375 g) · Aldi",
     "Manzanas – 2 ud · Aldi",
-    "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
+    {
+      "texto": "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
+      "hecho": true
+    },
     {
       "texto": "Leche – 1 brick de 1 l (necesitas 500 ml) · Aldi",
       "hecho": true

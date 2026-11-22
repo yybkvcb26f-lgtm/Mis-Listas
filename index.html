@@ -778,13 +778,67 @@
       }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": editar " + partes(nuevo).nombre, rutaDe(clave));
     }
     async function anadir(clave, texto) {
-      if (clave === "compra") texto = completarCompra(texto);
+      if (clave !== "compra") {
+        return cambiar(d => {
+          if (!d[clave]) d[clave] = [];
+          const ya = d[clave].some(it => !esHecho(it) && normaliza(textoItem(it)) === normaliza(texto));
+          if (!ya) d[clave].push(texto);
+        }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": añadir " + partes(texto).nombre, rutaDe(clave));
+      }
+      // «Pasta 200 g» o «Pasta - 200 g» → «Pasta – 200 g» (la cantidad es lo que va al final: número y unidad)
+      let escrito = texto.replace(/\s+-\s+/, " – ").trim();
+      const iSup = escrito.lastIndexOf(" · ");
+      let cuerpo = iSup >= 0 ? escrito.slice(0, iSup) : escrito;
+      const finSup = iSup >= 0 ? escrito.slice(iSup) : "";
+      if (!cuerpo.includes(" – ")) {
+        const m = cuerpo.match(/^(.+?)\s+(\d+(?:[.,]\d+)?\s*[a-zA-ZáéíóúÁÉÍÓÚñÑ]*)$/);
+        if (m) cuerpo = m[1] + " – " + m[2];
+      }
+      escrito = cuerpo + finSup;
+      const superEscrito = escrito.includes(" · ") && ORDEN_SUPER.includes(partes(escrito).tienda) ? partes(escrito).tienda : null;
+      texto = completarCompra(escrito);
+      const p = partes(texto);
+      // Aplica el añadido sobre una lista: línea nueva, o suma en la línea que ya hay (una sola línea por producto)
+      const aplicar = lista => {
+        const i = indiceLinea(lista, p.nombre);
+        if (i < 0) { lista.push(texto); return { tipo: "añadir" }; }
+        const it = lista[i], pl = partes(textoItem(it));
+        if (!p.cantidad) {
+          if (esHecho(it)) { lista[i] = pl.nombre + " · " + (superEscrito || pl.tienda || "Sin súper"); return { tipo: "sumar" }; }
+          if (superEscrito && superEscrito !== pl.tienda) {
+            lista[i] = pl.nombre + (pl.cantidad ? " – " + pl.cantidad : "") + " · " + superEscrito;
+            return { tipo: "sumar" };
+          }
+          return { tipo: "nada", aviso: pl.nombre + " ya está en la lista." };
+        }
+        // Cantidad escrita → en la unidad del producto (en los productos por envase, «1 paquete» = su peso)
+        let q = null, u = null;
+        const env = envaseDe(pl.nombre);
+        const c = leerCantidad(p.cantidad);
+        if (env && typeof env === "object") {
+          const uE = unidadNorm(env.unidad);
+          const m = p.cantidad.match(/^\s*([\d.,]+)\s*([^\s(]+)/);
+          if (c && c.u === uE) { q = c.n; u = uE; }
+          else if (m && [normaliza(env.singular), normaliza(env.plural)].includes(normaliza(m[2]))) { q = leerNumero(m[1]) * env.envase; u = uE; }
+        } else if (c) { q = c.n; u = c.u; }
+        const av = [];
+        if (q === null || !sumarALinea(lista, pl.nombre, q, u, av, superEscrito)) {
+          return { tipo: "nada", aviso: "No se puede sumar: ya tienes " + textoItem(it).replace(/ · .*$/, "") + ". Edítalo a mano." };
+        }
+        return { tipo: "sumar" };
+      };
+      // Prueba en local: si no cambia nada, solo se avisa (sin guardar)
+      const prueba = aplicar(JSON.parse(JSON.stringify(listas.compra || [])));
+      if (prueba.tipo === "nada") { estado(prueba.aviso, true); return false; }
+      let r = prueba;
       const ok = await cambiar(d => {
-        if (!d[clave]) d[clave] = [];
-        const ya = d[clave].some(it => !esHecho(it) && normaliza(textoItem(it)) === normaliza(texto));
-        if (!ya) d[clave].push(texto);
-      }, (LISTAS[clave] ? LISTAS[clave].nombre : clave) + ": añadir " + partes(texto).nombre, rutaDe(clave));
-      if (ok && clave === "compra") await registrarProducto(texto);
+        if (!d.compra) d.compra = [];
+        r = aplicar(d.compra);
+      }, "Compra: " + (prueba.tipo === "sumar" ? "sumar " : "añadir ") + p.nombre);
+      if (!ok) return false;
+      if (superEscrito) await guardarSuper(p.nombre, superEscrito);
+      else await registrarProducto(texto);
+      return true;
     }
 
     // --- Base de supermercados (supermercados.json) desde la app ---
@@ -1008,71 +1062,68 @@
     function tamanoEnvase(env) {
       return textoCantidad(env.envase, unidadNorm(env.unidad));
     }
-    // Cantidad que piden los platos del menú de la semana para un producto (en su unidad)
-    function necesidadSemana(producto, u) {
-      let total = 0;
-      diasMenu().forEach(x => ["comida", "cena"].forEach(t => {
-        const b = x[t] && platoBase(x[t].plato);
-        ((b && b.ingredientes) || []).forEach(g => {
-          if (mismoProducto(g.producto, producto) && unidadNorm(g.unidad) === u) total += g.cantidad;
-        });
-      }));
-      return total;
-    }
     // Suma (o resta, si delta < 0) una cantidad a un producto pendiente de la compra
-    function ajustarProducto(lista, producto, delta, unidad, avisos) {
-      const u = unidadNorm(unidad);
-      const i = lista.findIndex(it => !esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, producto));
+    // --- Una sola línea por producto en la compra (pendiente o tachada) ---
+    function indiceLinea(lista, producto) {
+      return lista.findIndex(it => mismoProducto(partes(textoItem(it)).nombre, producto));
+    }
+    // Cantidad de una línea en la unidad u (en productos por envase, el «necesitas»; si no lo tiene, envases × tamaño)
+    function cantidadDeLinea(it, producto, u) {
+      const p = partes(textoItem(it));
       const env = envaseDe(producto);
-      // Producto por envase (envases.json): la compra va en envases enteros, redondeando hacia arriba.
-      // Opción A: si los envases que ya hay pendientes bastan para la semana, no se toca; si no, se sube al número necesario.
       if (env && typeof env === "object") {
         const uE = unidadNorm(env.unidad);
-        if (unidadNorm(unidad) !== uE) { avisos.push(producto); return; }
-        const escribir = (envs, necesidad, tienda) => producto + " – " + textoEnvases(envs, env)
-          + (necesidad > 0 ? " (necesitas " + textoCantidad(necesidad, uE) + ")" : "")
-          + " · " + (tienda || superDe(producto) || "Sin súper");
-        if (i >= 0) {
-          const p = partes(textoItem(lista[i]));
-          const ya = cuantosEnvases(quitarNecesitas(p.cantidad), env);
-          if (ya === null) { avisos.push(p.nombre); return; }
-          const nec = leerCantidad(textoNecesitas(p.cantidad));
-          let necesidad;
-          if (nec && nec.u === uE) necesidad = Math.max(0, nec.n + delta); // se recalcula lo que pide la semana
-          else if (delta > 0) necesidad = Math.max(necesidadSemana(producto, uE), delta);
-          else return;
-          // Ningún plato de la semana lo pide ya: se quita, igual que los productos en gramos que llegan a 0
-          if (necesidad <= 0.001) { lista.splice(i, 1); return; }
-          const req = Math.ceil(necesidad / env.envase - 1e-9);
-          // Opción A: los envases nunca bajan; solo suben si no bastan
-          lista[i] = escribir(Math.max(ya, req), necesidad, p.tienda);
-        } else if (delta > 0) {
-          const necesidad = Math.max(necesidadSemana(producto, uE), delta);
-          lista.push(escribir(Math.max(1, Math.ceil(necesidad / env.envase - 1e-9)), necesidad));
-        }
-        return;
+        if (u !== uE) return null;
+        const nec = leerCantidad(textoNecesitas(p.cantidad));
+        if (nec && nec.u === uE) return nec.n;
+        const n = cuantosEnvases(quitarNecesitas(p.cantidad), env);
+        return n !== null ? n * env.envase : null;
       }
-      // Envase de texto fijo: no se suman ni se restan cantidades; si no hay ninguno pendiente y hace falta, se añade uno
-      if (env !== null) {
-        if (i < 0 && delta > 0) {
-          const s = superDe(producto) || "Sin súper";
-          lista.push(producto + (env ? " – " + env : "") + " · " + s);
-        }
-        return;
+      const c = leerCantidad(p.cantidad);
+      return c && c.u === u ? c.n : null;
+    }
+    function textoLinea(producto, cantidad, u, tienda, envasesMin) {
+      const env = envaseDe(producto);
+      if (env && typeof env === "object") {
+        const envs = Math.max(envasesMin || 0, Math.ceil(cantidad / env.envase - 1e-9));
+        return producto + " – " + textoEnvases(envs, env) + " (necesitas " + textoCantidad(cantidad, unidadNorm(env.unidad)) + ") · " + tienda;
       }
-      if (i < 0) {
-        if (delta > 0) {
-          const s = superDe(producto) || "Sin súper";
-          lista.push(producto + " – " + escribirCantidad(delta, u) + " · " + s);
-        }
-        return;
-      }
-      const p = partes(textoItem(lista[i]));
-      const actual = leerCantidad(p.cantidad);
-      if (!actual || actual.u !== u) { avisos.push(p.nombre); return; }
-      const total = actual.n + delta;
-      if (total <= 0.001) { lista.splice(i, 1); return; }
-      lista[i] = p.nombre + " – " + escribirCantidad(total, u) + " · " + (p.tienda || superDe(p.nombre) || "Sin súper");
+      return producto + " – " + escribirCantidad(cantidad, u) + " · " + tienda;
+    }
+    // Resta q a la línea del producto (pendiente o tachada; sigue igual de tachada). Si llega a 0, se quita.
+    function restarDeLinea(lista, producto, q, unidad, avisos, mantenerEnvases) {
+      const u = unidadNorm(unidad);
+      const i = indiceLinea(lista, producto);
+      if (i < 0) return;
+      const it = lista[i], p = partes(textoItem(it));
+      const actual = cantidadDeLinea(it, producto, u);
+      if (actual === null) { avisos.push(p.nombre); return; }
+      const queda = actual - q;
+      if (queda <= 0.001) { lista.splice(i, 1); return; }
+      const env = envaseDe(producto);
+      const minEnv = env && typeof env === "object" && mantenerEnvases ? (cuantosEnvases(quitarNecesitas(p.cantidad), env) || 0) : 0;
+      const txt = textoLinea(p.nombre, queda, u, p.tienda || superDe(p.nombre) || "Sin súper", minEnv);
+      lista[i] = esHecho(it) ? { texto: txt, hecho: true } : txt;
+    }
+    // Suma q a la línea del producto y la deja PENDIENTE. Si estaba tachada, se sustituye por una pendiente solo con q.
+    function sumarALinea(lista, producto, q, unidad, avisos, superForzado) {
+      const u = unidadNorm(unidad);
+      const i = indiceLinea(lista, producto);
+      if (i < 0) { lista.push(textoLinea(producto, q, u, superForzado || superDe(producto) || "Sin súper")); return true; }
+      const it = lista[i], p = partes(textoItem(it));
+      const tienda = superForzado || p.tienda || superDe(p.nombre) || "Sin súper";
+      if (esHecho(it) || !p.cantidad) { lista[i] = textoLinea(p.nombre, q, u, tienda); return true; }
+      const actual = cantidadDeLinea(it, producto, u);
+      if (actual === null) { avisos.push(p.nombre); return false; }
+      const env = envaseDe(producto);
+      const minEnv = env && typeof env === "object" ? (cuantosEnvases(quitarNecesitas(p.cantidad), env) || 0) : 0;
+      lista[i] = textoLinea(p.nombre, actual + q, u, tienda, minEnv);
+      return true;
+    }
+    // ↻: suma o resta en la única línea del producto (los envases no bajan al restar)
+    function ajustarProducto(lista, producto, delta, unidad, avisos) {
+      if (delta > 0) sumarALinea(lista, producto, delta, unidad, avisos);
+      else if (delta < 0) restarDeLinea(lista, producto, -delta, unidad, avisos, true);
     }
     function ajustarCompra(lista, viejo, nuevo, avisos) {
       const cambios = {};
@@ -1127,164 +1178,32 @@
       });
       return Object.values(junto);
     }
-    // Resta de lo PENDIENTE (lo tachado no se toca). Devuelve lo que se ha descontado de verdad.
-    function descontarCompra(lista, cosas, avisos) {
-      const hecho = [];
-      cosas.forEach(x => {
-        const u = unidadNorm(x.unidad);
-        const i = lista.findIndex(it => !esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, x.producto));
-        if (i < 0) return;
-        const p = partes(textoItem(lista[i]));
-        const env = envaseDe(x.producto);
-        if (env && typeof env === "object") {
-          const uE = unidadNorm(env.unidad);
-          const nec = leerCantidad(textoNecesitas(p.cantidad));
-          if (u !== uE || !nec || nec.u !== uE) { avisos.push(p.nombre); return; }
-          const q = Math.min(x.cantidad, nec.n);
-          const queda = nec.n - q;
-          if (queda <= 0.001) lista.splice(i, 1);
-          else lista[i] = p.nombre + " – " + textoEnvases(Math.ceil(queda / env.envase - 1e-9), env)
-            + " (necesitas " + textoCantidad(queda, uE) + ") · " + (p.tienda || superDe(p.nombre) || "Sin súper");
-          hecho.push({ producto: x.producto, cantidad: q, unidad: uE });
-        } else {
-          const actual = leerCantidad(p.cantidad);
-          if (!actual || actual.u !== u) { avisos.push(p.nombre); return; }
-          const q = Math.min(x.cantidad, actual.n);
-          const queda = actual.n - q;
-          if (queda <= 0.001) lista.splice(i, 1);
-          else lista[i] = p.nombre + " – " + escribirCantidad(queda, u) + " · " + (p.tienda || superDe(p.nombre) || "Sin súper");
-          hecho.push({ producto: x.producto, cantidad: q, unidad: u });
-        }
-      });
-      return hecho;
-    }
-    // Vuelve a poner en la compra exactamente lo que se descontó
-    function devolverCompra(lista, descontado, avisos) {
-      (descontado || []).forEach(x => {
-        const env = envaseDe(x.producto);
-        if (!(env && typeof env === "object")) { ajustarProducto(lista, x.producto, x.cantidad, x.unidad, avisos); return; }
-        const uE = unidadNorm(env.unidad);
-        const i = lista.findIndex(it => !esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, x.producto));
-        if (i < 0) {
-          lista.push(x.producto + " – " + textoEnvases(Math.max(1, Math.ceil(x.cantidad / env.envase - 1e-9)), env)
-            + " (necesitas " + textoCantidad(x.cantidad, uE) + ") · " + (superDe(x.producto) || "Sin súper"));
-          return;
-        }
-        const p = partes(textoItem(lista[i]));
-        const nec = leerCantidad(textoNecesitas(p.cantidad));
-        const total = (nec && nec.u === uE ? nec.n : 0) + x.cantidad;
-        const ya = cuantosEnvases(quitarNecesitas(p.cantidad), env) || 0;
-        lista[i] = p.nombre + " – " + textoEnvases(Math.max(ya, Math.ceil(total / env.envase - 1e-9)), env)
-          + " (necesitas " + textoCantidad(total, uE) + ") · " + (p.tienda || superDe(p.nombre) || "Sin súper");
-      });
-    }
-
-    // Cantidad de una línea de la compra en la unidad u (envases × tamaño en los productos por envase)
-    function cantidadLinea(it, producto, u) {
-      const p = partes(textoItem(it));
-      const env = envaseDe(producto);
-      if (env && typeof env === "object") {
-        if (unidadNorm(env.unidad) !== u) return 0;
-        const n = cuantosEnvases(quitarNecesitas(p.cantidad), env);
-        return n ? n * env.envase : 0;
-      }
-      const c = leerCantidad(p.cantidad);
-      return c && c.u === u ? c.n : 0;
-    }
-    // Lo comprado (tachado) de un producto
-    function stockComprado(lista, producto, u) {
-      return lista.filter(it => esHecho(it) && mismoProducto(partes(textoItem(it)).nombre, producto))
-        .reduce((a, it) => a + cantidadLinea(it, producto, u), 0);
-    }
-    function sumaDe(arr, producto, u) {
-      return (arr || []).filter(x => mismoProducto(x.producto, producto) && unidadNorm(x.unidad) === u)
-        .reduce((a, x) => a + x.cantidad, 0);
-    }
-    // Lo comprado que ya han gastado OTRAS comidas (las hechas, y las desmarcadas que lo devolvieron a la compra)
-    function consumidoOtras(m, producto, u, dia, t) {
-      let total = 0;
-      diasMenu(m).forEach((x, i) => ["comida", "cena"].forEach(tt => {
-        if (i === dia && tt === t) return;
-        const c = x[tt];
-        if (!c) return;
-        if (c.hecha) total += sumaDe(c.comprados, producto, u);
-        total += sumaDe(c.repuesto, producto, u);
-      }));
-      return total;
-    }
-    function juntar(arr) {
-      const j = {};
-      arr.forEach(x => {
-        if (!(x.cantidad > 0.001)) return;
-        const k = singular(normaliza(x.producto)) + "|" + unidadNorm(x.unidad);
-        if (!j[k]) j[k] = { producto: x.producto, cantidad: 0, unidad: unidadNorm(x.unidad) };
-        j[k].cantidad += x.cantidad;
-      });
-      return Object.values(j);
-    }
-    // Marcar como hecha: primero se gasta lo comprado (no se toca lo pendiente); si no llega, se descuenta de lo pendiente.
-    function aplicarHecha(lista, m, c, dia, t, avisos) {
-      const descontado = [], comprados = [];
-      cosasDeToma(c, lista).forEach(x => {
-        const u = unidadNorm(x.unidad);
-        let q = x.cantidad;
-        // 1) Lo que se devolvió a la compra al desmarcarla antes: se vuelve a quitar de lo pendiente
-        const r = Math.min(sumaDe(c.repuesto, x.producto, u), q);
-        let quitado = 0;
-        if (r > 0) {
-          quitado = sumaDe(descontarCompra(lista, [{ producto: x.producto, cantidad: r, unidad: u }], avisos), x.producto, u);
-          comprados.push({ producto: x.producto, cantidad: quitado, unidad: u });
-          q -= r;
-        }
-        // 2) Lo que cubre lo comprado (tachado) que no han gastado otras comidas
-        const libre = stockComprado(lista, x.producto, u) - consumidoOtras(m, x.producto, u, dia, t) - quitado;
-        const deComprado = Math.max(0, Math.min(libre, q));
-        if (deComprado > 0) comprados.push({ producto: x.producto, cantidad: deComprado, unidad: u });
-        q -= deComprado;
-        // 3) El resto se descuenta de lo pendiente
-        if (q > 0.001) descontarCompra(lista, [{ producto: x.producto, cantidad: q, unidad: u }], avisos)
-          .forEach(d => descontado.push(d));
-      });
-      return { descontado: juntar(descontado), comprados: juntar(comprados) };
-    }
-
     async function marcarHecha(dia, t) {
       const c = toma(menu, dia, t);
       if (!c || !c.plato) return;
       const nombre = diasMenu()[dia].dia + " (" + t + ")";
+      const marcar = !c.hecha;
       let avisos = [];
-      if (!c.hecha) {
-        let res = { descontado: [], comprados: [] };
-        const okCompra = await cambiar(d => {
-          avisos = [];
-          if (!d.compra) d.compra = [];
-          res = aplicarHecha(d.compra, menu, c, dia, t, avisos);
-        }, "Compra: descontar " + nombre + " (hecha)");
-        if (!okCompra) return;
-        const okMenu = await cambiar(d => {
-          const x = toma(d, dia, t);
-          if (!x) return;
-          x.hecha = true; x.descontado = res.descontado; x.comprados = res.comprados;
-          delete x.repuesto;
-        }, "Menú: " + nombre + " hecha", "menu.json");
-        if (okMenu) estado(avisos.length ? "Hecha ✓. Revisa a mano: " + avisos.join(", ") + "." : "Hecha ✓ — descontada de la compra");
-      } else {
-        const devolver = (c.descontado || []).concat(c.comprados || []);
-        const comprados = c.comprados || [];
-        const okCompra = await cambiar(d => {
-          avisos = [];
-          if (!d.compra) d.compra = [];
-          devolverCompra(d.compra, devolver, avisos);
-        }, "Compra: devolver " + nombre + " (desmarcada)");
-        if (!okCompra) return;
-        const okMenu = await cambiar(d => {
-          const x = toma(d, dia, t);
-          if (!x) return;
-          delete x.hecha; delete x.descontado; delete x.comprados;
-          if (comprados.length) x.repuesto = comprados; else delete x.repuesto;
-        }, "Menú: " + nombre + " sin hacer", "menu.json");
-        if (okMenu) estado(avisos.length ? "Desmarcada. Revisa a mano: " + avisos.join(", ") + "." : "Desmarcada — vuelve a la compra");
-      }
+      // Marcar: a cada producto de la comida se le resta su cantidad (esté pendiente o tachado).
+      // Desmarcar: se le suma y queda pendiente (si estaba tachado, pendiente solo con lo de esta comida).
+      const okCompra = await cambiar(d => {
+        avisos = [];
+        if (!d.compra) d.compra = [];
+        cosasDeToma(c, d.compra).forEach(x => {
+          if (marcar) restarDeLinea(d.compra, x.producto, x.cantidad, x.unidad, avisos, false);
+          else sumarALinea(d.compra, x.producto, x.cantidad, x.unidad, avisos);
+        });
+      }, "Compra: " + (marcar ? "descontar " + nombre + " (hecha)" : "devolver " + nombre + " (desmarcada)"));
+      if (!okCompra) return;
+      const okMenu = await cambiar(d => {
+        const x = toma(d, dia, t);
+        if (!x) return;
+        if (marcar) x.hecha = true; else delete x.hecha;
+        delete x.descontado; delete x.comprados; delete x.repuesto;
+      }, "Menú: " + nombre + (marcar ? " hecha" : " sin hacer"), "menu.json");
+      if (okMenu) estado(avisos.length
+        ? (marcar ? "Hecha ✓" : "Desmarcada") + ". Revisa a mano: " + avisos.join(", ") + "."
+        : marcar ? "Hecha ✓ — descontada de la compra" : "Desmarcada — vuelve a la compra");
     }
 
     async function cambiarPlato(dia, t) {
@@ -1293,7 +1212,7 @@
       if (!nuevo) { estado("No quedan platos distintos en la base.", true); render(); return; }
       const viejo = platoBase(toma(menu, dia, t).plato);
       const dianombre = diasMenu()[dia].dia + " (" + t + ")";
-      const ok = await cambiar(d => { const c = toma(d, dia, t); if (c) { c.plato = nuevo.nombre; delete c.repuesto; } },
+      const ok = await cambiar(d => { const c = toma(d, dia, t); if (c) c.plato = nuevo.nombre; },
         "Menú: " + dianombre + " → " + nuevo.nombre, "menu.json");
       if (!ok) return;
       let avisos = [];

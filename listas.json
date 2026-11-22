@@ -72,7 +72,10 @@
     "Zanahorias – 1 bolsa de 1 kg (necesitas 200 g) · BM",
     "Manzanas – 2 ud · Aldi",
     "Yogur natural – 1 pack de 500 g (necesitas 375 g) · Aldi",
-    "Granola – 1 sobre de 250 g (necesitas 60 g) · BM",
+    {
+      "texto": "Granola – 1 sobre de 250 g (necesitas 60 g) · BM",
+      "hecho": true
+    },
     "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
     "Tomate – 2 ud · Aldi",
     "Pan – 1 barra de 250 g (necesitas 230 g) · Lidl",

@@ -28,7 +28,10 @@
       "texto": "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",
       "hecho": true
     },
-    "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
+    {
+      "texto": "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
+      "hecho": true
+    },
     "Cacao 100% – 1 bote de 250 g (necesitas 10 g) · Mercadona",
     "Atún – 80 g · BM",
     "Cebolla – 1 bolsa de 450 g (necesitas 50 g) · Mercadona",

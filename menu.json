@@ -83,7 +83,57 @@
           "kcal": 375,
           "proteina": 17,
           "grasa": 8
-        }
+        },
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Huevos",
+            "cantidad": 4,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Tomate",
+            "cantidad": 1,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Pan",
+            "cantidad": 100,
+            "unidad": "g"
+          },
+          {
+            "producto": "Tomates cherry",
+            "cantidad": 100,
+            "unidad": "g"
+          },
+          {
+            "producto": "Kiwis",
+            "cantidad": 2,
+            "unidad": "ud"
+          }
+        ],
+        "comprados": [
+          {
+            "producto": "Atún",
+            "cantidad": 80,
+            "unidad": "g"
+          },
+          {
+            "producto": "Leche",
+            "cantidad": 250,
+            "unidad": "ml"
+          },
+          {
+            "producto": "Cacao 100%",
+            "cantidad": 10,
+            "unidad": "g"
+          },
+          {
+            "producto": "Avena",
+            "cantidad": 30,
+            "unidad": "g"
+          }
+        ]
       }
     },
     {

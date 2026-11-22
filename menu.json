@@ -536,6 +536,30 @@
             "unidad": "g"
           }
         ]
+      },
+      {
+        "nombre": "Crema de calabaza con pollo a la plancha y pan",
+        "racion": "Crema de calabaza 1 envase (400 ml, de BM) con pechuga de pollo a la plancha 220 g y pan 80 g",
+        "kcal": 650,
+        "proteina": 62,
+        "grasa": 17,
+        "ingredientes": [
+          {
+            "producto": "Crema de calabaza",
+            "cantidad": 1,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Pollo",
+            "cantidad": 220,
+            "unidad": "g"
+          },
+          {
+            "producto": "Pan",
+            "cantidad": 80,
+            "unidad": "g"
+          }
+        ]
       }
     ],
     "snacks": [

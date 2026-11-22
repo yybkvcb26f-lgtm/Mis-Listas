@@ -207,7 +207,57 @@
           "kcal": 390,
           "proteina": 11,
           "grasa": 10
-        }
+        },
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Pan",
+            "cantidad": 130,
+            "unidad": "g"
+          },
+          {
+            "producto": "Queso",
+            "cantidad": 40,
+            "unidad": "g"
+          },
+          {
+            "producto": "Tomate",
+            "cantidad": 1,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Plátanos",
+            "cantidad": 1,
+            "unidad": "ud"
+          },
+          {
+            "producto": "Yogur natural",
+            "cantidad": 125,
+            "unidad": "g"
+          }
+        ],
+        "comprados": [
+          {
+            "producto": "Jamón ibérico",
+            "cantidad": 80,
+            "unidad": "g"
+          },
+          {
+            "producto": "Zanahorias",
+            "cantidad": 100,
+            "unidad": "g"
+          },
+          {
+            "producto": "Frambuesas",
+            "cantidad": 80,
+            "unidad": "g"
+          },
+          {
+            "producto": "Granola",
+            "cantidad": 30,
+            "unidad": "g"
+          }
+        ]
       }
     },
     {

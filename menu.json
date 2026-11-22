@@ -16,29 +16,7 @@
           "kcal": 360,
           "proteina": 10,
           "grasa": 11
-        },
-        "repuesto": [
-          {
-            "producto": "Leche de coco",
-            "cantidad": 100,
-            "unidad": "ml"
-          },
-          {
-            "producto": "Verduras para asar",
-            "cantidad": 250,
-            "unidad": "g"
-          },
-          {
-            "producto": "Zanahorias",
-            "cantidad": 100,
-            "unidad": "g"
-          },
-          {
-            "producto": "Granola",
-            "cantidad": 30,
-            "unidad": "g"
-          }
-        ]
+        }
       }
     },
     {
@@ -56,56 +34,7 @@
           "proteina": 17,
           "grasa": 8
         },
-        "hecha": true,
-        "descontado": [
-          {
-            "producto": "Huevos",
-            "cantidad": 4,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Tomate",
-            "cantidad": 1,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Pan",
-            "cantidad": 100,
-            "unidad": "g"
-          },
-          {
-            "producto": "Tomates cherry",
-            "cantidad": 100,
-            "unidad": "g"
-          },
-          {
-            "producto": "Kiwis",
-            "cantidad": 2,
-            "unidad": "ud"
-          }
-        ],
-        "comprados": [
-          {
-            "producto": "Atún",
-            "cantidad": 80,
-            "unidad": "g"
-          },
-          {
-            "producto": "Leche",
-            "cantidad": 250,
-            "unidad": "ml"
-          },
-          {
-            "producto": "Cacao 100%",
-            "cantidad": 10,
-            "unidad": "g"
-          },
-          {
-            "producto": "Avena",
-            "cantidad": 30,
-            "unidad": "g"
-          }
-        ]
+        "hecha": true
       }
     },
     {
@@ -123,46 +52,7 @@
           "proteina": 5,
           "grasa": 9
         },
-        "hecha": true,
-        "descontado": [
-          {
-            "producto": "Kiwis",
-            "cantidad": 2,
-            "unidad": "ud"
-          }
-        ],
-        "comprados": [
-          {
-            "producto": "Pasta",
-            "cantidad": 130,
-            "unidad": "g"
-          },
-          {
-            "producto": "Carne picada de ternera",
-            "cantidad": 150,
-            "unidad": "g"
-          },
-          {
-            "producto": "Tomate triturado",
-            "cantidad": 150,
-            "unidad": "g"
-          },
-          {
-            "producto": "Cebolla",
-            "cantidad": 50,
-            "unidad": "g"
-          },
-          {
-            "producto": "Verduras para asar",
-            "cantidad": 100,
-            "unidad": "g"
-          },
-          {
-            "producto": "Chocolate 70%",
-            "cantidad": 20,
-            "unidad": "g"
-          }
-        ]
+        "hecha": true
       }
     },
     {
@@ -180,56 +70,7 @@
           "proteina": 11,
           "grasa": 10
         },
-        "hecha": true,
-        "descontado": [
-          {
-            "producto": "Pan",
-            "cantidad": 130,
-            "unidad": "g"
-          },
-          {
-            "producto": "Queso",
-            "cantidad": 40,
-            "unidad": "g"
-          },
-          {
-            "producto": "Tomate",
-            "cantidad": 1,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Plátanos",
-            "cantidad": 1,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Yogur natural",
-            "cantidad": 125,
-            "unidad": "g"
-          }
-        ],
-        "comprados": [
-          {
-            "producto": "Jamón ibérico",
-            "cantidad": 80,
-            "unidad": "g"
-          },
-          {
-            "producto": "Zanahorias",
-            "cantidad": 100,
-            "unidad": "g"
-          },
-          {
-            "producto": "Frambuesas",
-            "cantidad": 80,
-            "unidad": "g"
-          },
-          {
-            "producto": "Granola",
-            "cantidad": 30,
-            "unidad": "g"
-          }
-        ]
+        "hecha": true
       }
     },
     {
@@ -247,46 +88,7 @@
           "proteina": 6,
           "grasa": 4
         },
-        "hecha": true,
-        "descontado": [
-          {
-            "producto": "Aguacate",
-            "cantidad": 0.5,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Queso",
-            "cantidad": 40,
-            "unidad": "g"
-          },
-          {
-            "producto": "Tomates cherry",
-            "cantidad": 100,
-            "unidad": "g"
-          },
-          {
-            "producto": "Manzanas",
-            "cantidad": 1,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Yogur natural",
-            "cantidad": 125,
-            "unidad": "g"
-          }
-        ],
-        "comprados": [
-          {
-            "producto": "Wraps integrales",
-            "cantidad": 3,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Pavo en lonchas",
-            "cantidad": 150,
-            "unidad": "g"
-          }
-        ]
+        "hecha": true
       }
     },
     {
@@ -299,25 +101,7 @@
       },
       "comida": {
         "plato": "Entrecot con boniato asado y pimiento",
-        "hecha": true,
-        "descontado": [],
-        "comprados": [
-          {
-            "producto": "Entrecot",
-            "cantidad": 250,
-            "unidad": "g"
-          },
-          {
-            "producto": "Boniato",
-            "cantidad": 300,
-            "unidad": "g"
-          },
-          {
-            "producto": "Verduras para asar",
-            "cantidad": 100,
-            "unidad": "g"
-          }
-        ]
+        "hecha": true
       },
       "cena": {
         "plato": "Presa ibérica con arroz, pimiento y cebolla",
@@ -329,56 +113,7 @@
           "proteina": 12,
           "grasa": 11
         },
-        "hecha": true,
-        "descontado": [
-          {
-            "producto": "Presa ibérica",
-            "cantidad": 220,
-            "unidad": "g"
-          },
-          {
-            "producto": "Arroz",
-            "cantidad": 70,
-            "unidad": "g"
-          },
-          {
-            "producto": "Verduras para asar",
-            "cantidad": 75,
-            "unidad": "g"
-          },
-          {
-            "producto": "Kiwis",
-            "cantidad": 2,
-            "unidad": "ud"
-          },
-          {
-            "producto": "Yogur natural",
-            "cantidad": 125,
-            "unidad": "g"
-          },
-          {
-            "producto": "Frambuesas",
-            "cantidad": 80,
-            "unidad": "g"
-          }
-        ],
-        "comprados": [
-          {
-            "producto": "Cebolla",
-            "cantidad": 75,
-            "unidad": "g"
-          },
-          {
-            "producto": "Zanahorias",
-            "cantidad": 100,
-            "unidad": "g"
-          },
-          {
-            "producto": "Granola",
-            "cantidad": 30,
-            "unidad": "g"
-          }
-        ]
+        "hecha": true
       }
     },
     {
@@ -391,30 +126,7 @@
       },
       "comida": {
         "plato": "Pollo marinado con arroz y pimientos asados",
-        "hecha": true,
-        "descontado": [
-          {
-            "producto": "Pollo",
-            "cantidad": 250,
-            "unidad": "g"
-          },
-          {
-            "producto": "Arroz",
-            "cantidad": 100,
-            "unidad": "g"
-          },
-          {
-            "producto": "Verduras para asar",
-            "cantidad": 150,
-            "unidad": "g"
-          },
-          {
-            "producto": "Yogur natural",
-            "cantidad": 60,
-            "unidad": "g"
-          }
-        ],
-        "comprados": []
+        "hecha": true
       },
       "cena": {
         "plato": "Salmón al horno con boniato",
@@ -426,46 +138,7 @@
           "proteina": 16,
           "grasa": 7
         },
-        "hecha": true,
-        "descontado": [
-          {
-            "producto": "Salmón",
-            "cantidad": 220,
-            "unidad": "g"
-          },
-          {
-            "producto": "Boniato",
-            "cantidad": 250,
-            "unidad": "g"
-          },
-          {
-            "producto": "Verduras para asar",
-            "cantidad": 250,
-            "unidad": "g"
-          },
-          {
-            "producto": "Fresas",
-            "cantidad": 150,
-            "unidad": "g"
-          }
-        ],
-        "comprados": [
-          {
-            "producto": "Leche",
-            "cantidad": 250,
-            "unidad": "ml"
-          },
-          {
-            "producto": "Cacao 100%",
-            "cantidad": 10,
-            "unidad": "g"
-          },
-          {
-            "producto": "Avena",
-            "cantidad": 30,
-            "unidad": "g"
-          }
-        ]
+        "hecha": true
       }
     }
   ],

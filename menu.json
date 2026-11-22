@@ -170,7 +170,30 @@
         "grasa": 15
       },
       "comida": {
-        "plato": "Pollo marinado con arroz y pimientos asados"
+        "plato": "Pollo marinado con arroz y pimientos asados",
+        "hecha": true,
+        "descontado": [
+          {
+            "producto": "Pollo",
+            "cantidad": 250,
+            "unidad": "g"
+          },
+          {
+            "producto": "Arroz",
+            "cantidad": 100,
+            "unidad": "g"
+          },
+          {
+            "producto": "Verduras para asar",
+            "cantidad": 150,
+            "unidad": "g"
+          },
+          {
+            "producto": "Yogur natural",
+            "cantidad": 60,
+            "unidad": "g"
+          }
+        ]
       },
       "cena": {
         "plato": "Salmón al horno con boniato",

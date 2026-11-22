@@ -37,7 +37,10 @@
       "hecho": true
     },
     "Atún – 80 g · BM",
-    "Cebolla – 1 bolsa de 450 g (necesitas 50 g) · Mercadona",
+    {
+      "texto": "Cebolla – 1 bolsa de 450 g (necesitas 50 g) · Mercadona",
+      "hecho": true
+    },
     "Wraps integrales – 1 paquete de 6 ud (necesitas 3 ud) · Mercadona",
     "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
     "Avena – 1 sobre de 250 g (necesitas 30 g) · BM",

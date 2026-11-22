@@ -55,7 +55,10 @@
       "texto": "Cebolla – 50 g · Mercadona",
       "hecho": true
     },
-    "Wraps integrales – 1 paquete de 6 ud (necesitas 3 ud) · Mercadona",
+    {
+      "texto": "Wraps integrales – 1 paquete de 6 ud (necesitas 3 ud) · Mercadona",
+      "hecho": true
+    },
     {
       "texto": "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
       "hecho": true

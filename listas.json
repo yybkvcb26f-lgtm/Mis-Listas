@@ -9,14 +9,8 @@
     "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
     "Leche – 1 brick de 1 l (necesitas 250 ml) · Aldi",
     "Chocolate 70% – 1 tableta de 100 g (necesitas 20 g) · Aldi",
-    {
-      "texto": "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",
-      "hecho": true
-    },
-    {
-      "texto": "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
-      "hecho": true
-    },
+    "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",
+    "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
     "Cacao 100% – 1 bote de 250 g (necesitas 10 g) · Mercadona",
     "Atún – 80 g · BM",
     "Cebolla – 1 bolsa de 450 g (necesitas 50 g) · Mercadona",
@@ -39,14 +33,16 @@
     "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
     "Verduras para asar – 1 bolsa de 450 g (necesitas 400 g) · Mercadona",
     "Arroz – 1 vasito de 100 g (necesitas 80 g) · Aldi",
-    "Zanahorias – 1 bolsa de 1 kg (necesitas 100 g) · BM",
+    "Zanahorias – 1 bolsa de 1 kg (necesitas 200 g) · BM",
     "Manzanas – 1 ud · Aldi",
-    "Yogur natural – 1 pack de 500 g (necesitas 125 g) · Aldi",
-    "Granola – 1 sobre de 250 g (necesitas 30 g) · BM",
+    "Yogur natural – 1 pack de 500 g (necesitas 250 g) · Aldi",
+    "Granola – 1 sobre de 250 g (necesitas 60 g) · BM",
     "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
-    "Tomate – 1 ud · Aldi",
-    "Pan – 1 barra de 250 g (necesitas 100 g) · Lidl",
+    "Tomate – 2 ud · Aldi",
+    "Pan – 1 barra de 250 g (necesitas 230 g) · Lidl",
     "Tomates cherry – 1 tarrina de 250 g (necesitas 100 g) · BM",
-    "Kiwis – 4 ud · Aldi"
+    "Kiwis – 4 ud · Aldi",
+    "Queso – 1 paquete de 250 g (necesitas 40 g) · Aldi",
+    "Plátanos – 1 ud · Aldi"
   ]
 }

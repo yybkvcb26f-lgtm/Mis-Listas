@@ -1,7 +1,6 @@
 {
   "compra": [
-    "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
-    "Tomate – 2 ud · Aldi",
+    "Tomate – 1 ud · Aldi",
     {
       "texto": "Carne picada de ternera – 1 bandeja de 400 g (necesitas 150 g) · Lidl",
       "hecho": true
@@ -26,7 +25,7 @@
       "texto": "Leche – 1 brick de 1 l (necesitas 500 ml) · Aldi",
       "hecho": true
     },
-    "Kiwis – 4 ud · Aldi",
+    "Kiwis – 2 ud · Aldi",
     {
       "texto": "Chocolate 70% – 1 tableta de 100 g (necesitas 20 g) · Aldi",
       "hecho": true
@@ -36,7 +35,7 @@
       "texto": "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",
       "hecho": true
     },
-    "Pan – 1 barra de 250 g (necesitas 230 g) · Aldi",
+    "Pan – 1 barra de 250 g (necesitas 130 g) · Aldi",
     {
       "texto": "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
       "hecho": true
@@ -73,7 +72,7 @@
       "texto": "Granola – 1 sobre de 250 g (necesitas 90 g) · BM",
       "hecho": true
     },
-    "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
+    "Tomates cherry – 1 tarrina de 250 g (necesitas 100 g) · BM",
     {
       "texto": "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
       "hecho": true

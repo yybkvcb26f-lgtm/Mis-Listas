@@ -9,7 +9,10 @@
       "texto": "Pavo en lonchas – 1 paquete de 150 g (necesitas 150 g) · Aldi",
       "hecho": true
     },
-    "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
+    {
+      "texto": "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
+      "hecho": true
+    },
     "Leche – 1 brick de 1 l (necesitas 250 ml) · Aldi",
     "Chocolate 70% – 1 tableta de 100 g (necesitas 20 g) · Aldi",
     "Frambuesas – 1 tarrina de 150 g (necesitas 80 g) · Aldi",

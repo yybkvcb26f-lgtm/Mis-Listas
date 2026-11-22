@@ -45,7 +45,10 @@
       "hecho": true
     },
     "Wraps integrales – 1 paquete de 6 ud (necesitas 3 ud) · Mercadona",
-    "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
+    {
+      "texto": "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
+      "hecho": true
+    },
     "Avena – 1 sobre de 250 g (necesitas 30 g) · BM",
     {
       "texto": "Entrecot – 250 g · Aldi",

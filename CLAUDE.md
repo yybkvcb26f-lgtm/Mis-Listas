@@ -12,11 +12,11 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
   - Sábado y domingo: `desayuno` `{"texto", "kcal", "proteina", "grasa"}` y `comida` `{"plato"}`.
   - Todas las cenas: `{"plato", "snack", "fruta", "postre", "extras"}`. `extras` = `{"kcal", "proteina", "grasa"}` estimados de snack + fruta + postre juntos.
   - `base`: la base de platos; cada plato tiene `nombre`, `racion` (texto con cantidades por ración), `kcal`, `proteina` y `grasa` (estimados), `ingredientes` (`[{"producto", "cantidad", "unidad"}]`, unidad `g`, `ml`, `ud` o `lata`; `producto` con el mismo nombre que se usa en la compra) y, si toca, `"postre_ligero": true`. Además, listas de `snacks`, `frutas`, `postres` y `postres_ligeros` (solo nombres).
-  - Desde la app, el botón ↻ de cada comida o cena cambia el plato por otro de la base con valores nutricionales parecidos y ajusta sola la compra: resta los `ingredientes` del plato viejo y suma los del nuevo (si un producto queda a 0 se quita; si no estaba, se añade con su súper). En los productos por envase ajusta el «necesitas»: los envases solo suben si dejan de bastar, y si el «necesitas» llega a 0 el producto se quita.
+  - Desde la app, el botón ↻ de cada comida o cena cambia el plato por otro de la base con valores nutricionales parecidos y ajusta sola la compra (en la única línea de cada producto): resta los `ingredientes` del plato viejo y suma los del nuevo. Restar: a la línea, pendiente o tachada; si llega a 0 se quita; en los productos por envase baja el «necesitas» pero los envases no bajan. Sumar: la línea queda pendiente; si estaba tachada, se sustituye por una pendiente solo con lo que se suma; si no estaba, se añade con su súper.
   - Botón ✓ de cada comida o cena con plato («hecha»), con lo que lleva (ingredientes del plato + snack/fruta/postre):
-    - Al marcar: primero se gasta lo COMPRADO (lo tachado) que no hayan gastado ya otras comidas; eso no toca la compra. Lo que no cubra lo comprado se descuenta de lo PENDIENTE (en los productos por envase baja el «necesitas» y los envases pueden bajar; si algo llega a 0 se quita). Guarda en esa comida `"hecha": true`, `"comprados"` (lo que salió de lo comprado) y `"descontado"` (lo que se descontó de lo pendiente), cada uno `[{"producto", "cantidad", "unidad"}]`.
-    - Al desmarcar: vuelve a lo pendiente lo de `descontado` y también lo de `comprados` (hay que volver a comprarlo). Borra `hecha`, `descontado` y `comprados`, y guarda `"repuesto"` con lo de `comprados`, para que si se vuelve a marcar quede todo igual que antes.
-    - Mientras está hecha no tiene ↻. Si se cambia el plato con ↻, se borra `repuesto`.
+    - Al marcar: a la línea de cada producto se le resta la cantidad de esa comida, esté pendiente o tachada (sigue como estaba). Si llega a 0, desaparece; si otra comida también lo necesita, se queda con menos cantidad (en los productos por envase baja el «necesitas» y los envases pueden bajar). Guarda `"hecha": true` en esa comida.
+    - Al desmarcar: a la línea de cada producto se le suma la cantidad de esa comida y queda PENDIENTE. Si estaba tachada (comprada, aunque fuera a mano), se borra y se pone una pendiente solo con la cantidad de esa comida. Si no hay línea, se crea. Borra `hecha`.
+    - Siempre se resta/suma la cantidad completa de la comida, así que marcar y desmarcar las veces que sea nunca pierde la cuenta. Mientras está hecha no tiene ↻.
   - La app también entiende el formato antiguo (`cenas`, solo lunes a jueves), pero ya no se usa.
 - **Objetivo diario (kcal, proteína, grasa): es privado y NO va nunca en el repo** (el repo es público). Lo tiene la tarea programada del sábado y yo lo guardo en el navegador de mis dispositivos. No lo escribas en ningún archivo, commit ni PR; si no lo tienes, no lo inventes.
 - `envases.json`: productos que se compran por envase y cuánto es un envase (ver «Formato de los elementos»).
@@ -26,6 +26,8 @@ Este repo es mi app de listas (web en GitHub Pages: https://yybkvcb26f-lgtm.gith
 
 - Pendiente: un texto. Tachado (ya comprado / hecho): `{"texto": "...", "hecho": true}`.
 - En `"compra"`, cada elemento es `Producto – cantidad · Súper` (p. ej. `Pollo – 400 g · Aldi`). La cantidad es opcional.
+- **Una sola línea por producto** (pendiente o tachada), con la cantidad total. Nunca dos líneas del mismo producto.
+- Añadir a mano (app): producto que no está en la lista → línea nueva (y si no está en `supermercados.json`, se apunta allí). Producto que ya está → se suman cantidades en su línea (si estaba tachada, pasa a pendiente solo con lo añadido; en los productos por envase, gramos o envases escritos se suman al «necesitas»); sin cantidad → aviso «ya está en la lista»; unidades que no se pueden sumar → aviso y no se añade; si se escribe un súper (`Pasta 200 g · Mercadona`), la línea pasa a ese súper y se guarda en la base.
 - El súper es el PRIMERO que indica `supermercados.json` para ese producto. Si no está o no tiene súper: `· Sin súper`.
 - Nombres de súper: `Aldi`, `Lidl`, `Mercadona`, `BM`, `Carrefour`. Aldi y Lidl son súpers distintos: nunca `Lidl/Aldi`.
 - Productos que se compran por envase: están en `envases.json`, cada uno con `{"envase": tamaño de 1 envase, "unidad": "g" | "ml" | "ud", "singular", "plural"}` (p. ej. pasta: paquete de 500 g; arroz: vasito de 100 g; leche: brick de 1000 ml).
@@ -59,7 +61,7 @@ Cada sábado se renueva `menu.json` con la semana siguiente (lunes a domingo):
 - Lunes a viernes: `comida` = `{"trabajo": true}`.
 - Sábado y domingo: `desayuno` = `{"texto": "Leche 200 ml y tostadas con aceite y jamón (o aguacate y jamón, o lomo)", "kcal": 400, "proteina": 20, "grasa": 15}` y `comida` = `{"plato"}`. Desayuno + comida + cena de esos días tienen que acercarse al objetivo diario (aprox. ±10 %): elige la pareja de platos y ajusta snack, fruta y postre para cuadrarlo, y evita juntar dos platos con mucha grasa.
 - Cada cena: snack, fruta y postre de la base con su cantidad, y `extras` con sus kcal, proteína y grasa estimados.
-- La semana nueva empieza sin comidas hechas (sin `hecha`, `descontado`, `comprados` ni `repuesto`).
+- La semana nueva empieza sin comidas hechas (sin `hecha`).
 - Si te pido un plato nuevo, añádelo a `base.platos` con `racion`, `ingredientes`, `kcal`, `proteina` y `grasa`.
 
 Postres: en `menu.json` existe la lista `base.postres_ligeros`, además de `base.postres`. Los platos con `"postre_ligero": true` llevan un postre de `base.postres_ligeros` (con cantidad); el resto, uno de `base.postres` (con cantidad).

@@ -63,7 +63,10 @@
     },
     "Papel cocina – 1 ud · Aldi",
     "Pollo – 1 bandeja de 500 g (necesitas 250 g) · Aldi",
-    "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
+    {
+      "texto": "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
+      "hecho": true
+    },
     {
       "texto": "Verduras para asar – 1 bolsa de 450 g (necesitas 400 g) · Mercadona",
       "hecho": true

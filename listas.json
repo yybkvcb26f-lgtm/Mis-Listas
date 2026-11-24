@@ -49,7 +49,10 @@
       "texto": "Boniato – 300 g · Aldi",
       "hecho": true
     },
-    "Papel cocina – 1 ud · Aldi",
+    {
+      "texto": "Papel cocina – 1 ud · Aldi",
+      "hecho": true
+    },
     {
       "texto": "Verduras para asar – 1 bolsa de 450 g (necesitas 150 g) · Mercadona",
       "hecho": true

@@ -13,10 +13,6 @@
       "hecho": true
     },
     {
-      "texto": "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
-      "hecho": true
-    },
-    {
       "texto": "Leche – 1 brick de 1 l (necesitas 250 ml) · Aldi",
       "hecho": true
     },
@@ -54,26 +50,12 @@
       "hecho": true
     },
     "Papel cocina – 1 ud · Aldi",
-    "Pollo – 1 bandeja de 500 g (necesitas 250 g) · Aldi",
     {
-      "texto": "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
+      "texto": "Verduras para asar – 1 bolsa de 450 g (necesitas 150 g) · Mercadona",
       "hecho": true
     },
-    {
-      "texto": "Verduras para asar – 1 bolsa de 450 g (necesitas 400 g) · Mercadona",
-      "hecho": true
-    },
-    "Arroz – 1 vasito de 100 g (necesitas 80 g) · Aldi",
-    {
-      "texto": "Zanahorias – 1 bolsa de 1 kg (necesitas 100 g) · BM",
-      "hecho": true
-    },
-    "Manzanas – 2 ud · Aldi",
-    "Yogur natural – 1 pack de 500 g (necesitas 250 g) · Aldi",
-    {
-      "texto": "Granola – 1 sobre de 250 g (necesitas 30 g) · BM",
-      "hecho": true
-    },
+    "Manzanas – 1 ud · Aldi",
+    "Yogur natural – 1 pack de 500 g (necesitas 125 g) · Aldi",
     "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
     "Tomate – 1 ud · Aldi",
     "Pan – 1 barra de 250 g (necesitas 100 g) · Lidl",

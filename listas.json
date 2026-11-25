@@ -9,10 +9,6 @@
       "hecho": true
     },
     {
-      "texto": "Pavo en lonchas – 1 paquete de 150 g (necesitas 150 g) · Aldi",
-      "hecho": true
-    },
-    {
       "texto": "Leche – 1 brick de 1 l (necesitas 250 ml) · Aldi",
       "hecho": true
     },
@@ -32,7 +28,6 @@
       "texto": "Cebolla – 1 bolsa de 450 g (necesitas 50 g) · Mercadona",
       "hecho": true
     },
-    "Wraps integrales – 1 paquete de 6 ud (necesitas 3 ud) · Mercadona",
     {
       "texto": "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
       "hecho": true
@@ -57,21 +52,14 @@
       "texto": "Verduras para asar – 1 bolsa de 450 g (necesitas 150 g) · Mercadona",
       "hecho": true
     },
-    "Manzanas – 1 ud · Aldi",
-    {
-      "texto": "Yogur natural – 1 pack de 500 g (necesitas 125 g) · Aldi",
-      "hecho": true
-    },
     "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
     "Tomate – 1 ud · Aldi",
     "Pan – 1 barra de 250 g (necesitas 100 g) · Lidl",
-    "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
+    "Tomates cherry – 1 tarrina de 250 g (necesitas 100 g) · BM",
     {
       "texto": "Kiwis – 4 ud · Aldi",
       "hecho": true
     },
-    "Queso – 1 paquete de 250 g (necesitas 40 g) · Aldi",
-    "Aguacate – 1 ud (usas ½) · Aldi",
     {
       "texto": "Canela – 1 ud · BM",
       "hecho": true

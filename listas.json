@@ -1,22 +1,6 @@
 {
   "compra": [
     {
-      "texto": "Leche – 1 brick de 1 l (necesitas 250 ml) · Aldi",
-      "hecho": true
-    },
-    {
-      "texto": "Cacao 100% – 1 bote de 250 g (necesitas 10 g) · Mercadona",
-      "hecho": true
-    },
-    {
-      "texto": "Atún – 80 g · BM",
-      "hecho": true
-    },
-    {
-      "texto": "Avena – 1 sobre de 250 g (necesitas 30 g) · BM",
-      "hecho": true
-    },
-    {
       "texto": "Entrecot – 250 g · Aldi",
       "hecho": true
     },
@@ -26,20 +10,6 @@
     },
     {
       "texto": "Papel cocina – 1 ud · Aldi",
-      "hecho": true
-    },
-    {
-      "texto": "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
-      "hecho": true
-    },
-    "Tomate – 1 ud · Aldi",
-    "Pan – 1 barra de 250 g (necesitas 100 g) · Lidl",
-    {
-      "texto": "Tomates cherry – 1 tarrina de 250 g (necesitas 100 g) · BM",
-      "hecho": true
-    },
-    {
-      "texto": "Kiwis – 2 ud · Aldi",
       "hecho": true
     },
     {

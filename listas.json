@@ -28,7 +28,10 @@
       "texto": "Papel cocina – 1 ud · Aldi",
       "hecho": true
     },
-    "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
+    {
+      "texto": "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
+      "hecho": true
+    },
     "Tomate – 1 ud · Aldi",
     "Pan – 1 barra de 250 g (necesitas 100 g) · Lidl",
     {

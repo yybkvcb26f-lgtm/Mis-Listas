@@ -27,7 +27,10 @@
     "Cacao 100% – 1 bote de 250 g (necesitas 20 g) · Mercadona",
     "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
     "Crema de calabaza – 1 ud · BM",
-    "Zanahorias – 1 bolsa de 1 kg (necesitas 450 g) · BM",
+    {
+      "texto": "Zanahorias – 1 bolsa de 1 kg (necesitas 450 g) · BM",
+      "hecho": true
+    },
     {
       "texto": "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
       "hecho": true

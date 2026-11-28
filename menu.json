@@ -96,7 +96,8 @@
         "grasa": 15
       },
       "comida": {
-        "plato": "Pasta con carne picada de ternera y sofrito"
+        "plato": "Pasta con carne picada de ternera y sofrito",
+        "hecha": true
       },
       "cena": {
         "plato": "Crema de calabaza con pollo a la plancha y pan",

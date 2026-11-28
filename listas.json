@@ -11,7 +11,10 @@
     "Jamón cocido – 1 paquete de 200 g (necesitas 120 g) · Aldi",
     "Arroz – 1 vasito de 100 g (necesitas 80 g) · Aldi",
     "Kiwis – 2 ud · Aldi",
-    "Leche – 1 brick de 1 l (necesitas 500 ml) · BM",
+    {
+      "texto": "Leche – 1 brick de 1 l (necesitas 500 ml) · BM",
+      "hecho": true
+    },
     "Manzanas – 1 ud · Aldi",
     "Yogur natural – 2 packs de 500 g (necesitas 625 g) · Aldi",
     "Frambuesas – 2 tarrinas de 150 g (necesitas 240 g) · Aldi",

@@ -28,7 +28,10 @@
     "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
     "Crema de calabaza – 1 ud · BM",
     "Zanahorias – 1 bolsa de 1 kg (necesitas 450 g) · BM",
-    "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
+    {
+      "texto": "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
+      "hecho": true
+    },
     "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
     "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
     "Granola – 1 sobre de 250 g (necesitas 120 g) · BM",

@@ -39,7 +39,10 @@
       "texto": "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
       "hecho": true
     },
-    "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
+    {
+      "texto": "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
+      "hecho": true
+    },
     {
       "texto": "Granola – 1 sobre de 250 g (necesitas 120 g) · BM",
       "hecho": true

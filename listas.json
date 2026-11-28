@@ -28,7 +28,10 @@
     "Verduras para asar – 1 bolsa de 450 g (necesitas 450 g) · Mercadona",
     "Wraps integrales – 1 paquete de 6 ud (necesitas 3 ud) · Mercadona",
     "Cacao 100% – 1 bote de 250 g (necesitas 20 g) · Mercadona",
-    "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
+    {
+      "texto": "Pasta – 1 paquete de 500 g (necesitas 130 g) · BM",
+      "hecho": true
+    },
     {
       "texto": "Crema de calabaza – 1 ud · BM",
       "hecho": true

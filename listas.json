@@ -32,7 +32,10 @@
       "texto": "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
       "hecho": true
     },
-    "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
+    {
+      "texto": "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
+      "hecho": true
+    },
     "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
     {
       "texto": "Granola – 1 sobre de 250 g (necesitas 120 g) · BM",

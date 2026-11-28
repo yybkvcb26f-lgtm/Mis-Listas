@@ -34,7 +34,10 @@
     },
     "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
     "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
-    "Granola – 1 sobre de 250 g (necesitas 120 g) · BM",
+    {
+      "texto": "Granola – 1 sobre de 250 g (necesitas 120 g) · BM",
+      "hecho": true
+    },
     "Quinoa – 90 g · Mercadona",
     "Salmón – 180 g · Mercadona"
   ]

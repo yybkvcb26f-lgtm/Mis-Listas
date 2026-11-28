@@ -1,16 +1,41 @@
 {
   "compra": [
-    {
-      "texto": "Entrecot – 250 g · Aldi",
-      "hecho": true
-    },
-    {
-      "texto": "Papel cocina – 1 ud · Aldi",
-      "hecho": true
-    },
-    {
-      "texto": "Canela – 1 ud · BM",
-      "hecho": true
-    }
+    "Aguacate – 1 ud · Aldi",
+    "Tomate – 4 ud · Aldi",
+    "Huevos – 1 docena de 12 ud (necesitas 4 ud) · Aldi",
+    "Entrecot – 250 g · Aldi",
+    "Boniato – 300 g · Aldi",
+    "Pavo en lonchas – 1 paquete de 150 g (necesitas 150 g) · Aldi",
+    "Queso – 1 paquete de 250 g (necesitas 110 g) · Aldi",
+    "Carne picada de ternera – 1 bandeja de 400 g (necesitas 150 g) · Aldi",
+    "Tomate triturado – 1 bote de 400 g (necesitas 150 g) · Aldi",
+    "Pollo – 1 bandeja de 500 g (necesitas 470 g) · Aldi",
+    "Jamón cocido – 1 paquete de 200 g (necesitas 120 g) · Aldi",
+    "Arroz – 1 vasito de 100 g (necesitas 80 g) · Aldi",
+    "Kiwis – 2 ud · Aldi",
+    "Leche – 1 brick de 1 l (necesitas 500 ml) · Aldi",
+    "Manzanas – 1 ud · Aldi",
+    "Yogur natural – 2 packs de 500 g (necesitas 625 g) · Aldi",
+    "Frambuesas – 2 tarrinas de 150 g (necesitas 240 g) · Aldi",
+    "Fresas – 150 g · Aldi",
+    "Arándanos – 1 tarrina de 125 g (necesitas 50 g) · Aldi",
+    "Plátanos – 3 ud · Aldi",
+    "Mango – 150 g · Aldi",
+    "Pan – 2 barras de 250 g (necesitas 310 g) · Lidl",
+    "Jamón ibérico – 1 sobre de 100 g (necesitas 80 g) · Lidl",
+    "Atún – 80 g · Mercadona",
+    "Verduras para asar – 2 bolsas de 450 g (necesitas 500 g) · Mercadona",
+    "Wraps integrales – 1 paquete de 6 ud (necesitas 3 ud) · Mercadona",
+    "Cebolla – 1 bolsa de 450 g (necesitas 50 g) · Mercadona",
+    "Cacao 100% – 1 bote de 250 g (necesitas 20 g) · Mercadona",
+    "Pasta – 1 paquete de 500 g (necesitas 260 g) · BM",
+    "Crema de calabaza – 1 ud · BM",
+    "Zanahorias – 1 bolsa de 1 kg (necesitas 450 g) · BM",
+    "Leche de coco – 1 brick de 200 ml (necesitas 100 ml) · BM",
+    "Tomates cherry – 1 tarrina de 250 g (necesitas 200 g) · BM",
+    "Avena – 1 sobre de 250 g (necesitas 60 g) · BM",
+    "Granola – 1 sobre de 250 g (necesitas 120 g) · BM",
+    "Quinoa – 90 g · Sin súper",
+    "Salmón – 180 g · Sin súper"
   ]
 }
